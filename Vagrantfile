@@ -6,45 +6,65 @@ if File.exist?(CONFIG)
   require CONFIG
 end
 
+## if enable openstack provider, you must install this plugin
+# require "vagrant-openstack-provider"
+
 Vagrant.configure("2") do |config|
-    ## Configuration of Masters
     config.vm.box = $box_image
-    (1..$master_count).each do |i|
-        config.vm.define "master#{i}" do |subconfig|
-            subconfig.vm.hostname = "master#{i}"
-            subconfig.vm.network "private_network", ip: "172.16.35.1#{i}", auto_config: true
-        end
-    end
+    machine_total = $master_count + $node_count
 
-    ## Configuration of Nodes
-    (1..$node_count).each do |i|
-        config.vm.define "node#{i}" do |subconfig|
-            subconfig.vm.hostname = "node#{i}"
-            subconfig.vm.network "private_network", ip: "172.16.35.2#{i}", auto_config: true
-
-            ## Create node disks
-            (1..$disk_count).each do |j|
-                subconfig.vm.provider "virtualbox" do |vm|
-                    vm.customize ["createhd",  "--filename", "#{$storage_path}n#{i}d#{j}", "--size", $storage_size]
-                    vm.customize [
-                        "storageattach", :id,
-                        "--storagectl", "SATA Controller",
-                        "--port", "#{j}",
-                        "--type", "hdd",
-                        "--medium", "#{$storage_path}n#{i}d#{j}.vdi"
-                    ]
-                end
-            end
-        end
-    end
-
-    ## Configure vm infos
-    config.vm.provision :shell, path: "install-dep.sh"
+    ## Setting bridge network and vm infos
     if $bridge_enable && $bridge_eth.to_s != ''
-            config.vm.network "public_network", bridge: $bridge_eth
+        config.vm.network "public_network", bridge: $bridge_eth
     end
     config.vm.provider "virtualbox" do |vm|
         vm.memory = $system_memory
         vm.cpus = $system_vcpus
     end
+
+    ## Configuration of machines
+    (1..machine_total).each do |machine_id|
+        name = (machine_id <= $master_count) ? 'master' : 'node'
+        id   = (machine_id <= $master_count) ? machine_id : (machine_id - $master_count)
+
+        config.vm.define "#{name}#{id}" do |subconfig|
+            subconfig.vm.hostname = "#{name}#{id}"
+            subconfig.vm.network "private_network", ip: "#{$private_subnet}.#{$private_count}", auto_config: true
+            $private_count += 1
+
+            if machine_id > $master_count
+                (1..$disk_count).each do |disk_id|
+                    subconfig.vm.provider "virtualbox" do |vm|
+                        vm.customize ["createhd",  "--filename", "#{$storage_path}n#{id}d#{disk_id}", "--size", $storage_size]
+                        vm.customize [
+                            "storageattach", :id,
+                            "--storagectl", "SATA Controller",
+                            "--port", "#{disk_id}",
+                            "--type", "hdd",
+                            "--medium", "#{$storage_path}n#{id}d#{disk_id}.vdi"
+                        ]
+                    end
+                end
+            end
+
+            ## Install of dependency packages using Ansible playbooks
+            if machine_total == machine_id
+                subconfig.vm.provision :ansible do |ansible|
+                # Disable default limit to connect to all the machines
+                    ansible.limit = "all"
+                    ansible.sudo = true
+                    ansible.host_key_checking = false
+                    ansible.playbook = "./playbooks/install-dep.yaml"
+                    ansible.groups = {
+                        "kube-masters" => [$kube_masters],
+                        "kube-workers" => [$kube_workers],
+                        "kube-control" => [$kube_control],
+                        "kube-cluster:children" => ["kube-masters", "kube-workers"],
+                    }
+                end
+            end
+        end
+    end
+    ## Install of dependency packages using script
+    # config.vm.provision :shell, path: "install-dep.sh"
 end

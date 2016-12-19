@@ -1,0 +1,24 @@
+---
+- hosts: all
+  sudo: True
+  connection: ssh # or paramiko
+  tasks:
+  - name: Install list of packages (Debian/Ubuntu)
+    apt: name={{item}} state=latest
+    with_items:
+        - openvswitch-switch
+        - bridge-utils
+        - git
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+  - name: Install list of packages (CentOS/RHEL)
+    yum: name={{item}} state=latest
+    with_items:
+        - vim
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  - name: Download docker engine installer
+    get_url: url=https://get.docker.com/  dest=/tmp/docker-installer.sh
+
+  - name: Execute the installer to install docker engine
+    script: /tmp/docker-installer.sh
