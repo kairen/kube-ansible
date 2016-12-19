@@ -1,8 +1,8 @@
 ## Machine configuration variable
 # Can use "bento/ubuntu-14.04" or "bento/centos-7.2" box.
 $box_image       = "bento/centos-7.2"
-$master_count    = 2
-$node_count      = 2
+$master_count    = 1
+$node_count      = 1
 $disk_count      = 1
 $storage_path    = "./tmp/"
 $storage_size    = "30720"
@@ -16,12 +16,12 @@ $private_subnet  = "172.16.35"
 $private_count   = 10
 
 ## Ansible Declarations:
-$kube_masters      = "master[1:#{$master_count}]"
-$kube_workers = "node[1:#{$node_count}]"
-$kube_control      = "master[1:#{$master_count}]"
+$kube_masters    = "master[1:#{$master_count}]"
+$kube_workers    = "node[1:#{$node_count}]"
+$kube_control    = "master[1:#{$master_count}]"
 
 ## Ansible inventory variable
-
+$ansible_playboos = "./playbooks/site.yml"
 
 ## Virtualbox leave / Openstack change to OS default username:
 # $ssh_user       = "vagrant"

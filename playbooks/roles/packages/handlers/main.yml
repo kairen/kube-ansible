@@ -1,0 +1,12 @@
+---
+- name: Restart docker engine service.
+  command: /bin/true
+  notify:
+    - stop docker
+    - start docker
+
+- name: Stopping docker engine service.
+  service: name=docker state=stopped
+
+- name: Starting docker engine service.
+  service: name=docker state=started

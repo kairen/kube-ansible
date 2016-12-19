@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
                     ansible.limit = "all"
                     ansible.sudo = true
                     ansible.host_key_checking = false
-                    ansible.playbook = "./playbooks/install-dep.yaml"
+                    ansible.playbook = $ansible_playboos
                     ansible.groups = {
                         "kube-masters" => [$kube_masters],
                         "kube-workers" => [$kube_workers],

@@ -1,4 +1,4 @@
-# Kubernetes and Ceph development vagrant
+# My Development environment vagrant
 A vagrant development environment for Kyle.Bai
 
 If you want use this vagrant files, you will need install the following of plugins:
