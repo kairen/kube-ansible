@@ -1,6 +1,5 @@
 ---
 ## Install some package tasks
-
 - name: Install list of packages (Debian/Ubuntu)
   when: ansible_os_family == "Debian"
   apt: name={{item}} state=latest
@@ -14,10 +13,14 @@
   yum: name={{item}} state=latest
   with_items:
       - vim
+      - bridge-utils
+      - git
 
 - name: Download docker engine installer
-  get_url: url=https://get.docker.com/  dest=/tmp/docker-installer.sh
+  shell: "curl -fsSL https://get.docker.com/ -o /tmp/docker-installer.sh"
 
 - name: Execute the script to install docker engine
   script: /tmp/docker-installer.sh
-  notify: Starting docker engine service.
+  notify:
+    - Starting docker engine service.
+    - Enable docker engine service.

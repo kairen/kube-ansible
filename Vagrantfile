@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 
     ## Configuration of machines
     (1..machine_total).each do |machine_id|
-        name = (machine_id <= $master_count) ? 'master' : 'node'
+        name = (machine_id <= $master_count) ? $master_prefix : $node_prefix
         id   = (machine_id <= $master_count) ? machine_id : (machine_id - $master_count)
 
         config.vm.define "#{name}#{id}" do |subconfig|
@@ -32,6 +32,7 @@ Vagrant.configure("2") do |config|
             subconfig.vm.network "private_network", ip: "#{$private_subnet}.#{$private_count}", auto_config: true
             $private_count += 1
 
+            ## Create extra disk at nodes
             if machine_id > $master_count
                 (1..$disk_count).each do |disk_id|
                     subconfig.vm.provider "virtualbox" do |vm|
@@ -48,19 +49,14 @@ Vagrant.configure("2") do |config|
             end
 
             ## Install of dependency packages using Ansible playbooks
-            if machine_total == machine_id
+            if machine_total == machine_id && $enable_ansible
                 subconfig.vm.provision :ansible do |ansible|
                 # Disable default limit to connect to all the machines
                     ansible.limit = "all"
                     ansible.sudo = true
                     ansible.host_key_checking = false
                     ansible.playbook = $ansible_playboos
-                    ansible.groups = {
-                        "kube-masters" => [$kube_masters],
-                        "kube-workers" => [$kube_workers],
-                        "kube-control" => [$kube_control],
-                        "kube-cluster:children" => ["kube-masters", "kube-workers"],
-                    }
+                    ansible.groups = $ansible_groups
                 end
             end
         end

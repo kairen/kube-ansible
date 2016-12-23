@@ -2,11 +2,16 @@
 - name: Restart docker engine service.
   command: /bin/true
   notify:
-    - stop docker
-    - start docker
+    - Stopping docker engine service.
+    - Starting docker engine service.
 
 - name: Stopping docker engine service.
   service: name=docker state=stopped
 
 - name: Starting docker engine service.
   service: name=docker state=started
+
+- name: Enable docker engine service.
+  when: ansible_os_family == "RedHat"
+  become: yes
+  shell: systemctl enable docker
