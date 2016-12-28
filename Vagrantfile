@@ -1,4 +1,4 @@
-require "yaml"
+wrequire "yaml"
 require "fileutils"
 
 CONFIG = File.expand_path("config.rb")
