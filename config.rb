@@ -1,8 +1,8 @@
 ## Machine configuration variable
 # Can use "bento/ubuntu-14.04" or "bento/centos-7.2" box.
-$box_image       = "bento/ubuntu-14.04"
+$box_image       = "bento/centos-7.2"
 $master_count    = 1
-$node_count      = 3
+$node_count      = 1
 $disk_count      = 0
 $storage_path    = "./tmp/"
 $storage_size    = "30720"
@@ -10,7 +10,7 @@ $storage_size    = "30720"
 $system_memory   = 1024
 $system_vcpus    = 1
 
-$bridge_enable   = true
+$bridge_enable   = false
 $bridge_eth      = "eno1"
 $private_subnet  = "172.16.35"
 $private_count   = 10
@@ -24,7 +24,7 @@ $kube_masters    = "master[1:#{$master_count}]"
 $kube_workers    = "node[1:#{$node_count}]"
 
 ## Ansible inventory variable
-$enable_ansible      = true
+$enable_ansible      = false
 $ansible_playboos    = "./kube-deploy/kube-deploy.yml"
 
 $ansible_groups   = {

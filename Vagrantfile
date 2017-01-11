@@ -1,4 +1,4 @@
-wrequire "yaml"
+require "yaml"
 require "fileutils"
 
 CONFIG = File.expand_path("config.rb")
@@ -62,5 +62,6 @@ Vagrant.configure("2") do |config|
         end
     end
     ## Install of dependency packages using script
-    # config.vm.provision :shell, path: "install-dep.sh"
+    ## config.vm.provision :shell, path: "install-dep.sh"
+
 end
