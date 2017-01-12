@@ -1,0 +1,20 @@
+---
+- name: create kubernetes manifests config directory
+  when: haproxy
+  file: path={{ manifest_config_dir }} state=directory
+
+- name: create haproxy config directory
+  file: path={{ haproxy_dir }} state=directory
+  register: ha_dir
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: copy haproxy json config file
+  template: src="haproxy.json.j2" dest={{ manifest_config_dir }}/haproxy.json
+  register: ha_json
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: copy haproxy config file
+  template: src="haproxy.cfg.j2" dest={{ haproxy_dir }}/haproxy.cfg
+  register: ha_config
+  delegate_to: "{{ groups['masters'][0] }}"
+

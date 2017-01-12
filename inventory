@@ -5,7 +5,7 @@
 172.16.35.10 ansible_user=vagrant
 
 [sslhost]
-172.16.35.10 ansible_user=vagrant
+# 172.16.35.10 ansible_user=vagrant
 
-[node]
+[nodes]
 172.16.35.10 ansible_user=vagrant

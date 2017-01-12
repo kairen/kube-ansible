@@ -1,0 +1,34 @@
+global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  tune.ssl.default-dh-param 2048
+
+defaults
+  log global
+  mode http
+  #option httplog
+  option dontlognull
+  timeout connect 5000ms
+  timeout client 50000ms
+  timeout server 50000ms
+
+listen stats
+    bind :{{ haproxy_monitor_port }}
+    mode http
+    balance
+    stats uri /haproxy_stats
+    stats auth {{ admin_user }}:{{ admin_password }}
+    stats admin if TRUE
+
+frontend api-https
+   mode tcp
+   bind :443
+   default_backend api-backend
+
+backend api-backend
+    mode tcp
+{% for host in groups['masters'] %}
+    server  api{{ loop.index }}  {{ host }}:{{ api_secure_port }}  check
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}
+

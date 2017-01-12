@@ -1,0 +1,22 @@
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+[req_distinguished_name]
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = kubernetes
+DNS.2 = kubernetes.default
+DNS.3 = kubernetes.default.svc
+DNS.4 = kubernetes.default.svc.{{ cluster_name }}
+DNS.5 = {{ domain_name }}
+DNS.6 = *.{{ domain_name }}
+IP.1 = {{ kubernetes_service_ip }}
+{% for host in groups['masters'] %}
+{% set count1 = loop.index + 1 %}
+IP.{{ count1 }} = {{ host }}
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}
+

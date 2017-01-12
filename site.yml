@@ -5,6 +5,13 @@
   tags:
     - repos
 
+# install ssl cert
+- hosts: sslhost
+  roles:
+     -  sslcert
+  tags:
+     -  sslcert
+
 # Install etcd
 - hosts: etcd
   roles:
@@ -12,9 +19,47 @@
   tags:
     - etcd
 
+# Install flannel
+- hosts: all
+  roles:
+   - flannel
+
 # Install docker
 - hosts: all
   roles:
     - docker
   tags:
     - docker
+
+# install haproxy
+- hosts: masters
+  roles:
+    - haproxy
+  tags:
+    - haproxy
+
+# install kubernetes master services
+- hosts: masters
+  roles:
+    - master
+  tags:
+    - master
+
+# install kubernetes on the nodes
+- hosts: nodes
+  roles:
+    - node
+  tags:
+    - node
+
+# launch addons
+# run only cluster is fully operation
+#- hosts: masters
+#  roles:
+#    -  addon
+#  tags:
+#    - addon
+#    - dns
+#    - proxy
+#    - weave
+#    - dashboard

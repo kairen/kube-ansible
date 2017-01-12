@@ -1,0 +1,19 @@
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+[req_distinguished_name]
+[ v3_req ]
+extendedKeyUsage = clientAuth,serverAuth
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = {{ domain_name }}
+DNS.2 = *.{{ domain_name }}
+{% set pk = groups['masters'] | union(groups['node']) | union(groups['etcd']) %}
+{% for host in pk %}
+{% set count = loop.index  %}
+IP.{{ count }} = {{ host }}
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}
+

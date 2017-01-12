@@ -1,0 +1,64 @@
+---
+- name: Install Kubernetes packages
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    -  kubectl
+    -  kubelet
+    -  kubernetes-cni
+  register: masterpackage
+
+- name: create kubernetes config directory
+  file: path={{ manifest_config_dir }} state=directory
+  register: manifest
+
+- name: create weave dir
+  when: weave_net
+  file: path={{ weavedir }} state=directory
+
+- name: copy weave file
+  when: weave_net
+  copy: src=10-weave.conf  dest=/etc/cni/net.d/10-weave.conf
+
+- name: copy api config file
+  template: src="kube-apiserver.json.j2" dest={{ manifest_config_dir }}/kube-apiserver.json
+  register: api
+
+- name: copy controller config file
+  template: src="kube-controller-manager.json.j2" dest={{ manifest_config_dir }}/kube-controller-manager.json
+  register: controller
+
+- name: copy scheduler config file
+  template: src="kube-scheduler.json.j2" dest={{ manifest_config_dir }}/kube-scheduler.json
+  register: scheduler
+
+- name: copy kube config file
+  template: src="kubeadminconfig.j2" dest={{ kube_config_dir }}/kubeadminconfig
+  register: config
+
+- name: copy openssl certificate from ansible host
+  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
+  register: openssl_cert
+
+- name: copy kubelet-config file
+  template: src="kubelet.j2" dest={{ kube_config_dir }}/kubelet
+  register: kubelet_conf
+
+- name: copy kubelet-service file
+  copy: src=kubelet.service dest=/etc/systemd/system/kubelet.service owner=root group=root mode=0755
+  register: kubelet_service
+
+- name: create kubelet directory
+  file: path=/var/lib/kubelet state=directory
+  
+- name: start and enable kubelet
+  service: name=kubelet enabled=no state=started
+  register: kubelet_start
+
+- name: reload kubelet
+  when: openssl_cert|changed or kubelet_service|changed or kubelet_conf|changed
+  service: name=kubelet state=restarted
+

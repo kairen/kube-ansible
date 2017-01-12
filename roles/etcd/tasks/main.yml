@@ -1,5 +1,5 @@
 ---
-- name: Install etcd
+- name: Install etcd (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
   yum:
     name: etcd
@@ -16,7 +16,7 @@
   template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
   register: etc_config
 
-- name: copy etcd certificate from ansible host 
+- name: copy etcd certificate from ansible host
   when: etcd_peer_url_scheme == 'https'
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
   register: etcd_cert

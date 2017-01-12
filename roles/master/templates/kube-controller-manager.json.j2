@@ -1,0 +1,63 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "kube-controller-manager",
+    "namespace": "kube-system",
+    "labels": {
+      "component": "kube-controller-manager",
+      "tier": "control-plane"
+    }
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "pki",
+        "hostPath": {
+          "path": "/etc/kubernetes"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "kube-controller-manager",
+        "image": "{{ controller_image }}",
+        "command": [
+          "/usr/local/bin/kube-controller-manager",
+          "--v=0",
+          "--address=127.0.0.1",
+          "--leader-elect=true",
+          "--master={{ api_lb_ip }}",
+          "--cluster-name= kubernetes",
+          "--kubeconfig={{ kubeadminconfig }}",
+          "--root-ca-file={{ ca_cert }}",
+          "--service-account-private-key-file={{ account_key }}",
+          "--cluster-signing-cert-file={{ ca_cert }}",
+          "--cluster-signing-key-file={{ ca_key }}"
+        ],
+        "resources": {
+          "requests": {
+            "cpu": "200m"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "pki",
+            "readOnly": true,
+            "mountPath": "/etc/kubernetes/"
+          }
+        ],
+        "livenessProbe": {
+          "httpGet": {
+            "path": "/healthz",
+            "port": 10252,
+            "host": "127.0.0.1"
+          },
+          "initialDelaySeconds": 15,
+          "timeoutSeconds": 15
+        }
+      }
+    ],
+    "hostNetwork": true
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "haproxy",
+    "namespace": "kube-system",
+    "labels": {
+      "component": "kube-apiserver",
+      "tier": "control-plane"
+    }
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "vol",
+        "hostPath": {
+          "path": "/etc/haproxy/haproxy.cfg"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "haproxy",
+        "image": "haproxy",
+        "resources": {
+          "requests": {
+            "cpu": "250m"
+          }
+        },
+        "volumeMounts": [
+          {
+            "name": "vol",
+            "readOnly": true,
+            "mountPath": "/usr/local/etc/haproxy/haproxy.cfg"
+          }
+        ]
+      }
+    ],
+    "hostNetwork": true
+  }
+}
