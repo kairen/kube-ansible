@@ -24,7 +24,7 @@ $kube_masters    = "master[1:#{$master_count}]"
 $kube_workers    = "node[1:#{$node_count}]"
 
 # Ansible inventory variable
-$enable_ansible      = true
+$enable_ansible      = false
 $ansible_playboos    = "./site.yml"
 $ansible_inventory   = "./inventory"
 

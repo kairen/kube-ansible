@@ -7,3 +7,5 @@ sudo yum install -y gcc git vim openssl-devel \
 
 sudo easy_install pip
 sudo pip install  ansible
+
+git clone https://github.com/kairen/kubernetes-ceph-ansible.git -b dev
