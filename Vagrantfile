@@ -29,7 +29,8 @@ Vagrant.configure("2") do |config|
 
         config.vm.define "#{name}#{id}" do |subconfig|
             subconfig.vm.hostname = "#{name}#{id}"
-            subconfig.vm.network "private_network", ip: "#{$private_subnet}.#{$private_count}", auto_config: true
+	        ip_addr = "#{$private_subnet}.#{$private_count}"
+            subconfig.vm.network "private_network", ip: "#{ip_addr}",  auto_config: true
             $private_count += 1
 
             ## Create extra disk at nodes
