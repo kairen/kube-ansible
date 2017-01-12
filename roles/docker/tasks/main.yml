@@ -1,17 +1,35 @@
 ---
-- name: Download docker engine installer
-  shell: "curl -fsSL https://get.docker.com/ -o /tmp/docker-installer.sh"
-
-- name: Install docker engine
-  script: /tmp/docker-installer.sh
+- name: Install docker engine (RHEL/CentOS)
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: docker-engine
+    state: latest
   notify:
     - Starting docker engine service
     - Enable docker engine service
 
-# - name: Add any insecure registrys to docker config
-#   lineinfile: dest=/etc/sysconfig/docker-latest regexp=^INSECURE_REGISTRY= line=INSECURE_REGISTRY="{% for reg in insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
-#   when: insecure_registrys is defined and insecure_registrys > 0
-#
-# - name: add registry
-#   lineinfile: dest=/etc/sysconfig/docker-latest regexp=^ADD_REGISTRY= line=ADD_REGISTRY="{% for reg in add_registry %}--add-registry={{ reg }} {%endfor %}"
-#   when: add_registry is defined and add_registry > 0
+- name: Add any insecure registrys to docker config
+  lineinfile: dest=/etc/sysconfig/docker regexp=^INSECURE_REGISTRY= line=INSECURE_REGISTRY="{% for reg in insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
+  when:
+    - insecure_registrys is defined and insecure_registrys > 0
+    - ansible_os_family == "RedHat"
+
+- name: Add registry
+  lineinfile: dest=/etc/sysconfig/docker regexp=^ADD_REGISTRY= line=ADD_REGISTRY="{% for reg in add_registry %}--add-registry={{ reg }} {%endfor %}"
+  when:
+    - add_registry is defined and add_registry > 0
+    - ansible_os_family == "RedHat"
+  notify:
+    - Restart docker engine service
+
+########################################
+# Debian family install task (feature) #
+########################################
+# - name: Install docker engine (Debian/Ubuntu)
+#   when: ansible_os_family == "Debian"
+#   apt:
+#     name: docker-engine
+#     state: latest
+#   notify:
+#     - Starting docker engine service
+#     - Enable docker engine service

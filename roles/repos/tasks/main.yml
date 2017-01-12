@@ -1,15 +1,27 @@
 ---
-- name: Install epel
+- name: Adding EPEL repository
   when: ansible_os_family == "RedHat"
   yum:
     name: epel-release
     state: latest
 
+- name: Adding Docker repository
+  when: ansible_os_family == "RedHat"
+  yum_repository:
+    name: Docker
+    description: Docker Repository
+    file: docker
+    baseurl: https://yum.dockerproject.org/repo/main/centos/7/
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://yum.dockerproject.org/gpg
+  register: dockerepo
+
 - name: Adding Kubernetes repository
   when: ansible_os_family == "RedHat"
   yum_repository:
     name: Kubernetes
-    description: Kubernetes repo
+    description: Kubernetes Repository
     file: kubernetes
     baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
     enabled: yes
