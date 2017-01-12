@@ -1,0 +1,107 @@
+#- setup variable for cluster installation
+#- kubernetes dir
+kube_config_dir: /etc/kubernetes
+manifest_config_dir: /etc/kubernetes/manifests
+cert_dir: /etc/kubernetes/pki
+master_cert_dir: /opt/kubernetes/pki
+kube_addon_dir: /etc/kubernetes/addon
+weavedir: /etc/cni/net.d
+flannel_dir: /etc/sysconfig
+
+#- image and other variable
+api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.1
+controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.1
+scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.1
+kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.1
+
+#- cluster service ip range
+service_ip_range: 100.64.0.0/12
+kubernetes_service_ip: 100.64.0.1
+
+#- all certifactes for cluster
+account_key: /etc/kubernetes/pki/apiserver-key.pem
+ca_cert: /etc/kubernetes/pki/ca.pem
+ca_key: /etc/kubernetes/pki/ca-key.pem
+api_cert: /etc/kubernetes/pki/apiserver.pem
+api_key: /etc/kubernetes/pki/apiserver-key.pem
+admin_key: /etc/kubernetes/pki/admin-key.pem
+admin_cert: /etc/kubernetes/pki/admin.pem
+node_cert: /etc/kubernetes/pki/node.pem
+node_key: /etc/kubernetes/pki/node-key.pem
+
+#- api secure port and api loadbalancer IP
+api_secure_port: 5443
+api_lb_ip: https://172.16.35.9 # it should be haproxy host IP or network load balancer IP  # if using onle one api server then setup IP of it
+lb_ip: 172.16.35.9
+
+#- kubeconfig file
+kubeconfig: /etc/kubernetes/kubeconfig
+kubeletconfig: /etc/kubernetes/kubeletconfig
+kubeadminconfig: /etc/kubernetes/kubeadminconfig
+
+# all master fqdn name - it require to create ssl certificate
+# set it to only available api server
+masters_fqdn: ['kube.master1.com', 'kube.master2.com', 'kube.master3.com']
+
+#- cluster dns name and IP
+cluster_name: cluster.local
+
+# kube-proxy addon
+kube_proxy: true # set true only if cluster is fully operation and running
+
+#- kube-dns add-on
+kube_dns: false # set true only if cluster is fully operation and running
+#- if true then set following
+dns_ip: 100.64.0.10 # it should be from cluster service_ip_range
+dns_replicas: 1
+
+#- weave ui port and IP
+weave_net: false # set true only if cluster is fully operation and running
+#- if true then set following
+weaveui_port: 90
+weaveui_ip: 172.16.35.10 # it should be one of cluster node IP
+
+#flannel network # only one network plugin should be enable either weave or flannel
+flannel: true
+flannel_network: "10.10.0.0/16"
+flannel_key: "/atomic.io/network"
+flannel_subnet_len: 24
+
+# A list of insecure registrys you might need to define
+insecure_registrys:
+
+# Turn to false to disable cluster monitoring with heapster and influxdb
+cluster_monitoring: false # set true only if cluster is fully operation and running
+#- if true then set following
+heapster_ip: 100.64.0.11 # it should be from cluster service_ip_range
+heapster_port: 80
+grafana_ip: 172.16.35.10 # it should be one of cluster node IP
+grafana_port: 100
+influx_ip: 172.16.35.10 # it should be one of cluster node IP
+influx_port: 8086
+
+# Turn to false to disable the kube-dash addon for this cluster
+kube_dash: true  # set true only if cluster is fully operation and running
+#- if true then set following
+kube_dash_ip: 172.16.35.10 # it should be one of cluster node IP
+kube_dash_port: 80
+
+#- setup haproxy for loadbalancing
+haproxy: true  # set false when already physical loadbalancer available
+haproxy_dir: /etc/haproxy
+haproxy_monitor_port: 9090
+admin_user: admin
+admin_password: admin123
+
+#- ssl cert handler
+sslcert_create: true # set true to create certificate, it should be true during ansible first run
+
+#- etcd config
+domain_name: test.com #- use to create wildcard ssl certificate for api and etcd
+etcd_peer_url_scheme: http #- for http  or https
+etcd_ca_file: "/etc/kubernetes/pki/ca.pem"
+etcd_cert_file: "/etc/kubernetes/pki/etcd.pem"
+etcd_key_file: "/etc/kubernetes/pki/etcd-key.pem"
+etcd_peer_ca_file: "/etc/kubernetes/pki/ca.pem"
+etcd_peer_cert_file: "/etc/kubernetes/pki/etcd.pem"
+etcd_peer_key_file: "/etc/kubernetes/pki/etcd-key.pem"

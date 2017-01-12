@@ -1,0 +1,11 @@
+[etcd]
+172.16.35.10  ansible_user=vagrant
+
+[masters]
+172.16.35.10 ansible_user=vagrant
+
+[sslhost]
+172.16.35.10 ansible_user=vagrant
+
+[node]
+172.16.35.10 ansible_user=vagrant

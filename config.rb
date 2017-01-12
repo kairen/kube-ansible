@@ -1,8 +1,9 @@
 ## Machine configuration variable
-# Can use "bento/ubuntu-14.04" or "bento/centos-7.2" box.
+# if os == linux use "bento/ubuntu-14.04" or "bento/centos-7.2" box.
+# else os == mac os use "centos/7"
 $box_image       = "bento/centos-7.2"
 $master_count    = 1
-$node_count      = 1
+$node_count      = 0
 $disk_count      = 0
 $storage_path    = "./tmp/"
 $storage_size    = "30720"
@@ -24,21 +25,15 @@ $kube_masters    = "master[1:#{$master_count}]"
 $kube_workers    = "node[1:#{$node_count}]"
 
 ## Ansible inventory variable
-$enable_ansible      = false
-$ansible_playboos    = "./kube-deploy/kube-deploy.yml"
-
-$ansible_groups   = {
-    "kube-masters" => [$kube_masters],
-    "kube-workers" => [$kube_workers],
-    "kube-control" => [$kube_masters],
-    "kube-cluster:children" => ["kube-masters", "kube-workers"],
-}
+$enable_ansible      = true
+$ansible_playboos    = "./site.yml"
+$ansible_inventory   = "./inventory"
 
 # $ansible_groups   = {
-#     "etcd" => [$kube_masters],
-#     "masters" => [$kube_masters],
-#     "sslhost" => [$kube_masters],
-#     "node" => [$kube_workers],
+#     "kube-masters" => [$kube_masters],
+#     "kube-workers" => [$kube_workers],
+#     "kube-control" => [$kube_masters],
+#     "kube-cluster:children" => ["kube-masters", "kube-workers"],
 # }
 
 ## Virtualbox leave / Openstack change to OS default username:

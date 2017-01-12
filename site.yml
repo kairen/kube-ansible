@@ -1,0 +1,20 @@
+---
+- hosts: all
+  roles:
+    - repos
+  tags:
+    - repos
+
+# Install etcd
+- hosts: etcd
+  roles:
+   -   etcd
+  tags:
+    - etcd
+
+# Install docker
+- hosts: all
+  roles:
+    - docker
+  tags:
+    - docker

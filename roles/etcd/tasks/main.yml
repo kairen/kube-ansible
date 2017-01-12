@@ -1,0 +1,31 @@
+---
+- name: Install etcd
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: etcd
+    state: latest
+
+- name: Create etcd config directory
+  file: path={{ etcd_conf_dir }} state=directory
+
+- name: Create etcd cert directory
+  file: path={{ kube_config_dir }} state=directory
+  when: etcd_peer_url_scheme == 'https'
+
+- name: Write etcd config file
+  template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
+  register: etc_config
+
+- name: copy etcd certificate from ansible host 
+  when: etcd_peer_url_scheme == 'https'
+  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
+  register: etcd_cert
+
+- name: Enable and start etcd
+  when: etc_config|succeeded
+  service: name=etcd enabled=no state=started
+
+- name: Retart etcd
+  service: name=etcd state=restarted
+  when: etc_config|changed and etcd_cert|changed
+  register: etcd_started

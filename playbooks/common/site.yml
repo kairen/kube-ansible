@@ -1,8 +1,0 @@
----
-# This playbook deploys a\ cluster with the default addons.
-
-- hosts: all
-  roles:
-    - packages
-  tags:
-    - packages

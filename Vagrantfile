@@ -17,6 +17,7 @@ Vagrant.configure("2") do |config|
     if $bridge_enable && $bridge_eth.to_s != ''
         config.vm.network "public_network", bridge: $bridge_eth
     end
+    
     config.vm.provider "virtualbox" do |vm|
         vm.memory = $system_memory
         vm.cpus = $system_vcpus
@@ -57,12 +58,12 @@ Vagrant.configure("2") do |config|
                     ansible.sudo = true
                     ansible.host_key_checking = false
                     ansible.playbook = $ansible_playboos
-                    ansible.groups = $ansible_groups
+                    ansible.inventory_path = $ansible_inventory
+                    # ansible.groups = $ansible_groups
                 end
             end
         end
     end
     ## Install of dependency packages using script
     ## config.vm.provision :shell, path: "install-dep.sh"
-
 end
