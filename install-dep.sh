@@ -1,5 +1,9 @@
 #!/bin/bash
 
+HOST_NAME=$(hostname)
+
+if [ ${HOST_NAME} == "master1" ]; then
+
 set -xe
 
 sudo yum install -y gcc git vim openssl-devel expect \
@@ -8,16 +12,9 @@ sudo yum install -y gcc git vim openssl-devel expect \
 sudo easy_install pip
 sudo pip install  ansible
 
-sudo su -
+sudo mv /home/vagrant/kubernetes-ceph-ansible /root/
+else
 
-expect -c "
-spawn ssh-keygen -t rsa  \"\"
-expect \"Enter passphrase (empty for no passphrase):\"
-send \"\r\"
-expect \"Enter same passphrase again:\"
-send \"\r\"
-"
+sudo rm -r /home/vagrant/kubernetes-ceph-ansible
 
-cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
-
-git clone https://github.com/kairen/kubernetes-ceph-ansible.git -b dev
+fi

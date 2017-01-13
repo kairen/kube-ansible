@@ -1,0 +1,62 @@
+---
+- name: Add kubelet service file
+  copy: src=kubelet.service dest=/etc/systemd/system/kubelet.service owner=root group=root mode=0755
+  register: kubelet
+
+- name: Create kubernetes manifest config directory
+  file: path={{ manifest_config_dir }} state=directory
+  register: manifest
+
+- name: Create weave dir
+  when: weave_net
+  file: path={{ weavedir }} state=directory
+
+- name: Copy weave file
+  when: weave_net
+  copy: src=10-weave.conf  dest=/etc/cni/net.d/10-weave.conf
+
+- name: Create kubernetes config directory
+  file: path={{ kube_config_dir }} state=directory
+  register: config_dir
+
+- name: Copy kubeadmin config file
+  template: src="kubeadminconfig.j2" dest={{ kube_config_dir }}/kubeadminconfig
+  register: config
+
+- name: Copy kubelet config file
+  template: src="kubelet.j2" dest={{ kube_config_dir }}/kubelet
+  register: kubeletconfig
+
+- name: Copy kube config file
+  template: src="kubeletconfig.j2" dest={{ kube_config_dir }}/kubeletconfig
+  register: kube_config
+
+- name: Create ssl cert dir
+  file: path={{ cert_dir }} state=directory
+  register: ssl_dir
+
+- name: Copy CA certificate from ansible host
+  template: src={{ master_cert_dir }}/{{ item }} dest={{ cert_dir }}/{{ item }}
+  with_items:
+    - "ca-key.pem"
+    - "ca.pem"
+    - "admin.pem"
+    - "admin-key.pem"
+  register: ca_cert
+
+- name: Copy openssl
+  when: ca_cert|changed
+  template: src="openssl.conf.j2" dest={{ kube_config_dir }}/pki/openssl.conf
+  register: openssl_config
+
+- name: Create certificate for node
+#  when: openssl_config|changed
+  register: create_ssl_cert
+  command: "{{ item }}"
+  with_items:
+    - "openssl genrsa -out {{ cert_dir }}/node-key.pem 2048"
+    - "openssl req -new -key {{ cert_dir }}/node-key.pem -out {{ cert_dir }}/node.csr -subj '/CN=kube-node' -config {{ cert_dir }}/openssl.conf"
+    - "openssl x509 -req -in {{ cert_dir }}/node.csr -CA {{ cert_dir }}/ca.pem -CAkey {{ cert_dir }}/ca-key.pem -CAcreateserial -out {{ cert_dir }}/node.pem -days 1000 -extensions v3_req -extfile {{ cert_dir }}/openssl.conf"
+
+- name: Create kubelet directory
+  file: path=/var/lib/kubelet state=directory

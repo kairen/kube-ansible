@@ -1,4 +1,4 @@
 ---
 - name: Prepare and write yum repository to host
   when: ansible_os_family == "RedHat"
-  include: yum.yml
+  include: yum-repos.yml

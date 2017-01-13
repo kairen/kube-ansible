@@ -40,10 +40,11 @@ api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.1
 controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.1
 scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.1
 kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.1
+kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 
 # cluster service ip range
-service_ip_range: 192.168.10.0/12
-kubernetes_service_ip: 192.168.10.0.1
+service_ip_range: 192.160.0.0/12
+kubernetes_service_ip: 192.160.0.1
 
 # api secure port and api loadbalancer IP
 api_secure_port: 5443
@@ -55,7 +56,7 @@ lb_ip: 172.16.35.10
 
 # all master fqdn name - it require to create ssl certificate
 # set it to only available api server
-masters_fqdn: ['kube.master1.com', ]
+masters_fqdn: ['kube.master1.com',]
 
 # cluster dns name and IP
 cluster_name: cluster.local
@@ -66,7 +67,7 @@ kube_proxy: true # set true only if cluster is fully operation and running
 # kube-dns add-on
 kube_dns: false # set true only if cluster is fully operation and running
 # if true then set following
-dns_ip: 192.168.10.10 # it should be from cluster service_ip_range
+dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
 dns_replicas: 1
 
 # weave ui port and IP
@@ -87,7 +88,7 @@ insecure_registrys:
 # Turn to false to disable cluster monitoring with heapster and influxdb
 cluster_monitoring: false # set true only if cluster is fully operation and running
 # if true then set following
-heapster_ip: 192.168.10.11 # it should be from cluster service_ip_range
+heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
 heapster_port: 80
 grafana_ip: 172.16.35.10 # it should be one of cluster node IP
 grafana_port: 100
@@ -95,7 +96,7 @@ influx_ip: 172.16.35.10 # it should be one of cluster node IP
 influx_port: 8086
 
 # Turn to false to disable the kube-dash addon for this cluster
-kube_dash: false  # set true only if cluster is fully operation and running
+kube_dash: true  # set true only if cluster is fully operation and running
 # if true then set following
 kube_dash_ip: 172.16.35.10 # it should be one of cluster node IP
 kube_dash_port: 80
@@ -107,5 +108,7 @@ haproxy_monitor_port: 9090
 admin_user: admin
 admin_password: admin123
 
-# ssl cert handler
-sslcert_create: true # set true to create certificate, it should be true during ansible first run
+# SSL cert handler
+# set true to create certificate,
+# it should be true during ansible first run
+sslcert_create: true

@@ -25,7 +25,7 @@
         "command": [
           "/usr/local/bin/kube-controller-manager",
           "--v=0",
-          "--address={{ master_ip_address }}",
+          "--address=127.0.0.1",
           "--leader-elect=true",
           "--master={{ api_lb_ip }}",
           "--cluster-name= kubernetes",

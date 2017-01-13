@@ -2,7 +2,7 @@
 # examples : "bento/ubuntu-14.04" or "bento/centos-7.2".
 $box_image       = "bento/centos-7.2"
 $master_count    = 1
-$node_count      = 0
+$node_count      = 2
 $disk_count      = 0
 $storage_path    = "./tmp/"
 $storage_size    = "30720"
