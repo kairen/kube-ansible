@@ -38,28 +38,16 @@
   tags:
     - haproxy
 
-# install kubernetes master services
+# install kubernetes master 
 - hosts: masters
   roles:
     - master
   tags:
     - master
 
-# install kubernetes on the nodes
+# install kubernetes nodes
 - hosts: node
   roles:
     - node
   tags:
     - node
-
-# launch addons
-# run only cluster is fully operation
-#- hosts: masters
-#  roles:
-#    -  addon
-#  tags:
-#    - addon
-#    - dns
-#    - proxy
-#    - weave
-#    - dashboard

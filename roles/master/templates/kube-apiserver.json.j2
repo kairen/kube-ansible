@@ -31,7 +31,7 @@
         "command": [
           "/usr/local/bin/kube-apiserver",
           "--v=0",
-          "--insecure-bind-address=127.0.0.1",
+          "--insecure-bind-address={{ master_ip_address }}",
           "--admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota",
           "--service-cluster-ip-range={{ service_ip_range }}",
           "--service-account-key-file={{ account_key }}",
@@ -45,7 +45,7 @@
           "--etcd-cafile={{ etcd_ca_file }}",
           "--etcd-certfile={{ etcd_cert_file }}",
           "--etcd-keyfile={{ etcd_key_file }}",
-          {% endif -%} 
+          {% endif -%}
           "--etcd-servers={% for node in groups['etcd'] %}{{ etcd_peer_url_scheme }}://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
         ],
         "resources": {

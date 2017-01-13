@@ -1,0 +1,10 @@
+---
+- hosts: masters
+  roles:
+   -  addon
+  tags:
+   - addon
+   - dns
+   - proxy
+   - weave
+   - dashboard

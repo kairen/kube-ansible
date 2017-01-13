@@ -95,7 +95,7 @@ influx_ip: 172.16.35.10 # it should be one of cluster node IP
 influx_port: 8086
 
 # Turn to false to disable the kube-dash addon for this cluster
-kube_dash: true  # set true only if cluster is fully operation and running
+kube_dash: false  # set true only if cluster is fully operation and running
 # if true then set following
 kube_dash_ip: 172.16.35.10 # it should be one of cluster node IP
 kube_dash_port: 80

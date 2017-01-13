@@ -1,0 +1,4 @@
+---
+# master_interface: "{{ ansible_default_ipv4.interface }}"
+master_interface: "enp0s8"
+master_ip_address: "{{ hostvars[inventory_hostname]['ansible_' + master_interface].ipv4.address }}"
