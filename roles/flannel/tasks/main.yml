@@ -1,54 +1,26 @@
 ---
-- name: Install flannel service (RHEL/CentOS)
+- name: Install flannel
   when: ansible_os_family == "RedHat"
   yum:
     name: flannel
     state: latest
     update_cache: yes
 
-- name: Update flannel config
-  template: src="flanneld.j2" dest={{ flannel_dir }}/flanneld
-  register: change_flannel
-
-- name: Set facts about etcdctl command
-  set_fact:
-    peers: "{% for hostname in groups['etcd'] %}http://{{ hostname }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
-    conf_file: "/tmp/config.json"
-    conf_loc: "/{{ flannel_key }}/config"
-  run_once: true
-  delegate_to: "{{ groups['etcd'][0] }}"
-
-- name: Create flannel config file to go in etcd
-  template: src=flannel-config.json dest={{ conf_file }}
-  run_once: true
-  delegate_to: "{{ groups['etcd'][0] }}"
-
-- name: copy etcd certificate from ansible host
-  when: etcd_peer_url_scheme == 'https'
-  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
-  register: etcd_cert
-
-- name: Load the flannel config file into etcd
-  when: etcd_peer_url_scheme == 'http'
-  shell: "/usr/bin/etcdctl --no-sync --peers={{ peers }} set {{ conf_loc }} < {{ conf_file }}"
-  run_once: true
-  delegate_to: "{{ groups['etcd'][0] }}"
-
-- name: Load the flannel config file into secure etcd
-  when: etcd_peer_url_scheme == 'https'
-  shell: "/usr/bin/etcdctl -cert-file={{ etcd_peer_cert_file }} --ca-file={{ etcd_peer_ca_file }} --key-file={ etcd_peer_key_file }} --no-sync --peers={{ peers }} set {{ conf_loc }} < {{ conf_file }}"
-  run_once: true
-  delegate_to: "{{ groups['etcd'][0] }}"
+- name: Prepare and write flannel configuration to etcd
+  include: config.yml
 
 - name: Copy etcd certificate from ansible host
   when: etcd_peer_url_scheme == 'https'
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
   register: etcd_cert
 
-- name: Start and enable flannel on node
+- name: Enable flannel on node
   when: change_flannel|succeeded
-  service: name=flanneld enabled=no state=started
+  service: name=flanneld enabled=yes
 
-- name: Reload flanneld
+- name: Start flannel on node
   when: change_flannel|changed or etcd_cert|changed
-  service: name=flanneld state=restarted
+  service: name=flanneld state=started
+  register: flannel_started
+  notify:
+     - Restart docker engine

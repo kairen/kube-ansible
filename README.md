@@ -21,3 +21,8 @@ $ kubectl run nginx --image=nginx --replicas=2 --port=80
 $ kubectl expose deploy nginx --port=80 --type=NodePort
 $ kubectl get svc,po -o wide
 ```
+
+Weave net addon:
+```sh
+$ kubectl apply -f https://git.io/weave-kube
+```

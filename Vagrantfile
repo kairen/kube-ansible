@@ -25,8 +25,8 @@ Vagrant.configure("2") do |config|
 
     ## Configuration of machines
     (1..machine_total).each do |machine_id|
-        name = (machine_id <= $master_count) ? $master_prefix : $node_prefix
-        id   = (machine_id <= $master_count) ? machine_id : (machine_id - $master_count)
+        name = (machine_id <= $node_count) ? $node_prefix : $master_prefix
+        id   = (machine_id <= $node_count) ? machine_id : (machine_id - $node_count)
 
         config.vm.define "#{name}#{id}" do |subconfig|
             subconfig.vm.hostname = "#{name}#{id}"
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
             $private_count += 1
 
             ## Create extra disk at nodes
-            if machine_id > $master_count
+            if machine_id <= $node_count
                 (1..$disk_count).each do |disk_id|
                     subconfig.vm.provider "virtualbox" do |vm|
                         vm.customize ["createhd",  "--filename", "#{$storage_path}n#{id}d#{disk_id}", "--size", $storage_size]
@@ -64,7 +64,8 @@ Vagrant.configure("2") do |config|
             end
         end
     end
-    ## Install of dependency packages using script
+
+    # Install of dependency packages using script
     config.vm.provision "file",
         source: "~/Desktop/Codes/ansible/kubernetes-ceph-ansible",
         destination: "~/"

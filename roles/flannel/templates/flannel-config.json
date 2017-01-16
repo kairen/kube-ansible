@@ -1,7 +1,1 @@
-{
-    "Network": "{{ flannel_network }}",
-    "SubnetLen": {{ flannel_subnet_len }},
-    "Backend": {
-        "Type": "{{ flannel_backend }}"
-     }
-}
+{ "Network": "{{ flannel_subnet }}/{{ flannel_prefix }}", "SubnetLen": {{ flannel_host_prefix }}, "Backend": { "Type": "{{ flannel_backend }}" } }
