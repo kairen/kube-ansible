@@ -1,4 +1,5 @@
 ---
+# Require the cluster is fully operation and running
 - hosts: masters
   roles:
    -  addon

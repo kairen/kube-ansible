@@ -1,5 +1,91 @@
+# All option variables
 # Leverage from https://github.com/pawankkamboj/HA-kubernetes-ansible
-# Config dir declarations
+
+# kubernetes component image version
+api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.1
+controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.1
+scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.1
+kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.1
+kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
+
+# cluster service ip range
+service_ip_range: 192.160.0.0/12
+kubernetes_service_ip: 192.160.0.1
+
+# api secure port and api loadbalancer IP
+api_secure_port: 5443
+
+# it should be haproxy host IP or network load balancer IP
+# if using onle one api server then setup IP of it
+api_lb_ip: https://172.16.35.12
+lb_ip: 172.16.35.12
+
+# all master fqdn name - it require to create ssl certificate
+# set it to only available api server
+masters_fqdn: ['kube.master1.com',]
+
+# A list of insecure registrys you might need to define
+insecure_registrys:
+
+# SSL cert handler
+# set true to create certificate,
+# it should be true during ansible first run
+sslcert_create: true
+
+# Etcd
+# set etcd variables
+domain_name: test.com # use to create wildcard ssl certificate for api and etcd
+etcd_peer_url_scheme: http # http / https
+etcd_listen_subnet: "" # if eth to differ from other machine.
+
+# Flannel network
+# (only one network plugin, if want use weave-net, you must disable)
+flannel: true # set enable true/false
+flannel_subnet: 172.20.0.0 # flannel subnet range
+flannel_prefix: 16
+flannel_key: "/atomic.io/network"
+flannel_host_prefix: 24
+flannel_backend: vxlan
+flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s8
+
+# Addons variables
+# kube-dns addon
+cluster_name: cluster.local # cluster dns name
+kube_dns: false # set enable true/false
+dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
+dns_replicas: 1
+
+# kube-proxy addon
+kube_proxy: true # set enable true/false
+
+# weave net addon
+# (only one network plugin, if flannel working, you must disable)
+weave_net: false # set enable true/false
+weaveui_port: 90
+weaveui_ip: 172.16.35.12 # it should be one of cluster node IP
+
+# cluster monitoring with heapster and influxdb addon
+cluster_monitoring: false # set enable true/false
+heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
+heapster_port: 80
+grafana_ip: 172.16.35.12 # it should be one of cluster node IP
+grafana_port: 100
+influx_ip: 172.16.35.12 # it should be one of cluster node IP
+influx_port: 8086
+
+# kube-dashboard addon (https://github.com/kubernetes/dashboard)
+kube_dash: true  # set enable true/false
+kube_dash_ip: 172.16.35.12 # it should be one of cluster node IP
+kube_dash_port: 80
+
+# setup haproxy for loadbalancing
+haproxy: true  # set false when already physical loadbalancer available
+haproxy_dir: /etc/haproxy
+haproxy_monitor_port: 9090
+admin_user: admin
+admin_password: admin123
+
+# Config dir variable declarations
 kube_config_dir: /etc/kubernetes
 manifest_config_dir: /etc/kubernetes/manifests
 cert_dir: /etc/kubernetes/pki
@@ -24,95 +110,10 @@ kubeconfig: /etc/kubernetes/kubeconfig
 kubeletconfig: /etc/kubernetes/kubeletconfig
 kubeadminconfig: /etc/kubernetes/kubeadminconfig
 
-# etcd config
-# etcd_listen_subnet: 172.16.35 # solve multi nic issue
-domain_name: test.com # use to create wildcard ssl certificate for api and etcd
-etcd_peer_url_scheme: http # http / https
+# etcd file
 etcd_ca_file: "/etc/kubernetes/pki/ca.pem"
 etcd_cert_file: "/etc/kubernetes/pki/etcd.pem"
 etcd_key_file: "/etc/kubernetes/pki/etcd-key.pem"
 etcd_peer_ca_file: "/etc/kubernetes/pki/ca.pem"
 etcd_peer_cert_file: "/etc/kubernetes/pki/etcd.pem"
 etcd_peer_key_file: "/etc/kubernetes/pki/etcd-key.pem"
-
-# image and other variable
-api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.1
-controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.1
-scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.1
-kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.1
-kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
-
-# cluster service ip range
-service_ip_range: 192.160.0.0/12
-kubernetes_service_ip: 192.160.0.1
-
-# api secure port and api loadbalancer IP
-api_secure_port: 5443
-
-# it should be haproxy host IP or network load balancer IP
-# if using onle one api server then setup IP of it
-api_lb_ip: https://172.16.35.12
-lb_ip: 172.16.35.12
-
-# all master fqdn name - it require to create ssl certificate
-# set it to only available api server
-masters_fqdn: ['kube.master1.com',]
-
-# cluster dns name and IP
-cluster_name: cluster.local
-
-# kube-proxy addon
-kube_proxy: true # set true only if cluster is fully operation and running
-
-# kube-dns add-on
-kube_dns: false # set true only if cluster is fully operation and running
-# if true then set following
-dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
-dns_replicas: 1
-
-# weave ui port and IP
-weave_net: false # set true only if cluster is fully operation and running
-# if true then set following
-weaveui_port: 90
-weaveui_ip: 172.16.35.12 # it should be one of cluster node IP
-
-#flannel network
-# only one network plugin should be enable either weave or flannel
-flannel: true
-flannel_subnet: 172.20.0.0
-flannel_prefix: 16
-flannel_key: "/atomic.io/network"
-flannel_host_prefix: 24
-flannel_backend: vxlan
-flannel_opts: "--iface=enp0s8"
-
-# A list of insecure registrys you might need to define
-insecure_registrys:
-
-# Turn to false to disable cluster monitoring with heapster and influxdb
-cluster_monitoring: false # set true only if cluster is fully operation and running
-# if true then set following
-heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
-heapster_port: 80
-grafana_ip: 172.16.35.12 # it should be one of cluster node IP
-grafana_port: 100
-influx_ip: 172.16.35.12 # it should be one of cluster node IP
-influx_port: 8086
-
-# Turn to false to disable the kube-dash addon for this cluster
-kube_dash: true  # set true only if cluster is fully operation and running
-# if true then set following
-kube_dash_ip: 172.16.35.12 # it should be one of cluster node IP
-kube_dash_port: 80
-
-# setup haproxy for loadbalancing
-haproxy: true  # set false when already physical loadbalancer available
-haproxy_dir: /etc/haproxy
-haproxy_monitor_port: 9090
-admin_user: admin
-admin_password: admin123
-
-# SSL cert handler
-# set true to create certificate,
-# it should be true during ansible first run
-sslcert_create: true

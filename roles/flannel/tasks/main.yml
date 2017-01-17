@@ -19,7 +19,6 @@
   service: name=flanneld enabled=yes
 
 - name: Start flannel on node
-  when: change_flannel|changed or etcd_cert|changed
   service: name=flanneld state=started
   register: flannel_started
   notify:

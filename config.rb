@@ -1,5 +1,5 @@
 # Machine configuration variable
-# examples : "bento/ubuntu-14.04" or "bento/centos-7.2".
+# examples : "bento/centos-7.2".
 $box_image       = "bento/centos-7.2"
 $master_count    = 1
 $node_count      = 2

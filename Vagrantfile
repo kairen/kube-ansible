@@ -6,9 +6,6 @@ if File.exist?(CONFIG)
   require CONFIG
 end
 
-## if enable openstack provider, you must install this plugin
-# require "vagrant-openstack-provider"
-
 Vagrant.configure("2") do |config|
     config.vm.box = $box_image
     machine_total = $master_count + $node_count
@@ -66,8 +63,8 @@ Vagrant.configure("2") do |config|
     end
 
     # Install of dependency packages using script
-    config.vm.provision "file",
-        source: "~/Desktop/Codes/ansible/kubernetes-ceph-ansible",
-        destination: "~/"
-    config.vm.provision :shell, path: "install-dep.sh"
+    # config.vm.provision "file",
+    #     source: "~/Desktop/Codes/ansible/kubernetes-ceph-ansible",
+    #     destination: "~/"
+    # config.vm.provision :shell, path: "./scripts/test-script.sh"
 end

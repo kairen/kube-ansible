@@ -1,7 +1,6 @@
 #!/bin/bash
 
 i=1
-
 while :; do
     echo "${i}. $(curl -s -o /dev/null \
                        -w "%{http_code}" \

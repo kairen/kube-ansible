@@ -4,9 +4,6 @@
   yum:
     name: docker-engine
     state: latest
-  notify:
-    - Enable docker engine
-    - Start docker engine
 
 - name: Add any insecure registrys to docker config
   lineinfile: dest=/etc/sysconfig/docker regexp=^INSECURE_REGISTRY= line=INSECURE_REGISTRY="{% for reg in insecure_registrys %}--insecure-registry={{ reg }} {% endfor %}"
@@ -21,6 +18,14 @@
     - ansible_os_family == "RedHat"
   notify:
     - Restart docker engine
+
+- name: Add docker service file
+  when: ansible_os_family == "RedHat"
+  copy: src=docker.service dest=/etc/systemd/system/docker.service owner=root group=root mode=0755
+  register: dockerengine
+  notify:
+    - Enable docker engine
+    - Start docker engine
 
 ########################################
 # Debian family install task (feature) #
