@@ -36,6 +36,6 @@
   command: systemctl daemon-reload
 
 - name: Enable and restart docker
-  service: name=etcd enabled=yes
+  service: name=docker enabled=yes
   notify:
      - Restart docker engine
