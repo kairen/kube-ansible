@@ -1,0 +1,22 @@
+---
+- name: Adding Docker APT GPG key
+  apt_key:
+    keyserver: hkp://ha.pool.sks-keyservers.net:80
+    id: 58118E89F3A912897C070ADBF76221572C52609D
+
+- name: Adding Docker APT repository
+  apt_repository:
+    repo: deb https://apt.dockerproject.org/repo ubuntu-xenial main
+    state: present
+    filename: 'docker'
+
+- name: Adding Kubernetes APT GPG key
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+
+- name: Adding Kubernetes APT repository
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: 'kubernetes'

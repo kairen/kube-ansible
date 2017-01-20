@@ -10,8 +10,3 @@
 
 - name: Start docker engine
   service: name=docker state=started
-
-- name: Enable docker engine 
-  when: ansible_os_family == "RedHat"
-  become: yes
-  shell: systemctl enable docker

@@ -1,30 +1,44 @@
 #!/bin/bash
 
+set -xe
+
 HOST_NAME=$(hostname)
 HOSTS="172.16.35.10 172.16.35.11"
 
 if [ ${HOST_NAME} == "master1" ]; then
 
-set -xe
-
 # Install packages
-sudo yum install -y gcc git vim openssl-devel \
-                    python python-devel python-setuptools
+OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release | grep -o "\w*" | head -n 1)
+case "${OS_NAME}" in
+    "CentOS")
+    sudo yum install -y gcc git vim openssl-devel \
+                        python python-devel python-setuptools
+
+    sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/sshpass-1.05-1.el6.x86_64.rpm
+
+    ;;
+    "Ubuntu")
+    sudo apt-get install -y python-dev python-setuptools \
+                            libssl-dev git gcc sshpass
+    ;;
+    *)
+    echo "${OS_NAME} is not support ..."
+    exit 1
+esac
 
 sudo easy_install pip
 sudo pip install  ansible
-sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/sshpass-1.05-1.el6.x86_64.rpm
 
-#
+# Create ssh key
 yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 
-for host in ${HOSTS}; do
-    # Create dir
-    sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir /root/.ssh"
-    # Write authorized_keys file
-    sudo cat /root/.ssh/id_rsa.pub | \
-         sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
-done
+# for host in ${HOSTS}; do
+#     # Create dir
+#     sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir /root/.ssh"
+#     # Write authorized_keys file
+#     sudo cat /root/.ssh/id_rsa.pub | \
+#          sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
+# done
 
 sudo cat /root/.ssh/id_rsa.pub | sudo tee /root/.ssh/authorized_keys
 

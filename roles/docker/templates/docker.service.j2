@@ -5,9 +5,14 @@ After=network.target
 
 [Service]
 Type=notify
+EnvironmentFile=-/etc/default/%p
 ExecStart=/usr/bin/dockerd \
-          $DOCKER_NETWORK_OPTIONS \
-          $INSECURE_REGISTRY
+{% if ansible_os_family == 'Debian' -%}
+-H fd:// \
+{% endif -%}
+$DOCKER_OPTS \
+$DOCKER_NETWORK_OPTIONS \
+$INSECURE_REGISTRY
 
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=infinity

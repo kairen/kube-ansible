@@ -1,0 +1,2 @@
+docker_config_dir: "/etc/sysconfig"
+docker_service_dir: "/etc/systemd/system"

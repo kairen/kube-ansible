@@ -1,8 +1,8 @@
 # Machine configuration variable
-# examples : "bento/centos-7.2".
-$box_image       = "bento/centos-7.2"
+# examples : "bento/centos-7.2" or "bento/ubuntu-16.04" or "centos/7"
+$box_image       = "bento/ubuntu-16.04"
 $master_count    = 1
-$node_count      = 2
+$node_count      = 0
 $disk_count      = 0
 $storage_path    = "./tmp/"
 $storage_size    = "30720"
@@ -25,7 +25,7 @@ $kube_workers    = "node[1:#{$node_count}]"
 
 # Ansible inventory variable
 $enable_ansible      = false
-$ansible_playboos    = "./site.yml"
+$ansible_playboos    = "./cluster-site.yml"
 $ansible_inventory   = "./inventory"
 
 # $ansible_groups   = {

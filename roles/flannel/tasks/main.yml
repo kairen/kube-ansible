@@ -1,10 +1,7 @@
 ---
 - name: Install flannel
   when: ansible_os_family == "RedHat"
-  yum:
-    name: flannel
-    state: latest
-    update_cache: yes
+  yum: name=flannel state=latest update_cache=yes
 
 - name: Prepare and write flannel configuration to etcd
   include: config.yml
@@ -14,12 +11,9 @@
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
   register: etcd_cert
 
-- name: Enable flannel on node
+- name: Enable flannel and start on node
   when: change_flannel|succeeded
-  service: name=flanneld enabled=yes
-
-- name: Start flannel on node
-  service: name=flanneld state=started
+  service: name=flanneld enabled=yes state=started
   register: flannel_started
   notify:
      - Restart docker engine

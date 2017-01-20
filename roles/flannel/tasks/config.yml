@@ -1,5 +1,4 @@
 ---
-# Prepare and write Flannel configuration to etcd.
 - name: Update flannel config
   template: src="flanneld.j2" dest={{ flannel_dir }}/flanneld
   register: change_flannel

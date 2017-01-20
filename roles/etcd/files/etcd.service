@@ -1,15 +1,25 @@
 [Unit]
-Description=Etcd Server
+Description=etcd - highly-available key value store
+Documentation=https://github.com/coreos/etcd
+Documentation=man:etcd
 After=network.target
+Wants=network-online.target
 
 [Service]
-Type=simple
-WorkingDirectory=/var/lib/etcd/
+Environment=DAEMON_ARGS=
+Environment=ETCD_NAME=%H
+Environment=ETCD_DATA_DIR=/var/lib/etcd/default
+EnvironmentFile=-/etc/default/%p
 EnvironmentFile=-/etc/etcd/etcd.conf
+Type=notify
 User=etcd
-ExecStart=/usr/bin/etcd
-Restart=on-failure
+PermissionsStartOnly=true
+#ExecStart=/bin/sh -c "GOMAXPROCS=$(nproc) /usr/bin/etcd $DAEMON_ARGS"
+ExecStart=/usr/bin/etcd $DAEMON_ARGS
+Restart=on-abnormal
+#RestartSec=10s
 LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
+Alias=etcd2.service

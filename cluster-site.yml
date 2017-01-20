@@ -25,29 +25,29 @@
     - docker
   tags:
     - docker
-
-# Install flannel
-- hosts: all
-  roles:
-   - flannel
-
-# install haproxy
-- hosts: masters
-  roles:
-    - haproxy
-  tags:
-    - haproxy
-
-# install kubernetes master
-- hosts: masters
-  roles:
-    - master
-  tags:
-    - master
-
-# install kubernetes nodes
-- hosts: node
-  roles:
-    - node
-  tags:
-    - node
+#
+# # Install flannel
+# - hosts: all
+#   roles:
+#    - flannel
+#
+# # install haproxy
+# - hosts: masters
+#   roles:
+#     - haproxy
+#   tags:
+#     - haproxy
+#
+# # install kubernetes master
+# - hosts: masters
+#   roles:
+#     - master
+#   tags:
+#     - master
+#
+# # install kubernetes nodes
+# - hosts: node
+#   roles:
+#     - node
+#   tags:
+#     - node
