@@ -1,0 +1,25 @@
+---
+- name: Override flannel service directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    flannel_service_dir: "/lib/systemd/system"
+
+- name: Override flannel config directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    flannel_config_dir: "/etc/default"
+
+- name: Override flannel drop-in directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    flannel_dropin_dir: "/etc/systemd/system"
+
+- name: Add flanneld service file
+  template: src=flanneld.service.j2 dest={{ flannel_service_dir }}/flanneld.service
+  register: flanneld_service
+
+- name: Create Docker systemd drop-in directory
+  file: path={{ flannel_dropin_dir }}/docker.service.d state=directory
+
+- name: Add docker drop-in with dependency on flannel
+  copy: src=flannel.conf dest="{{ flannel_dropin_dir }}/docker.service.d/flannel.conf"

@@ -1,6 +1,6 @@
 ---
 - name: Update flannel config
-  template: src="flanneld.j2" dest={{ flannel_dir }}/flanneld
+  template: src="flanneld.j2" dest={{ flannel_config_dir }}/flanneld
   register: change_flannel
 
 - name: Set facts about etcdctl command

@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=notify
-EnvironmentFile=-/etc/default/%p
+EnvironmentFile=-{{ docker_config_dir }}/docker
 ExecStart=/usr/bin/dockerd \
 {% if ansible_os_family == 'Debian' -%}
 -H fd:// \

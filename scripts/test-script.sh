@@ -18,6 +18,8 @@ case "${OS_NAME}" in
 
     ;;
     "Ubuntu")
+    sudo sed -i 's/us.archive.ubuntu.com/tw.archive.ubuntu.com/g' /etc/apt/sources.list
+    sudo apt-get update
     sudo apt-get install -y python-dev python-setuptools \
                             libssl-dev git gcc sshpass
     ;;
@@ -41,7 +43,6 @@ yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 # done
 
 sudo cat /root/.ssh/id_rsa.pub | sudo tee /root/.ssh/authorized_keys
-
 sudo mv /home/vagrant/kubernetes-ceph-ansible /root/
 
 else

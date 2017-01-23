@@ -35,18 +35,20 @@ sslcert_create: true
 # Etcd
 # set etcd variables
 domain_name: test.com # use to create wildcard ssl certificate for api and etcd
+etcd_version: 2.2.3
 etcd_peer_url_scheme: http # http / https
 etcd_listen_subnet: "" # if eth to differ from other machine.
 
 # Flannel network
 # (only one network plugin, if want use weave-net, you must disable)
 flannel: true # set enable true/false
+flannel_version: 0.5.5 # flannel_version
 flannel_subnet: 172.20.0.0 # flannel subnet range
 flannel_prefix: 16
 flannel_key: "/atomic.io/network"
 flannel_host_prefix: 24
 flannel_backend: vxlan
-flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s8
+flannel_opts: "--iface=enp0s8" # resolve vargrant machine bind problem, example: --iface=enp0s8
 
 # Addons variables
 # kube-dns addon
@@ -86,13 +88,13 @@ admin_user: admin
 admin_password: admin123
 
 # Config dir variable declarations
+bin_dir: "/usr/bin"
 kube_config_dir: /etc/kubernetes
 manifest_config_dir: /etc/kubernetes/manifests
 cert_dir: /etc/kubernetes/pki
 master_cert_dir: /opt/kubernetes/pki
 kube_addon_dir: /etc/kubernetes/addon
 weavedir: /etc/cni/net.d
-flannel_dir: /etc/sysconfig
 
 # all certifactes for cluster
 account_key: /etc/kubernetes/pki/apiserver-key.pem

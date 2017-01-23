@@ -19,24 +19,26 @@
   tags:
     - etcd
 
+# Install flannel
+- hosts: all
+  roles:
+   - flannel
+  tags:
+    - flannel
+
 # Install docker
 - hosts: all
   roles:
     - docker
   tags:
     - docker
-#
-# # Install flannel
-# - hosts: all
-#   roles:
-#    - flannel
-#
-# # install haproxy
-# - hosts: masters
-#   roles:
-#     - haproxy
-#   tags:
-#     - haproxy
+
+# install haproxy
+- hosts: masters
+  roles:
+    - haproxy
+  tags:
+    - haproxy
 #
 # # install kubernetes master
 # - hosts: masters

@@ -32,10 +32,10 @@
   copy: src=etcd.service dest={{ etcd_service_dir }}/etcd.service owner=root group=root mode=0755
   register: etcdengine
 
-- name: Reload systemd daemon
+- name: Reload etcd systemd daemon
   sudo: yes
   command: systemctl daemon-reload
 
 - name: Enable and restart etcd
-  when: etc_config|succeeded
+  when: etcdengine|succeeded
   service: name=etcd enabled=yes state=restarted

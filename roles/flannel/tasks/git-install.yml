@@ -1,0 +1,27 @@
+---
+- name: Download flannel tar file
+  get_url:
+    url: "{{ flannel_download_url }}"
+    dest: "/tmp"
+    validate_certs: False
+  register: flannel_download
+
+- name: Extract flannel tar file
+  when: flannel_download|succeeded
+  unarchive:
+    src: "/tmp/flannel-{{ flannel_version }}-linux-amd64.tar.gz"
+    dest: "{{ flannel_releases_dir }}"
+    copy: no
+
+- name: Create flannel symlinks
+  file:
+    src: "{{ flannel_releases_dir }}/flannel-{{ flannel_version }}/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - flanneld
+    - mk-docker-opts.sh
+
+- name: Setup flannel systemd service
+  include: systemd.yml

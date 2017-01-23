@@ -1,17 +1,17 @@
 ---
-- name: create ssl cert dir
+- name: Create ssl cert dir
   file: path={{ master_cert_dir }} state=directory
   register: master_ssl_dir
- 
-- name: copy openssl conf file to create certificate
+
+- name: Copy openssl conf file to create certificate
   template: src="openssl.conf.j2" dest={{ master_cert_dir }}/openssl.conf
   register: ssl_config
 
-- name: copy openssl conf file to create certificate
+- name: Copy openssl conf file to create certificate
   template: src="openssl-etcd.conf.j2" dest={{ master_cert_dir }}/openssl-etcd.conf
   register: ssl_config
 
-- name: create kubenetes certificates
+- name: Create kubenetes certificates
   when: sslcert_create
   register: create_cert
   command: "{{ item }}"
@@ -22,10 +22,10 @@
     - "openssl req -new -key {{ master_cert_dir }}/admin-key.pem -out {{ master_cert_dir }}/admin.csr -subj '/CN=kube-admin'"
     - "openssl x509 -req -in {{ master_cert_dir }}/admin.csr -CA {{ master_cert_dir }}/ca.pem -CAkey {{ master_cert_dir }}/ca-key.pem -CAcreateserial -out {{ master_cert_dir }}/admin.pem -days 1000"
     - "openssl genrsa -out {{ master_cert_dir }}/apiserver-key.pem 2048"
-    - "openssl req -new -key {{ master_cert_dir }}/apiserver-key.pem -out {{ master_cert_dir }}/apiserver.csr -subj '/CN=kube-apiserver' -config {{ master_cert_dir }}/openssl.conf" 
+    - "openssl req -new -key {{ master_cert_dir }}/apiserver-key.pem -out {{ master_cert_dir }}/apiserver.csr -subj '/CN=kube-apiserver' -config {{ master_cert_dir }}/openssl.conf"
     - "openssl x509 -req -in {{ master_cert_dir }}/apiserver.csr -CA {{ master_cert_dir }}/ca.pem -CAkey {{ master_cert_dir }}/ca-key.pem -CAcreateserial -out {{ master_cert_dir }}/apiserver.pem -days 1000 -extensions v3_req -extfile {{ master_cert_dir }}/openssl.conf"
 
-- name: create etcd certificate
+- name: Create etcd certificate
   when: etcd_peer_url_scheme == 'https'
   register: etcd_cert
   command: "{{ item }}"
@@ -33,4 +33,3 @@
     - "openssl genrsa -out {{ master_cert_dir }}/etcd-key.pem 2048"
     - "openssl req -new -key {{ master_cert_dir }}/etcd-key.pem -out {{ master_cert_dir }}/etcd.csr -subj '/CN=Etcd-server' -config {{ master_cert_dir }}/openssl-etcd.conf"
     - "openssl x509 -req -in {{ master_cert_dir }}/etcd.csr -CA {{ master_cert_dir }}/ca.pem -CAkey {{ master_cert_dir }}/ca-key.pem -CAcreateserial -out {{ master_cert_dir }}/etcd.pem -days 1000 -extensions v3_req -extfile {{ master_cert_dir }}/openssl-etcd.conf"
-
