@@ -1,9 +1,6 @@
 #!/bin/bash
 
-set -xe
-
 HOST_NAME=$(hostname)
-HOSTS="172.16.35.10 172.16.35.11"
 
 if [ ${HOST_NAME} == "master1" ]; then
 
@@ -34,16 +31,29 @@ sudo pip install  ansible
 # Create ssh key
 yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 
+HOSTS="172.16.35.10 172.16.35.11 172.16.35.12"
 for host in ${HOSTS}; do
     # Create dir
-    sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir /root/.ssh"
+    sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir -p /root/.ssh"
     # Write authorized_keys file
     sudo cat /root/.ssh/id_rsa.pub | \
          sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
 done
 
-sudo cat /root/.ssh/id_rsa.pub | sudo tee /root/.ssh/authorized_keys
+# Run ansible-playbook
 sudo mv /home/vagrant/kubernetes-ceph-ansible /root/
+
+cd /root/kubernetes-ceph-ansible
+sudo ansible-playbook -i inventory cluster-site.yml
+
+WAIT_MES="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
+echo -n "Wait for API server start ...."
+while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
+WAIT_MES="No resources found."
+while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
+
+echo "Deploying addons ..."
+sudo ansible-playbook -i inventory addons-site.yml
 
 else
 

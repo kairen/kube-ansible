@@ -16,11 +16,16 @@ TODO:
 ## Quick Start
 Following the below steps to create Kubernetes setup on `CentOS 7.x` and `Ubuntu Server 16.x` .
 
+The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
+```sh
+$ ./setup-vagrant.sh
+```
+
 ### Requirement
 * Deploy node need install Ansible.
 * All master/node should have password-less access from Deploy node.
 
-### Setup
+### VM and BareMetal Setup
 Add the system information gathered above into a file called inventory.
 
 For example(kubernetes):
@@ -42,12 +47,12 @@ For example(kubernetes):
 Set the variables in `group_vars/all.yml` to reflect you need options.
 > P.S. if using vagrant machine, you must modify `roles/node/defaults/main.yml` and `roles/etcd/defaults/main.yaml` bind interface.
 
-Finally, running the playbook to deploy cluster:
+Finally, running the `cluster-site.yml` to deploy cluster:
 ```sh
 $ ansible-playbook -i inventory cluster-site.yml
 ```
 
-(Option) Running the `addons-site.yml` to deploy addon:
+(Option)Running the `addons-site.yml` to deploy addon:
 ```sh
 $ ansible-playbook -i inventory addons-site.yml
 ```
