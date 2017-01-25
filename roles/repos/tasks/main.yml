@@ -1,6 +1,0 @@
----
-- when: ansible_os_family == "RedHat"
-  include: yum-repos.yml
-
-- when: ansible_os_family == "Debian"
-  include: ubuntu-repos.yml

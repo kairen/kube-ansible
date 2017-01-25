@@ -1,0 +1,16 @@
+---
+- when: ansible_os_family == "RedHat"
+  include: yum-repos.yml
+
+- when: ansible_os_family == "Debian"
+  include: ubuntu-repos.yml
+
+- name: Override config file directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    config_dir: "/etc/default"
+
+- name: Override service file directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    service_dir: "/lib/systemd/system"

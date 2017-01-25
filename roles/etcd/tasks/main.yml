@@ -23,13 +23,8 @@
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
   register: etcd_cert
 
-- name: Override etcd config file directory for Debian
-  set_fact:
-    etcd_service_dir: "/lib/systemd/system"
-  when: ansible_os_family == "Debian"
-
 - name: Add etcd service file
-  copy: src=etcd.service dest={{ etcd_service_dir }}/etcd.service owner=root group=root mode=0755
+  copy: src=etcd.service dest={{ service_dir }}/etcd.service owner=root group=root mode=0755
   register: etcdengine
 
 - name: Reload etcd systemd daemon

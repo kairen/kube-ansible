@@ -1,8 +1,6 @@
 etcd_client_port: 2379
 flannel_releases_dir: "/opt"
-flannel_config_dir: "/etc/sysconfig"
-flannel_service_dir: "/etc/systemd/system"
-flannel_dropin_dir: "/etc/systemd/system"
+flannel_dropin_dir: "/usr/lib/systemd/system"
 
 #The default url to download the flannel tar from
 flannel_download_url_base: "https://github.com/coreos/flannel/releases/download/v{{ flannel_version }}"

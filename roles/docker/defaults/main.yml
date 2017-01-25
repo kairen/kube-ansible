@@ -1,2 +1,2 @@
-docker_config_dir: "/etc/sysconfig"
-docker_service_dir: "/etc/systemd/system"
+docker_version: 1.12.6
+docker_service_dir: "/usr/lib/systemd/system"

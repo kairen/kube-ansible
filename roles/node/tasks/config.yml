@@ -1,6 +1,6 @@
 ---
 - name: Add kubelet service file
-  copy: src=kubelet.service dest=/etc/systemd/system/kubelet.service owner=root group=root mode=0755
+  copy: src=kubelet.service dest={{ service_dir }}/kubelet.service owner=root group=root mode=0755
   register: kubelet
 
 - name: Create kubernetes manifest config directory
@@ -50,7 +50,7 @@
   register: openssl_config
 
 - name: Create certificate for node
-#  when: openssl_config|changed
+  # when: openssl_config|changed
   register: create_ssl_cert
   command: "{{ item }}"
   with_items:

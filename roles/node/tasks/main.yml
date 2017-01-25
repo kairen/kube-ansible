@@ -1,7 +1,18 @@
 ---
-- name: Install Kubernetes Node packages
+- name: Install Kubernetes Node packages (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
   yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    -  kubelet
+    -  kubernetes-cni
+  register: nodepackage
+
+- name: Install Kubernetes packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt:
     name: "{{ item }}"
     state: latest
     update_cache: yes
@@ -13,10 +24,10 @@
 - name: Create and copy node config file
   include: config.yml
 
-- name: Start and enable kubelet on node
-  service: name=kubelet enabled=no state=started
-  register: kubelet_start_node
+- name: Reload docker systemd daemon
+  sudo: yes
+  command: systemctl daemon-reload
 
-- name: Reload kubelet
-  when: create_ssl_cert|changed or kubelet|changed or kubeletconfig|changed
-  service: name=kubelet state=restarted
+- name: Enable and restart kubelet on node
+  service: name=kubelet enabled=yes state=restarted
+  register: kubelet_start_node

@@ -34,13 +34,13 @@ sudo pip install  ansible
 # Create ssh key
 yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 
-# for host in ${HOSTS}; do
-#     # Create dir
-#     sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir /root/.ssh"
-#     # Write authorized_keys file
-#     sudo cat /root/.ssh/id_rsa.pub | \
-#          sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
-# done
+for host in ${HOSTS}; do
+    # Create dir
+    sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir /root/.ssh"
+    # Write authorized_keys file
+    sudo cat /root/.ssh/id_rsa.pub | \
+         sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
+done
 
 sudo cat /root/.ssh/id_rsa.pub | sudo tee /root/.ssh/authorized_keys
 sudo mv /home/vagrant/kubernetes-ceph-ansible /root/

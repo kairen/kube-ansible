@@ -1,7 +1,19 @@
 ---
-- name: Install Kubernetes packages
+- name: Install Kubernetes packages (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
   yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    -  kubectl
+    -  kubelet
+    -  kubernetes-cni
+  register: masterpackage
+
+- name: Install Kubernetes packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt:
     name: "{{ item }}"
     state: latest
     update_cache: yes
@@ -14,10 +26,10 @@
 - name: Create and copy master config file
   include: config.yml
 
-- name: Start and enable kubelet
-  service: name=kubelet enabled=no state=started
-  register: kubelet_start
+- name: Reload docker systemd daemon
+  sudo: yes
+  command: systemctl daemon-reload
 
-- name: Reload kubelet
-  when: openssl_cert|changed or kubelet_service|changed or kubelet_conf|changed
-  service: name=kubelet state=restarted
+- name: Enable and restart kubelet
+  service: name=kubelet enabled=yes state=restarted
+  register: kubelet_start

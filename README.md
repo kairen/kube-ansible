@@ -8,13 +8,13 @@ $ vagrant plugin install vagrant-libvirt
 
 TODO:
 - [x] Vagrant scripts.
-- [x] Kubernetes cluster setup(v1.4.0+).
+- [x] Kubernetes cluster setup(v1.4.6+).
 - [ ] Ceph cluster setup.
 - [ ] Kubernetes Ceph RBD/FS volume.
-- [ ] Support vagrant-openStack.
+- [ ] Support vagrant-openstack.
 
 ## Quick Start
-Following the below steps to create Kubernetes setup on CentOS 7.x.
+Following the below steps to create Kubernetes setup on `CentOS 7.x` and `Ubuntu Server 16.x` .
 
 ### Requirement
 * Deploy node need install Ansible.

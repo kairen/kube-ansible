@@ -1,9 +1,9 @@
 ---
 - hosts: all
   roles:
-    - repos
+    - commons
   tags:
-    - repos
+    - commons
 
 # install ssl cert
 - hosts: sslhost
@@ -39,17 +39,17 @@
     - haproxy
   tags:
     - haproxy
-#
-# # install kubernetes master
-# - hosts: masters
-#   roles:
-#     - master
-#   tags:
-#     - master
-#
-# # install kubernetes nodes
-# - hosts: node
-#   roles:
-#     - node
-#   tags:
-#     - node
+
+# install kubernetes master
+- hosts: masters
+  roles:
+    - master
+  tags:
+    - master
+
+# install kubernetes nodes
+- hosts: node
+  roles:
+    - node
+  tags:
+    - node

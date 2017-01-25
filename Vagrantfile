@@ -63,8 +63,8 @@ Vagrant.configure("2") do |config|
     end
 
     # Install of dependency packages using script
-    config.vm.provision "file",
-        source: "~/Desktop/Codes/ansible/kubernetes-ceph-ansible",
-        destination: "~/"
-    config.vm.provision :shell, path: "./scripts/test-script.sh"
+    # config.vm.provision "file",
+    #     source: "../kubernetes-ceph-ansible",
+    #     destination: "~/"
+    # config.vm.provision :shell, path: "./scripts/initial.sh"
 end

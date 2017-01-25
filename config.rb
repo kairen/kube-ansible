@@ -1,8 +1,8 @@
 # Machine configuration variable
-# examples : "bento/centos-7.2" or "bento/ubuntu-16.04" or "centos/7"
+# examples : "bento/centos-7.2" or "bento/ubuntu-16.04"
 $box_image       = "bento/ubuntu-16.04"
 $master_count    = 1
-$node_count      = 0
+$node_count      = 2
 $disk_count      = 0
 $storage_path    = "./tmp/"
 $storage_size    = "30720"

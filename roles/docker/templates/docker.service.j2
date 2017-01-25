@@ -5,14 +5,17 @@ After=network.target
 
 [Service]
 Type=notify
-EnvironmentFile=-{{ docker_config_dir }}/docker
-ExecStart=/usr/bin/dockerd \
-{% if ansible_os_family == 'Debian' -%}
--H fd:// \
-{% endif -%}
-$DOCKER_OPTS \
-$DOCKER_NETWORK_OPTIONS \
-$INSECURE_REGISTRY
+EnvironmentFile=-{{ config_dir }}/docker
+EnvironmentFile=-{{ config_dir }}/docker-storage
+EnvironmentFile=-{{ config_dir }}/docker-network
+ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
+                        $OPTIONS \
+                        $DOCKER_STORAGE_OPTIONS \
+                        $DOCKER_OPTS \
+                        $DOCKER_NETWORK_OPTIONS \
+                        $ADD_REGISTRY \
+                        $BLOCK_REGISTRY \
+                        $INSECURE_REGISTRY
 
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=infinity
@@ -20,9 +23,7 @@ LimitNPROC=infinity
 LimitCORE=infinity
 #TasksMax=infinity
 TimeoutStartSec=0
-# set delegate yes so that systemd does not reset the cgroups of docker containers
 Delegate=yes
-# kill only the docker process, not all processes in the cgroup
 KillMode=process
 
 [Install]
