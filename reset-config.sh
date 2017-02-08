@@ -12,6 +12,7 @@ perl -i -pe "s/${SUBNET}.[0-9]*/${SUBNET}.12/g" ${GROUP_VARS_PATH}
 perl -i -pe "s/${BIND_ETH}/{{ ansible_default_ipv4.interface }}/g" ${ETCD_DEFAULT_PATH}
 perl -i -pe "s/${BIND_ETH}/{{ ansible_default_ipv4.interface }}/g" ${NODE_DEFAULT_PATH}
 perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${SUBNET}.10 ${SUBNET}.11 ${SUBNET}.12\"/g" ${INITIAL_SCRIPT_PATH}
+perl -i -pe "s/${MASTER_PREFIX}[0-9]*/master1/g" ${INITIAL_SCRIPT_PATH}
 
 cat <<EOF > inventory
 [etcd]

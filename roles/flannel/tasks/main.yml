@@ -14,7 +14,7 @@
   sudo: yes
   command: systemctl daemon-reload
 
-- name: Enable flannel and restart on node
+- name: Enable and restart flannel
   when: change_flannel|succeeded
   service: name=flanneld enabled=yes state=restarted
   register: flannel_started

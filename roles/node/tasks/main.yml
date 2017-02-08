@@ -28,6 +28,6 @@
   sudo: yes
   command: systemctl daemon-reload
 
-- name: Enable and restart kubelet on node
+- name: Enable and restart kubelet
   service: name=kubelet enabled=yes state=restarted
   register: kubelet_start_node

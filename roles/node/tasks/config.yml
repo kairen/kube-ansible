@@ -50,7 +50,6 @@
   register: openssl_config
 
 - name: Create certificate for node
-  # when: openssl_config|changed
   register: create_ssl_cert
   command: "{{ item }}"
   with_items:

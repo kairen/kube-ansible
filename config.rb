@@ -1,6 +1,8 @@
 # Machine configuration variable
-# examples : "bento/centos-7.2" or "bento/ubuntu-16.04"
+# examples : "bento/centos-7.2", "bento/ubuntu-16.04", "coreos-{alpha/beta/stable}"
 $box_image       = "bento/ubuntu-16.04"
+$coreos_version  = "current"
+
 $master_count    = 1
 $node_count      = 2
 $disk_count      = 0
@@ -15,25 +17,10 @@ $bridge_eth      = "eno1"
 $private_subnet  = "172.16.35"
 $private_count   = 10
 
-# Hostname prefix
+# Name prefix
+$prefix_name   = "kube"
 $master_prefix = "master"
 $node_prefix   = "node"
-
-# Ansible Declarations:
-$kube_masters    = "master[1:#{$master_count}]"
-$kube_workers    = "node[1:#{$node_count}]"
-
-# Ansible inventory variable
-$enable_ansible      = false
-$ansible_playboos    = "./cluster-site.yml"
-$ansible_inventory   = "./inventory"
-
-# $ansible_groups   = {
-#     "kube-masters" => [$kube_masters],
-#     "kube-workers" => [$kube_workers],
-#     "kube-control" => [$kube_masters],
-#     "kube-cluster:children" => ["kube-masters", "kube-workers"],
-# }
 
 # Virtualbox leave / Openstack change to OS default username:
 # $ssh_user       = "vagrant"

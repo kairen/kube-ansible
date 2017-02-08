@@ -5,7 +5,6 @@ KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest"
 
 # Add your own!
-#KUBELET_ARGS="--kubeconfig={{ kubeadminconfig }} --require-kubeconfig=true --pod-manifest-path={{ manifest_config_dir }} --register-schedulable=false"
 KUBELET_ARGS="--kubeconfig={{ kubeadminconfig }} --require-kubeconfig=true --pod-manifest-path={{ manifest_config_dir }}"
 
 # set log
@@ -20,4 +19,4 @@ KUBELET_NETWORK_ARGS="--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-b
 {% endif -%}
 
 # kube dns
-KUBELET_DNS_ARGS="--cluster-dns={{ dns_ip }} --cluster-domain={{ cluster_name }}"
+KUBELET_DNS_ARGS="--cluster-dns={{ dns_ip }} --cluster-domain={{ dns_name }}"

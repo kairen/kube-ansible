@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 HOST_NAME=$(hostname)
 
 if [ ${HOST_NAME} == "master1" ]; then
@@ -47,7 +48,7 @@ cd /root/kubernetes-ceph-ansible
 sudo ansible-playbook -i inventory cluster-site.yml
 
 WAIT_MES="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
-echo -n "Wait for API server start ...."
+echo -n -e "\nWait for API server start ....\n"
 while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
 WAIT_MES="No resources found."
 while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
@@ -56,7 +57,5 @@ echo "Deploying addons ..."
 sudo ansible-playbook -i inventory addons-site.yml
 
 else
-
 sudo rm -r /home/vagrant/kubernetes-ceph-ansible
-
 fi

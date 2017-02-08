@@ -69,7 +69,7 @@ spec:
           initialDelaySeconds: 60
           timeoutSeconds: 5
         args:
-        - --domain={{ cluster_name }}.
+        - --domain={{ dns_name }}.
         - --dns-port=10053
         ports:
         - containerPort: 10053
@@ -110,9 +110,9 @@ spec:
             cpu: 10m
             memory: 50Mi
         args:
-        - --cmd=nslookup kubernetes.default.svc.{{ cluster_name }} 127.0.0.1 >/dev/null
+        - --cmd=nslookup kubernetes.default.svc.{{ dns_name }} 127.0.0.1 >/dev/null
         - --url=/healthz-dnsmasq
-        - --cmd=nslookup kubernetes.default.svc.{{ cluster_name }} 127.0.0.1:10053 >/dev/null
+        - --cmd=nslookup kubernetes.default.svc.{{ dns_name }} 127.0.0.1:10053 >/dev/null
         - --url=/healthz-kubedns
         - --port=8080
         - --quiet

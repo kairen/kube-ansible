@@ -17,6 +17,7 @@ perl -i -pe "s/${SUBNET}.[0-9]*/${SUBNET}.$((${NET_COUNT}+${NODE_COUNT}))/g" ${G
 perl -i -pe "s/{{ ansible_default_ipv4.interface }}/${BIND_ETH}/g" ${ETCD_DEFAULT_PATH}
 perl -i -pe "s/{{ ansible_default_ipv4.interface }}/${BIND_ETH}/g" ${NODE_DEFAULT_PATH}
 perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${HOSTS}\"/g" ${INITIAL_SCRIPT_PATH}
+perl -i -pe "s/${MASTER_PREFIX}[0-9]*/${MASTER_PREFIX}${MASTER_COUNT}/g" ${INITIAL_SCRIPT_PATH}
 
 # Create inventory
 set_inventory

@@ -15,7 +15,7 @@ ExecStart=/usr/bin/kubelet \
 	$KUBE_ALLOW_PRIV \
 	$KUBELET_NETWORK_ARGS \
 	$KUBELET_DNS_ARGS
-Restart=on-failure
+Restart=on-failure # The value of the Restart parameter can set to `always`
 
 [Install]
 WantedBy=multi-user.target

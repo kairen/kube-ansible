@@ -1,12 +1,14 @@
 # All option variables
 # Leverage from https://github.com/pawankkamboj/HA-kubernetes-ansible
 
-# kubernetes component image version
-api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.1
-controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.1
-scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.1
-kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.1
+# all component image version,
+# other version from https://console.cloud.google.com/kubernetes/images/tags/kube-apiserver-amd64?location=GLOBAL&project=google-containers
+api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.2
+controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.2
+scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.2
+kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.2
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
+haproxy_image: haproxy:1.7
 
 # cluster service ip range
 service_ip_range: 192.160.0.0/12
@@ -35,10 +37,10 @@ sslcert_create: true
 
 # Etcd
 # set etcd variables
-domain_name: test.com # use to create wildcard ssl certificate for api and etcd
+etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
 etcd_version: 2.2.3 # now, not available
 etcd_peer_url_scheme: http # http / https
-etcd_listen_subnet: "" # if eth to differ from other machine.
+etcd_listen_subnet: "" # resolve multi ethernet on baremetal
 
 # Flannel network
 # (only one network plugin, if want use weave-net, you must disable)
@@ -53,8 +55,8 @@ flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s
 
 # Addons variables
 # kube-dns addon
-cluster_name: cluster.local # cluster dns name
-kube_dns: false # set enable true/false
+dns_name: cluster.local # cluster dns name
+kube_dns: true # set enable true/false
 dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
 dns_replicas: 1
 
