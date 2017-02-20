@@ -14,7 +14,7 @@ ruby get.rb && rm get.rb
 function set_inventory() {
 local nodes="${SUBNET}.[${NET_COUNT}:$((${NET_COUNT}+${NODE_COUNT}-1))]"
 local masters="${SUBNET}.[$((${NET_COUNT}+${NODE_COUNT})):$((${NET_COUNT}+${TOTAL}-1))]"
-local master="${SUBNET}.$((${NET_COUNT}+${NODE_COUNT}))"
+local master="${SUBNET}.$((${NET_COUNT}+${NODE_COUNT}+${MASTER_COUNT}-1))"
 
 cat <<EOF > inventory
 [etcd]
@@ -26,7 +26,7 @@ ${masters}
 [sslhost]
 ${master}
 
-[node]
+[nodes]
 ${nodes}
 EOF
 }

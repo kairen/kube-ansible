@@ -10,7 +10,6 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.box = $box_image
-
   cores_prefixs = $box_image.split("-")
   if cores_prefixs[0] == 'coreos'
     config.vm.box_url = "https://storage.googleapis.com/%s.release.core-os.net/amd64-usr/%s/coreos_production_vagrant.json" % [cores_prefixs[1], $coreos_version]

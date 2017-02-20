@@ -2,6 +2,6 @@ etcd_client_port: 2379
 flannel_releases_dir: "/opt"
 flannel_dropin_dir: "/usr/lib/systemd/system"
 
-#The default url to download the flannel tar from
+# The default url to download the flannel tar from
 flannel_download_url_base: "https://github.com/coreos/flannel/releases/download/v{{ flannel_version }}"
 flannel_download_url: "{{ flannel_download_url_base }}/flannel-{{ flannel_version }}-linux-amd64.tar.gz"

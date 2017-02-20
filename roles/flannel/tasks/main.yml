@@ -2,6 +2,9 @@
 - name: Install flannel
   include: git-install.yml
 
+- name: Setup flannel systemd service
+  include: systemd.yml
+
 - name: Prepare and write flannel configuration to etcd
   include: config.yml
 

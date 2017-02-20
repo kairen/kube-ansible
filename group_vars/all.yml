@@ -38,20 +38,20 @@ sslcert_create: true
 # Etcd
 # set etcd variables
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
-etcd_version: 2.2.3 # now, not available
+etcd_version: 3.1.1 # etcd version
 etcd_peer_url_scheme: http # http / https
 etcd_listen_subnet: "" # resolve multi ethernet on baremetal
 
 # Flannel network
 # (only one network plugin, if want use weave-net, you must disable)
 flannel: true # set enable true/false
-flannel_version: 0.5.5 # flannel_version
+flannel_version: 0.5.5 # flannel version
 flannel_key: "/atomic.io/network"
 flannel_subnet: 172.20.0.0 # flannel subnet range
 flannel_prefix: 16
 flannel_host_prefix: 24
 flannel_backend: vxlan
-flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s8
+flannel_opts: --iface=enp0s8 # resolve vargrant machine bind problem, example: --iface=enp0s8
 
 # Addons variables
 # kube-dns addon

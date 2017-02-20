@@ -48,7 +48,7 @@
     - master
 
 # install kubernetes nodes
-- hosts: node
+- hosts: nodes
   roles:
     - node
   tags:

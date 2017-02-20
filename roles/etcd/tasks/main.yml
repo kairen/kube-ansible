@@ -1,36 +1,25 @@
 ---
-- name: Install etcd (RHEL/CentOS)
-  when: ansible_os_family == "RedHat"
-  yum: name=etcd state=latest
+# - name: Install etcd (RHEL/CentOS)
+#   when: ansible_os_family == "RedHat"
+#   yum: name=etcd state=latest
+#
+# - name: Install etcd (Debian/Ubuntu)
+#   when: ansible_os_family == "Debian"
+#   apt: name=etcd state=latest
 
-- name: Install etcd (Debian/Ubuntu)
-  when: ansible_os_family == "Debian"
-  apt: name=etcd state=latest
+- name: Install etcd
+  include: git-install.yml
 
-- name: Create etcd config directory
-  file: path={{ etcd_conf_dir }} state=directory
+- name: Setup flannel systemd service
+  include: systemd.yml
 
-- name: Create etcd cert directory
-  file: path={{ kube_config_dir }} state=directory
-  when: etcd_peer_url_scheme == 'https'
-
-- name: Write etcd config file
-  template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
-  register: etc_config
-
-- name: Copy etcd certificate from ansible host
-  when: etcd_peer_url_scheme == 'https'
-  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
-  register: etcd_cert
-
-- name: Add etcd service file
-  copy: src=etcd.service dest={{ service_dir }}/etcd.service owner=root group=root mode=0755
-  register: etcdengine
+- name: Prepare and write etcd configuration
+  include: config.yml
 
 - name: Reload etcd systemd daemon
   sudo: yes
   command: systemctl daemon-reload
 
 - name: Enable and restart etcd
-  when: etcdengine|succeeded
   service: name=etcd enabled=yes state=restarted
+  register: etcd_started

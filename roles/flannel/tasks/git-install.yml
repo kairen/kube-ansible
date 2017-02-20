@@ -22,6 +22,3 @@
   with_items:
     - flanneld
     - mk-docker-opts.sh
-
-- name: Setup flannel systemd service
-  include: systemd.yml

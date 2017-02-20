@@ -5,10 +5,13 @@ etcd_peers_group: etcd
 etcd_conf_dir: /etc/etcd
 etcd_script_dir: /usr/libexec/etcd
 etcd_data_dir: /var/lib/etcd
+etcd_releases_dir: "/opt"
+
 etcd_initial_cluster_state: new
 etcd_initial_cluster_token: etcd-k8s-cluster
-etcd_interface: "{{ ansible_default_ipv4.interface }}"
-etcd_machine_address: "{{ hostvars[inventory_hostname]['ansible_' + etcd_interface].ipv4.address }}"
+etcd_interface: "enp0s8"
+etcd_machine_address: "{% if etcd_interface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_interface].ipv4.address }}
+{%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
 etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
 etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_port }}"
 etcd_advertise_client_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }}"

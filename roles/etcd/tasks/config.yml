@@ -1,0 +1,20 @@
+---
+- name: Create etcd config directory
+  file: path={{ etcd_conf_dir }} state=directory
+
+- name: Create etcd cert directory
+  file: path={{ kube_config_dir }} state=directory
+  when: etcd_peer_url_scheme == 'https'
+
+- name: Write etcd config file
+  template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
+  register: etc_config
+
+- name: Copy etcd certificate from ansible host
+  when: etcd_peer_url_scheme == 'https'
+  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
+  register: etcd_cert
+
+- name: Add etcd service file
+  copy: src=etcd.service dest={{ service_dir }}/etcd.service owner=root group=root mode=0755
+  register: etcd_service

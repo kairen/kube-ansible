@@ -1,1 +1,24 @@
 ---
+- name: Download etcd tar file
+  get_url:
+    url: "{{ etcd_download_url }}"
+    dest: "/tmp"
+    validate_certs: False
+  register: etcd_download
+
+- name: Extract etcd tar file
+  when: etcd_download|succeeded
+  unarchive:
+    src: "/tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: "{{ etcd_releases_dir }}"
+    copy: no
+
+- name: Create etcd symlinks
+  file:
+    src: "{{ etcd_releases_dir }}/etcd-v{{ etcd_version }}-linux-amd64/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - etcd
+    - etcdctl

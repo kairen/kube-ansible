@@ -1,0 +1,25 @@
+---
+- name: Create system etcd group
+  group:
+    name: etcd
+    state: present
+
+- name: Create system etcd user
+  user:
+    name=etcd
+    comment="Etcd user"
+    shell=/sbin/nologin
+    state=present
+    system=yes
+    groups=etcd
+
+- name: Ensure /var/lib/etcd exists
+  file:
+    path=/var/lib/etcd
+    recurse=yes
+    state=directory
+    owner=etcd
+
+- name: Write etcd systemd unit file
+  copy: src=etcd.service dest={{ service_dir }}/etcd.service
+  register: etcd_service

@@ -1,6 +1,6 @@
 # Machine configuration variable
 # examples : "bento/centos-7.2", "bento/ubuntu-16.04", "coreos-{alpha/beta/stable}"
-$box_image       = "bento/ubuntu-16.04"
+$box_image       = "bento/centos-7.2"
 $coreos_version  = "current"
 
 $master_count    = 1
