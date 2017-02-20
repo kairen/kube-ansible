@@ -9,7 +9,7 @@
 - name: Extract flannel tar file
   when: flannel_download|succeeded
   unarchive:
-    src: "/tmp/flannel-{{ flannel_version }}-linux-amd64.tar.gz"
+    src: "/tmp/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
     dest: "{{ flannel_releases_dir }}"
     copy: no
 
