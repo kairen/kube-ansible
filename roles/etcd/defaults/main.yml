@@ -9,7 +9,7 @@ etcd_releases_dir: "/opt"
 
 etcd_initial_cluster_state: new
 etcd_initial_cluster_token: etcd-k8s-cluster
-etcd_interface: "enp0s8"
+etcd_interface: "{{ ansible_default_ipv4.interface }}"
 etcd_machine_address: "{% if etcd_interface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_interface].ipv4.address }}
 {%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
 etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_peer_port }}"

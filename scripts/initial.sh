@@ -32,7 +32,7 @@ sudo pip install  ansible
 # Create ssh key
 yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 
-HOSTS=" 172.16.35.10 172.16.35.11 172.16.35.12"
+HOSTS="172.16.35.10 172.16.35.11 172.16.35.12"
 for host in ${HOSTS}; do
     # Create dir
     sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir -p /root/.ssh"

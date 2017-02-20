@@ -51,12 +51,12 @@ flannel_subnet: 172.20.0.0 # flannel subnet range
 flannel_prefix: 16
 flannel_host_prefix: 24
 flannel_backend: vxlan
-flannel_opts: --iface=enp0s8 # resolve vargrant machine bind problem, example: --iface=enp0s8
+flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s8
 
 # Addons variables
 # kube-dns addon
-dns_name: cluster.local # cluster dns name
 kube_dns: true # set enable true/false
+dns_name: cluster.local # cluster dns name
 dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
 dns_replicas: 1
 
