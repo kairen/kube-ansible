@@ -6,16 +6,31 @@
     validate_certs: False
   register: flannel_download
 
-- name: Extract flannel tar file
-  when: flannel_download|succeeded
+- name: Create flannel release directory
+  when: flannel_version != "0.5.5"
+  file: path="{{ flannel_dir }}/flannel-{{ flannel_version }}" state=directory
+
+- name: Extract flannel tar file (0.5.5)
+  when:
+    - flannel_download|succeeded
+    - flannel_version == "0.5.5"
   unarchive:
     src: "/tmp/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
-    dest: "{{ flannel_releases_dir }}"
+    dest: "{{ flannel_dir }}"
+    copy: no
+
+- name: Extract flannel tar file (0.6.0+)
+  when:
+    - flannel_download|succeeded
+    - flannel_version != "0.5.5"
+  unarchive:
+    src: "/tmp/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
+    dest: "{{ flannel_dir }}/flannel-{{ flannel_version }}"
     copy: no
 
 - name: Create flannel symlinks
   file:
-    src: "{{ flannel_releases_dir }}/flannel-{{ flannel_version }}/{{ item }}"
+    src: "{{ flannel_dir }}/flannel-{{ flannel_version }}/{{ item }}"
     dest: "{{ bin_dir }}/{{ item }}"
     state: link
     force: yes

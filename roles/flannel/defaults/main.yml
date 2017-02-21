@@ -1,8 +1,9 @@
 etcd_client_port: 2379
-flannel_releases_dir: "/opt"
-flannel_dropin_dir: "/usr/lib/systemd/system"
 
 # The default url to download the flannel tar from
 flannel_download_url_base: "https://github.com/coreos/flannel/releases/download/v{{ flannel_version }}"
-flannel_version_uri: "{% if flannel_version|float >= 0.6 %}v{{ flannel_version }}{% else %}{{ flannel_version }}{% endif -%}"
+flannel_version_uri: "{% if flannel_version == '0.5.5' %}{{ flannel_version }}{% else %}v{{ flannel_version }}{% endif -%}"
 flannel_download_url: "{{ flannel_download_url_base }}/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
+
+flannel_dir: "/opt"
+flannel_dropin_dir: "/usr/lib/systemd/system"
