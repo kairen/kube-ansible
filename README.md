@@ -83,6 +83,3 @@ Run a simple nginx application:
 $ kubectl create -f examples/nginx/
 $ kubectl get svc,po -o wide
 ```
-
-### Known issue
-* The `etcd.conf.j2` template can't parse different eth name on physical machine。
