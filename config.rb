@@ -21,8 +21,3 @@ $private_count   = 10
 $prefix_name   = "kube"
 $master_prefix = "master"
 $node_prefix   = "node"
-
-# Virtualbox leave / Openstack change to OS default username:
-# $ssh_user       = "vagrant"
-# $ssh_keypath    = "~/.ssh/id_rsa"
-# $ssh_port       = 22

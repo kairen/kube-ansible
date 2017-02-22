@@ -41,8 +41,9 @@ for host in ${HOSTS}; do
          sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
 done
 
-# Run ansible-playbook
+# Move file to destination
 sudo mv /home/vagrant/kubernetes-ceph-ansible /root/
+sudo mv /root/kubernetes-ceph-ansible/hosts /etc/
 
 cd /root/kubernetes-ceph-ansible
 sudo ansible-playbook -i inventory cluster-site.yml
@@ -57,5 +58,6 @@ echo "Deploying addons ..."
 sudo ansible-playbook -i inventory addons-site.yml
 
 else
+sudo mv /home/vagrant/kubernetes-ceph-ansible/hosts /etc/
 sudo rm -r /home/vagrant/kubernetes-ceph-ansible
 fi

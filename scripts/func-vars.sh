@@ -31,6 +31,25 @@ ${nodes}
 EOF
 }
 
+# Set hosts file
+function set_hosts() {
+
+cat <<EOF > hosts
+127.0.0.1   localhost
+::1         localhost
+EOF
+
+for ((i=0; i<${TOTAL}; i++)) do
+    PREFIX=""
+    if [ ${i} -lt ${NODE_COUNT} ]; then
+        PREFIX="${NODE_PREFIX}$((${i}+1))"
+    else
+        PREFIX="${MASTER_PREFIX}$((${i}+1-${NODE_COUNT}))"
+    fi
+    echo "${SUBNET}.$((${NET_COUNT}+${i})) ${PREFIX}" >> hosts
+done
+}
+
 # Define variables
 BIND_ETH="enp0s8"
 GROUP_VARS_PATH="./group_vars/all.yml"
@@ -43,4 +62,5 @@ NODE_COUNT=$(get_vagrant_config "node_count")
 SUBNET=$(get_vagrant_config "private_subnet")
 NET_COUNT=$(get_vagrant_config "private_count")
 MASTER_PREFIX=$(get_vagrant_config "master_prefix")
+NODE_PREFIX=$(get_vagrant_config "node_prefix")
 TOTAL=$((MASTER_COUNT+NODE_COUNT))
