@@ -45,18 +45,16 @@ For example(kubernetes):
 ```
 
 Set the variables in `group_vars/all.yml` to reflect you need options.
-> P.S. if using vagrant machine, you must modify `roles/node/defaults/main.yml` and `roles/etcd/defaults/main.yaml` bind interface.
 
-Finally, running the `cluster-site.yml` to deploy cluster:
+When variables are already set, just execute `cluster-site.yml` to deploy cluster:
 ```sh
 $ ansible-playbook -i inventory cluster-site.yml
 ```
 
-(Option)Running the `addons-site.yml` to deploy addon:
+When cluster is fully operation and running, just execute `addons-site.yml` to create addons:
 ```sh
 $ ansible-playbook -i inventory addons-site.yml
 ```
-> P.S. Require the cluster is fully operation and running
 
 ## Verify
 If all step completed, you can run following the below command:
