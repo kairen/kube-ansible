@@ -1,8 +1,5 @@
-# All option variables
-# Leverage from https://github.com/pawankkamboj/HA-kubernetes-ansible
-
-# all component image version,
-# other version from https://console.cloud.google.com/kubernetes/images/tags/kube-apiserver-amd64?location=GLOBAL&project=google-containers
+# This value determines how kubernetes binaries, config files, and service
+# Kubernetes component images
 api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.2
 controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.2
 scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.2
@@ -10,67 +7,73 @@ kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.2
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 haproxy_image: haproxy:1.7
 
-# cluster service ip range
+# Kubernetes cluster network
+kubernetes_service_ip: 192.160.0.1
 service_ip_range: 192.160.0.0/12
 service_node_port_range: 30000-32767
-kubernetes_service_ip: 192.160.0.1
 
-# api secure port and api loadbalancer IP
+# Set if you want to access kubernetes cluster via load balancer
+api_lb_ip: https://172.16.35.12
+advertise_lb_ip: 172.16.35.12
 api_secure_port: 5443
 
-# it should be haproxy host IP or network load balancer IP
-# if using onle one api server then setup IP of it
-api_lb_ip: https://172.16.35.12
-lb_ip: 172.16.35.12
-
-# all master fqdn name - it require to create ssl certificate
-# set it to only available api server
-masters_fqdn: ['kube.master1.com',]
-
-# A list of insecure registrys you might need to define
-insecure_registrys:
-
-# SSL cert handler
-# set true to create certificate,
-# it should be true during ansible first run
+# SSL cert handler, it should be true during ansible first run
 sslcert_create: true
 
-# Etcd
-# set etcd variables
+# Etcd variable
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
-etcd_version: 3.1.1 # etcd version
+etcd_version: 3.1.1 # etcd version, support 2.1.0+
 etcd_peer_url_scheme: http # http / https
-etcd_listen_subnet: "" # resolve multi ethernet on baremetal
 
-# Flannel network
-# (only one network plugin, if want use weave-net, you must disable)
-flannel: true # set enable true/false
-flannel_version: 0.5.5 # flannel version
+# Flannel network (only one network plugin run on cluster)
+flannel: true # turn to false to disable
+flannel_version: 0.5.5 # flannel version, support 0.5.5+
 flannel_key: "/atomic.io/network"
 flannel_subnet: 172.20.0.0 # flannel subnet range
 flannel_prefix: 16
 flannel_host_prefix: 24
-flannel_backend: vxlan
-flannel_opts: "" # resolve vargrant machine bind problem, example: --iface=enp0s8
+flannel_backend: vxlan # overlay network type
+flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8"
 
-# Addons variables
+# Weave network (only one network plugin run on cluster)
+weave_net: false # turn to true to enable
+weaveui_port: 90
+weaveui_ip: 172.16.35.12 # it should be one of cluster node IP
+
+# All master fqdn name - it require to create ssl certificate
+# Set it to only available api server
+masters_fqdn: ['kube.master1.com',]
+
+# A list of insecure registrys you might need to define
+insecure_registrys:
+# - "gcr.io"
+
+# kube-dash addon (https://github.com/kubernetes/dashboard)
+kube_dash: true  # turn to false to disable
+kube_dash_ip: 172.16.35.12 # it should be one of cluster node IP
+kube_dash_port: 80
+
 # kube-dns addon
-kube_dns: true # set enable true/false
+kube_dns: true # turn to false to disable
 dns_name: cluster.local # cluster dns name
 dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
 dns_replicas: 1
 
 # kube-proxy addon
-kube_proxy: true # set enable true/false
+kube_proxy: true # turn to false to disable
+kube_proxy_mode: iptables # it should be "iptables",
+                          # but if you want to deploy ceph on kubernetes,
+                          # you must set to "userspace"
 
-# weave net addon
-# (only one network plugin, if flannel working, you must disable)
-weave_net: false # set enable true/false
-weaveui_port: 90
-weaveui_ip: 172.16.35.12 # it should be one of cluster node IP
+# Haproxy loadbalancing config
+haproxy: true  # set false when already physical loadbalancer available
+haproxy_dir: /etc/haproxy
+haproxy_monitor_port: 9090
+admin_user: admin
+admin_password: admin123
 
-# cluster monitoring with heapster and influxdb addon
-cluster_monitoring: false # set enable true/false
+# Cluster monitoring with heapster and influxdb addon
+cluster_monitoring: false # turn to true to enable
 heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
 heapster_port: 80
 grafana_ip: 172.16.35.12 # it should be one of cluster node IP
@@ -78,19 +81,7 @@ grafana_port: 100
 influx_ip: 172.16.35.12 # it should be one of cluster node IP
 influx_port: 8086
 
-# kube-dashboard addon (https://github.com/kubernetes/dashboard)
-kube_dash: true  # set enable true/false
-kube_dash_ip: 172.16.35.12 # it should be one of cluster node IP
-kube_dash_port: 80
-
-# setup haproxy for loadbalancing
-haproxy: true  # set false when already physical loadbalancer available
-haproxy_dir: /etc/haproxy
-haproxy_monitor_port: 9090
-admin_user: admin
-admin_password: admin123
-
-# Config dir variable declarations
+# Component directory path
 bin_dir: /usr/bin
 service_dir: /etc/systemd/system
 config_dir: /etc/sysconfig
@@ -101,7 +92,7 @@ master_cert_dir: /opt/kubernetes/pki
 kube_addon_dir: /etc/kubernetes/addon
 weavedir: /etc/cni/net.d
 
-# all certifactes for cluster
+# cluster certifactes file path
 account_key: /etc/kubernetes/pki/apiserver-key.pem
 ca_cert: /etc/kubernetes/pki/ca.pem
 ca_key: /etc/kubernetes/pki/ca-key.pem
@@ -112,12 +103,12 @@ admin_cert: /etc/kubernetes/pki/admin.pem
 node_cert: /etc/kubernetes/pki/node.pem
 node_key: /etc/kubernetes/pki/node-key.pem
 
-# kubeconfig file
+# Kubeconfig file path
 kubeconfig: /etc/kubernetes/kubeconfig
 kubeletconfig: /etc/kubernetes/kubeletconfig
 kubeadminconfig: /etc/kubernetes/kubeadminconfig
 
-# etcd file
+# Etcd certificate file path
 etcd_ca_file: "/etc/kubernetes/pki/ca.pem"
 etcd_cert_file: "/etc/kubernetes/pki/etcd.pem"
 etcd_key_file: "/etc/kubernetes/pki/etcd-key.pem"

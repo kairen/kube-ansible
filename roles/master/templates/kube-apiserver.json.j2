@@ -41,7 +41,7 @@
           "--tls-private-key-file={{ api_key }}",
           "--secure-port={{ api_secure_port }}",
           "--allow-privileged",
-	      "--advertise-address={{ lb_ip }}",
+	      "--advertise-address={{ advertise_lb_ip }}",
           {% if etcd_peer_url_scheme == 'https' -%}
           "--etcd-cafile={{ etcd_ca_file }}",
           "--etcd-certfile={{ etcd_cert_file }}",

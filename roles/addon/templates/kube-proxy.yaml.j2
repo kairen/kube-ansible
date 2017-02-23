@@ -34,6 +34,7 @@ spec:
         - --v=0
         - --master={{ api_lb_ip }}
         - --kubeconfig=/run/kubeadminconfig
+        - --proxy-mode={{ kube_proxy_mode }}
         image: {{ kube_proxy_image }}
         imagePullPolicy: IfNotPresent
         name: kube-proxy
