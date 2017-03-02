@@ -22,3 +22,14 @@
     baseurl: http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
     enabled: yes
     gpgcheck: no
+
+- name: Adding Ceph yum repository
+  when: ceph_cluster
+  yum_repository:
+    name: "ceph-{{ ceph_version }}"
+    description: Ceph Repository
+    file: ceph
+    baseurl: "https://download.ceph.com/rpm-{{ ceph_version }}/el7/x86_64"
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.ceph.com/keys/release.asc

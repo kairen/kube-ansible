@@ -81,6 +81,10 @@ grafana_port: 100
 influx_ip: 172.16.35.12 # it should be one of cluster node IP
 influx_port: 8086
 
+# Ceph cluster on Kubernetes
+ceph_cluster: true
+ceph_version: kraken
+
 # Component directory path
 bin_dir: /usr/bin
 service_dir: /etc/systemd/system

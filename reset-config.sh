@@ -24,6 +24,6 @@ cat <<EOF > inventory
 [sslhost]
 172.16.35.12
 
-[node]
+[nodes]
 172.16.35.[10:11]
 EOF

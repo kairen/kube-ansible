@@ -20,3 +20,6 @@ KUBELET_NETWORK_ARGS="--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-b
 
 # kube dns
 KUBELET_DNS_ARGS="--cluster-dns={{ dns_ip }} --cluster-domain={{ dns_name }}"
+
+# node label
+KUBE_NODE_LABEL="--node-labels=kubeadm.alpha.kubernetes.io/role=master"
