@@ -28,7 +28,7 @@ etcd_peer_url_scheme: http # http / https
 # Flannel network (only one network plugin run on cluster)
 flannel: true # turn to false to disable
 flannel_version: 0.5.5 # flannel version, support 0.5.5+
-flannel_key: "/atomic.io/network"
+flannel_key: /atomic.io/network
 flannel_subnet: 172.20.0.0 # flannel subnet range
 flannel_prefix: 16
 flannel_host_prefix: 24
@@ -81,10 +81,6 @@ grafana_port: 100
 influx_ip: 172.16.35.12 # it should be one of cluster node IP
 influx_port: 8086
 
-# Ceph cluster on Kubernetes
-ceph_cluster: true
-ceph_version: kraken
-
 # Component directory path
 bin_dir: /usr/bin
 service_dir: /etc/systemd/system
@@ -94,7 +90,8 @@ manifest_config_dir: /etc/kubernetes/manifests
 cert_dir: /etc/kubernetes/pki
 master_cert_dir: /opt/kubernetes/pki
 kube_addon_dir: /etc/kubernetes/addon
-weavedir: /etc/cni/net.d
+weave_dir: /etc/cni/net.d
+ceph_dir: /etc/ceph
 
 # cluster certifactes file path
 account_key: /etc/kubernetes/pki/apiserver-key.pem
@@ -113,9 +110,9 @@ kubeletconfig: /etc/kubernetes/kubeletconfig
 kubeadminconfig: /etc/kubernetes/kubeadminconfig
 
 # Etcd certificate file path
-etcd_ca_file: "/etc/kubernetes/pki/ca.pem"
-etcd_cert_file: "/etc/kubernetes/pki/etcd.pem"
-etcd_key_file: "/etc/kubernetes/pki/etcd-key.pem"
-etcd_peer_ca_file: "/etc/kubernetes/pki/ca.pem"
-etcd_peer_cert_file: "/etc/kubernetes/pki/etcd.pem"
-etcd_peer_key_file: "/etc/kubernetes/pki/etcd-key.pem"
+etcd_ca_file: /etc/kubernetes/pki/ca.pem
+etcd_cert_file: /etc/kubernetes/pki/etcd.pem
+etcd_key_file: /etc/kubernetes/pki/etcd-key.pem
+etcd_peer_ca_file: /etc/kubernetes/pki/ca.pem
+etcd_peer_cert_file: /etc/kubernetes/pki/etcd.pem
+etcd_peer_key_file: /etc/kubernetes/pki/etcd-key.pem

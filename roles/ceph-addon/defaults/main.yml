@@ -1,0 +1,7 @@
+# Ceph cluster on Kubernetes
+sigil_verison: 0.4.0
+sigil_download_url_base: "https://github.com/gliderlabs/sigil/releases/download/v{{ sigil_verison }}"
+sigil_download_url: "{{ sigil_download_url_base }}/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
+
+osd_cluster_network: "{{ flannel_subnet }}/{{ flannel_prefix }}"
+osd_public_network: "{{ osd_cluster_network }}"

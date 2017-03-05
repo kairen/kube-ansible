@@ -1,11 +1,13 @@
 ---
 # Require the cluster is fully operation and running
+- hosts: all
+  roles:
+   - ceph
+  tags:
+   - ceph
+
 - hosts: masters
   roles:
-   -  addon
+    - ceph-addon
   tags:
-   - addon
-   - dns
-   - proxy
-   - weave
-   - dashboard
+    - ceph-addon

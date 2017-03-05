@@ -9,7 +9,7 @@
 
 - name: Create weave dir
   when: weave_net
-  file: path={{ weavedir }} state=directory
+  file: path={{ weave_dir }} state=directory
 
 - name: Copy weave file
   when: weave_net

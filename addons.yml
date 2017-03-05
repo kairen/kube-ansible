@@ -2,6 +2,6 @@
 # Require the cluster is fully operation and running
 - hosts: masters
   roles:
-   - ceph
+   - addon
   tags:
-   - ceph
+   - addon

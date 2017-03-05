@@ -1,18 +1,27 @@
 ---
-- name: Download sigil tar file
-  get_url:
-    url: "{{ sigil_download_url }}"
-    dest: "/tmp"
-    validate_certs: False
-  register: sigil_download
+- name: Adding Ceph APT GPG key
+  when: ansible_os_family == "Debian"
+  apt_key:
+    url: "https://download.ceph.com/keys/release.asc"
+    state: present
 
-- name: Extract sigil tar file
-  when:
-    - sigil_download|succeeded
-  unarchive:
-    src: "/tmp/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
-    dest: "{{ bin_dir }}"
-    copy: no
+- name: Adding Ceph APT repository
+  when: ansible_os_family == "Debian"
+  apt_repository:
+    repo: "deb https://download.ceph.com/debian-{{ ceph_version }}/ xenial main"
+    state: present
+    filename: 'ceph'
+
+- name: Adding Ceph yum repository
+  when: ansible_os_family == "RedHat"
+  yum_repository:
+    name: "ceph-{{ ceph_version }}"
+    description: Ceph Repository
+    file: ceph
+    baseurl: "https://download.ceph.com/rpm-{{ ceph_version }}/el7/x86_64"
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.ceph.com/keys/release.asc
 
 - name: Install Ceph packages (RHEL/CentOS)
   when: ansible_os_family == "RedHat"

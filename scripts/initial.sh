@@ -3,7 +3,7 @@
 set -e
 HOST_NAME=$(hostname)
 OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release | grep -o "\w*" | head -n 1)
-DEPLOY_KUBE=false
+DEPLOY_KUBE=true
 
 if [ ${HOST_NAME} == "master1" ]; then
   case "${OS_NAME}" in
@@ -21,7 +21,7 @@ if [ ${HOST_NAME} == "master1" ]; then
   esac
 
   sudo easy_install pip
-  sudo pip install  ansible
+  sudo pip install ansible ansible-lint
 
   # Create ssh key
   yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
@@ -36,12 +36,12 @@ if [ ${HOST_NAME} == "master1" ]; then
   done
 
   # Move file to destination
-  sudo mv /home/vagrant/kubernetes-ceph-ansible /root/
-  sudo mv /root/kubernetes-ceph-ansible/hosts /etc/
+  sudo mv /home/vagrant/kubebox-ansible /root/
+  sudo mv /root/kubebox-ansible/hosts /etc/
 
   if ${DEPLOY_KUBE}; then
-    cd /root/kubernetes-ceph-ansible
-    sudo ansible-playbook -i inventory cluster-site.yml
+    cd /root/kubebox-ansible
+    sudo ansible-playbook -i inventory cluster.yml
 
     WAIT_MES="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
     echo -n -e "\nWait for API server start ....\n"
@@ -50,9 +50,9 @@ if [ ${HOST_NAME} == "master1" ]; then
     while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
 
     echo "Deploying addons ..."
-    sudo ansible-playbook -i inventory addons-site.yml
+    sudo ansible-playbook -i inventory addons.yml
   fi
 else
-  sudo mv /home/vagrant/kubernetes-ceph-ansible/hosts /etc/
-  sudo rm -r /home/vagrant/kubernetes-ceph-ansible
+  sudo mv /home/vagrant/kubebox-ansible/hosts /etc/
+  sudo rm -r /home/vagrant/kubebox-ansible
 fi

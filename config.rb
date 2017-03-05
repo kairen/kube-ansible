@@ -7,9 +7,9 @@ $master_count    = 1
 $node_count      = 2
 $disk_count      = 0
 $storage_path    = "./tmp/"
-$storage_size    = "30720"
+$storage_size    = "20480"
 
-$system_memory   = 1024
+$system_memory   = 2048
 $system_vcpus    = 1
 
 $bridge_enable   = false

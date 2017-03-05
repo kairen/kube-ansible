@@ -20,16 +20,3 @@
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present
     filename: 'kubernetes'
-
-- name: Adding Ceph APT GPG key
-  when: ceph_cluster
-  apt_key:
-    url: "https://download.ceph.com/keys/release.asc"
-    state: present
-
-- name: Adding Ceph APT repository
-  when: ceph_cluster
-  apt_repository:
-    repo: "deb https://download.ceph.com/debian-{{ ceph_version }}/ xenial main"
-    state: present
-    filename: 'ceph'
