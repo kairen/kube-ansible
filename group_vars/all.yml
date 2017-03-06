@@ -61,7 +61,7 @@ dns_replicas: 1
 
 # kube-proxy addon
 kube_proxy: true # turn to false to disable
-kube_proxy_mode: iptables # it should be "iptables",
+kube_proxy_mode: userspace # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
 

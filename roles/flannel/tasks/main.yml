@@ -13,8 +13,7 @@
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
   register: etcd_cert
 
-- name: Reload flannel systemd daemon
-  sudo: yes
+- name: Reload systemd daemon
   command: systemctl daemon-reload
 
 - name: Enable and restart flannel

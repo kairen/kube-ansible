@@ -25,8 +25,7 @@
 - name: Add docker service file
   template: src="docker.service.j2" dest={{ docker_service_dir }}/docker.service owner=root group=root mode=0755
 
-- name: Reload docker systemd daemon
-  sudo: yes
+- name: Reload systemd daemon
   command: systemctl daemon-reload
 
 - name: Enable and restart docker

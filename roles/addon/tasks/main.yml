@@ -34,7 +34,7 @@
   register: check_kube_proxy
   ignore_errors: True
 
-- name: create kube-proxy
+- name: Create kube-proxy
   when: kube_proxy and check_kube_proxy|failed
   shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/kube-proxy.yaml"
   delegate_to: "{{ groups['masters'][0] }}"

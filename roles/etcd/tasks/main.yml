@@ -16,8 +16,7 @@
 - name: Prepare and write etcd configuration
   include: config.yml
 
-- name: Reload etcd systemd daemon
-  sudo: yes
+- name: Reload systemd daemon
   command: systemctl daemon-reload
 
 - name: Enable and restart etcd

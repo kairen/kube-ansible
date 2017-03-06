@@ -1,8 +1,6 @@
 ---
 - name: Adding EPEL repository
-  yum:
-    name: epel-release
-    state: latest
+  yum: name=epel-release state=present
 
 - name: Adding Docker yum repository
   yum_repository:

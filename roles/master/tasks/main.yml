@@ -3,7 +3,6 @@
   when: ansible_os_family == "RedHat"
   yum:
     name: "{{ item }}"
-    state: latest
     update_cache: yes
   with_items:
     -  kubectl
@@ -15,7 +14,6 @@
   when: ansible_os_family == "Debian"
   apt:
     name: "{{ item }}"
-    state: latest
     update_cache: yes
   with_items:
     -  kubectl
@@ -26,8 +24,7 @@
 - name: Create and copy master config file
   include: config.yml
 
-- name: Reload docker systemd daemon
-  sudo: yes
+- name: Reload systemd daemon
   command: systemctl daemon-reload
 
 - name: Enable and restart kubelet
