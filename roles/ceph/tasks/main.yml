@@ -30,3 +30,6 @@
 - name: Install Ceph packages (Debian/Ubuntu)
   when: ansible_os_family == "Debian"
   apt: name=ceph state=present
+
+- name: Update dns resolv conf for Ceph
+  template: src="resolv.conf.j2" dest="/etc/resolv.conf"
