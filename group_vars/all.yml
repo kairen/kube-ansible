@@ -93,7 +93,7 @@ kube_addon_dir: /etc/kubernetes/addon
 weave_dir: /etc/cni/net.d
 ceph_dir: /etc/ceph
 
-# cluster certifactes file path
+# Cluster certifactes file path
 account_key: /etc/kubernetes/pki/apiserver-key.pem
 ca_cert: /etc/kubernetes/pki/ca.pem
 ca_key: /etc/kubernetes/pki/ca-key.pem

@@ -31,8 +31,8 @@
         "command": [
           "/usr/local/bin/kube-apiserver",
           "--v=0",
-          "--insecure-bind-address={{ master_ip_address }}",
-          "--admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota",
+          "--insecure-bind-address=127.0.0.1",
+          "--admission-control={{ admission_control }}",
           "--service-cluster-ip-range={{ service_ip_range }}",
           "--service-node-port-range={{ service_node_port_range }}",
           "--service-account-key-file={{ account_key }}",

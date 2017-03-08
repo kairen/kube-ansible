@@ -1,2 +1,12 @@
 ---
-master_ip_address: "127.0.0.1"
+cluster_name: kubernetes
+
+# kube-apiserver options
+admission_control: NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota
+
+# kube-controller-manager options
+leader_elect: true
+leader_elect_lease_duration: 15s
+leader_elect_renew_deadline: 10s
+leader_elect_retry_period: 2s
+pod_eviction_timeout: 1m0s

@@ -26,8 +26,11 @@
           "/usr/local/bin/kube-scheduler",
           "--v=0",
           "--address=127.0.0.1",
-          "--leader-elect=true",
-	  "--kubeconfig={{ kubeadminconfig }}",
+          "--leader-elect={{ leader_elect }}",
+          "--leader-elect-lease-duration={{ leader_elect_lease_duration }}",
+          "--leader-elect-renew-deadline={{ leader_elect_renew_deadline }}",
+          "--leader-elect-retry-period={{ leader_elect_retry_period }}",
+	      "--kubeconfig={{ kubeadminconfig }}",
           "--master={{ api_lb_ip }}"
         ],
         "resources": {
