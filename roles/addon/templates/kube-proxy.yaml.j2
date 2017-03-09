@@ -32,7 +32,7 @@ spec:
       - command:
         - /usr/local/bin/kube-proxy
         - --v=0
-        - --master={{ api_lb_ip }}
+        - --master={{ lb_api_url }}
         - --kubeconfig=/run/kubeadminconfig
         - --proxy-mode={{ kube_proxy_mode }}
         image: {{ kube_proxy_image }}

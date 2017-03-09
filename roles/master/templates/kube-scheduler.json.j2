@@ -31,7 +31,7 @@
           "--leader-elect-renew-deadline={{ leader_elect_renew_deadline }}",
           "--leader-elect-retry-period={{ leader_elect_retry_period }}",
 	      "--kubeconfig={{ kubeadminconfig }}",
-          "--master={{ api_lb_ip }}"
+          "--master={{ lb_api_url }}"
         ],
         "resources": {
           "requests": {

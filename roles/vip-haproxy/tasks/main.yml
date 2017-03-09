@@ -1,0 +1,36 @@
+---
+- name: Install keepalived packages (RHEL/CentOS)
+  when: ansible_os_family == "RedHat"
+  yum: name=keepalived state=present
+
+- name: Install keepalived packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt: name=keepalived state=present
+
+- name: Enable the shared IP address variable
+  shell: "{{ item }}"
+  with_items:
+    - "echo 'net.ipv4.ip_nonlocal_bind=1' > /etc/sysctl.conf"
+    - "sysctl -p"
+
+- name: Copy keepalived config file
+  template: src="keepalived.conf.j2" dest="/etc/keepalived/keepalived.conf"
+
+- name: Create kubernetes manifests config directory
+  file: path={{ manifest_config_dir }} state=directory
+
+- name: Create haproxy config directory
+  file: path={{ haproxy_dir }} state=directory
+  register: ha_dir
+
+- name: Copy haproxy json config file
+  template: src="haproxy.json.j2" dest={{ manifest_config_dir }}/haproxy.json
+  register: ha_json
+
+- name: Copy haproxy config file
+  template: src="haproxy.cfg.j2" dest={{ haproxy_dir }}/haproxy.cfg
+  register: ha_config
+
+- name: Enable and restart keepalived
+  service: name=keepalived enabled=yes state=restarted
+  register: keepalived_started

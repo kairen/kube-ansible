@@ -33,12 +33,12 @@
   tags:
     - docker
 
-# install haproxy
+# install vip-haproxy
 - hosts: masters
   roles:
-    - haproxy
+    - vip-haproxy
   tags:
-    - haproxy
+    - vip-haproxy
 
 # install kubernetes master
 - hosts: masters

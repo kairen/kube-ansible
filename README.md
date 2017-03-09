@@ -1,24 +1,20 @@
 # My Kubernetes and Ceph development environment
 A vagrant development environment for Kubernetes and Ceph
 
-If you want use this vagrant files, you must install the following of plugins:
-```sh
-$ vagrant plugin install vagrant-libvirt
-```
-
 TODO:
 - [x] Vagrant scripts.
 - [x] Kubernetes cluster setup(v1.5.0+).
+- [x] Kubernetes High Availability
 - [x] Ceph cluster on Kubernetes(v11.2.0+).
 - [ ] Kubernetes Ceph RBD/FS volume.
-- [ ] Support vagrant-openstack.
+- [ ] Support other plugin.
 
 ## Quick Start
 Following the below steps to create Kubernetes setup on `CentOS 7.x` and `Ubuntu Server 16.x` .
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
-$ ./setup-vagrant.sh
+$ ./setup-vagrant
 ```
 
 ### Requirement

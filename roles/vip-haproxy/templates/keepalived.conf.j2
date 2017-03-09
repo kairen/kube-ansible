@@ -1,0 +1,19 @@
+vrrp_script chk_haproxy {
+    script "killall -0 haproxy"
+    interval 2
+    weight 2
+}
+
+vrrp_instance api_vip {
+    interface {{ vip_interface }}
+    state MASTER
+    virtual_router_id 51
+    virtual_ipaddress {
+        {{ lb_vip_address }}
+    }
+    track_script {
+        chk_haproxy
+    }
+    priority {% if groups['masters'][0] == inventory_hostname %}101 {%- else -%}100 {%- endif -%}
+
+}

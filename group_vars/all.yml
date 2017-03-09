@@ -13,8 +13,8 @@ service_ip_range: 192.160.0.0/12
 service_node_port_range: 30000-32767
 
 # Set if you want to access kubernetes cluster via load balancer
-api_lb_ip: https://172.16.35.12
-advertise_lb_ip: 172.16.35.12
+lb_vip_address: 172.16.35.9
+lb_api_url: https://172.16.35.9
 api_secure_port: 5443
 
 # SSL cert handler, it should be true during ansible first run
@@ -38,7 +38,7 @@ flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8
 # Weave network (only one network plugin run on cluster)
 weave_net: false # turn to true to enable
 weaveui_port: 90
-weaveui_ip: 172.16.35.12 # it should be one of cluster node IP
+weaveui_ip: 172.16.35.9 # it should be one of cluster node IP
 
 # All master fqdn name - it require to create ssl certificate
 # Set it to only available api server
@@ -50,7 +50,7 @@ insecure_registrys:
 
 # kube-dash addon (https://github.com/kubernetes/dashboard)
 kube_dash: true  # turn to false to disable
-kube_dash_ip: 172.16.35.12 # it should be one of cluster node IP
+kube_dash_ip: 172.16.35.9 # it should be one of cluster node IP
 kube_dash_port: 80
 
 # kube-dns addon
@@ -61,24 +61,17 @@ dns_replicas: 1
 
 # kube-proxy addon
 kube_proxy: true # turn to false to disable
-kube_proxy_mode: userspace # it should be "iptables",
+kube_proxy_mode: iptables # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
-
-# Haproxy loadbalancing config
-haproxy: true  # set false when already physical loadbalancer available
-haproxy_dir: /etc/haproxy
-haproxy_monitor_port: 9090
-admin_user: admin
-admin_password: admin123
 
 # Cluster monitoring with heapster and influxdb addon
 cluster_monitoring: false # turn to true to enable
 heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
 heapster_port: 80
-grafana_ip: 172.16.35.12 # it should be one of cluster node IP
+grafana_ip: 172.16.35.9 # it should be one of cluster node IP
 grafana_port: 100
-influx_ip: 172.16.35.12 # it should be one of cluster node IP
+influx_ip: 172.16.35.9 # it should be one of cluster node IP
 influx_port: 8086
 
 # Component directory path

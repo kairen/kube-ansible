@@ -14,9 +14,9 @@ DNS.4 = kubernetes.default.svc.{{ dns_name }}
 DNS.5 = {{ etcd_domain_name }}
 DNS.6 = *.{{ etcd_domain_name }}
 IP.1 = {{ kubernetes_service_ip }}
+IP.2 = {{ lb_vip_address }}
 {% for host in groups['masters'] %}
-{% set count1 = loop.index + 1 %}
+{% set count1 = loop.index + 2 %}
 IP.{{ count1 }} = {{ host }}
 {% if not loop.last -%}{%- endif -%}
 {% endfor %}
-

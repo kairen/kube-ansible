@@ -1,0 +1,8 @@
+# Keepalived variables
+vip_interface: "{{ ansible_default_ipv4.interface }}"
+
+# HAProxy variables
+haproxy_dir: /etc/haproxy
+haproxy_monitor_port: 9090
+admin_user: admin
+admin_password: admin123
