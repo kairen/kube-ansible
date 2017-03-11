@@ -43,12 +43,12 @@ For inventory example:
 
 Set the variables in `group_vars/all.yml` to reflect you need options.
 
-When variables are already set, just execute `cluster.yml` to deploy cluster:
+If everything is ready, just execute `cluster.yml` to deploy cluster:
 ```sh
 $ ansible-playbook -i inventory cluster.yml
 ```
 
-When cluster is fully operation and running, just execute `addons.yml` to create addons:
+And then just execute `addons.yml` to create addons(Dashboard, proxy, DNS):
 ```sh
 $ ansible-playbook -i inventory addons.yml
 ```
