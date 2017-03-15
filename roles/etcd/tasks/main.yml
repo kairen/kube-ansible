@@ -10,7 +10,7 @@
 - name: Install etcd
   include: git-install.yml
 
-- name: Setup flannel systemd service
+- name: Setup etcd systemd service
   include: systemd.yml
 
 - name: Prepare and write etcd configuration

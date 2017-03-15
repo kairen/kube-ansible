@@ -36,11 +36,11 @@ if [ ${HOST_NAME} == "master1" ]; then
   done
 
   # Move file to destination
-  sudo mv /home/vagrant/kubebox-ansible /root/
-  sudo mv /root/kubebox-ansible/hosts /etc/
+  sudo mv /home/vagrant/kube-ansible /root/
+  sudo mv /root/kube-ansible/hosts /etc/
 
   if ${DEPLOY_KUBE}; then
-    cd /root/kubebox-ansible
+    cd /root/kube-ansible
     sudo ansible-playbook -i inventory cluster.yml
 
     WAIT_MES="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
@@ -53,6 +53,6 @@ if [ ${HOST_NAME} == "master1" ]; then
     sudo ansible-playbook -i inventory addons.yml
   fi
 else
-  sudo mv /home/vagrant/kubebox-ansible/hosts /etc/
-  sudo rm -r /home/vagrant/kubebox-ansible
+  sudo mv /home/vagrant/kube-ansible/hosts /etc/
+  sudo rm -r /home/vagrant/kube-ansible
 fi
