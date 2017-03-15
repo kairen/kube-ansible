@@ -36,7 +36,7 @@
 
 - name: Create kube-proxy
   when: kube_proxy and check_kube_proxy|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/kube-proxy.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -50,7 +50,7 @@
 
 - name: Create weavenet and weave-ui
   when: weave_net and check_weavenet|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/{{ item }}"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/{{ item }}"
   with_items:
     - "weavenet.yaml"
     - "weavescopeui.yaml"
@@ -67,7 +67,7 @@
 
 - name: Create kube-dns
   when: kube_dns and check_dns|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/kube-dns.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -81,7 +81,7 @@
 
 - name: Create kube-monitoring
   when: cluster_monitoring and check_monitoring|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/kube-monitoring.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -95,6 +95,6 @@
 
 - name: Create kube-dash
   when: kube_dash and check_dash|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ kube_addon_dir }}/dashboard.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/dashboard.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

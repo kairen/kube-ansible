@@ -33,7 +33,7 @@ spec:
         - /usr/local/bin/kube-proxy
         - --v=0
         - --master={{ lb_api_url }}
-        - --kubeconfig=/run/kubeadminconfig
+        - --kubeconfig=/run/admin.conf
         - --proxy-mode={{ kube_proxy_mode }}
         image: {{ kube_proxy_image }}
         imagePullPolicy: IfNotPresent
@@ -44,7 +44,7 @@ spec:
         volumeMounts:
         - mountPath: /var/run/dbus
           name: dbus
-        - mountPath: /run/kubeadminconfig
+        - mountPath: /run/admin.conf
           name: kubeconfig
         - mountPath: {{ kube_config_dir }}
           name: pki
@@ -55,7 +55,7 @@ spec:
       restartPolicy: Always
       volumes:
       - hostPath:
-          path: {{ kubeadminconfig }}
+          path: {{ kubeadmin_config }}
         name: kubeconfig
       - hostPath:
           path: /var/run/dbus

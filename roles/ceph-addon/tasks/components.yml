@@ -23,7 +23,7 @@
 
 - name: Create ceph mds deployment
   when: check_ceph_mds|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ ceph_addon_dir }}/ceph-mds-dp.yml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ ceph_addon_dir }}/ceph-mds-dp.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -36,7 +36,7 @@
 
 - name: Create mon check deployment
   when: check_ceph_mon_health|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ ceph_addon_dir }}/ceph-mon-check-dp.yml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ ceph_addon_dir }}/ceph-mon-check-dp.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -49,7 +49,7 @@
 
 - name: Create mon deployment
   when: check_ceph_mon|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ ceph_addon_dir }}/ceph-mon-dp.yml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ ceph_addon_dir }}/ceph-mon-dp.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -62,6 +62,6 @@
 
 - name: Create osd daemonset
   when: check_ceph_osd|failed
-  shell: "kubectl create --kubeconfig={{ kubeadminconfig }} -f {{ ceph_addon_dir }}/ceph-osd-ds.yml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ ceph_addon_dir }}/ceph-osd-ds.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

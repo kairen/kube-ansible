@@ -98,9 +98,8 @@ node_cert: /etc/kubernetes/pki/node.pem
 node_key: /etc/kubernetes/pki/node-key.pem
 
 # Kubeconfig file path
-kubeconfig: /etc/kubernetes/kubeconfig
-kubeletconfig: /etc/kubernetes/kubeletconfig
-kubeadminconfig: /etc/kubernetes/kubeadminconfig
+kubelet_config: /etc/kubernetes/kubelet.conf
+kubeadmin_config: /etc/kubernetes/admin.conf
 
 # Etcd certificate file path
 etcd_ca_file: /etc/kubernetes/pki/ca.pem

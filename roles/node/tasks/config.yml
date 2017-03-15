@@ -20,7 +20,7 @@
   register: config_dir
 
 - name: Copy kubeadmin config file
-  template: src="kubeadminconfig.j2" dest={{ kube_config_dir }}/kubeadminconfig
+  template: src="admin.conf.j2" dest={{ kubeadmin_config }}
   register: config
 
 - name: Copy kubelet config file
@@ -28,7 +28,7 @@
   register: kubeletconfig
 
 - name: Copy kube config file
-  template: src="kubeletconfig.j2" dest={{ kube_config_dir }}/kubeletconfig
+  template: src="kubelet.conf.j2" dest={{ kubelet_config }}
   register: kube_config
 
 - name: Create ssl cert dir

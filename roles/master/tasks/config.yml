@@ -25,7 +25,7 @@
   register: scheduler
 
 - name: Copy kube config file
-  template: src="kubeadminconfig.j2" dest={{ kube_config_dir }}/kubeadminconfig
+  template: src="admin.conf.j2" dest={{ kubeadmin_config }}
   register: config
 
 - name: Copy openssl certificate from ansible host
