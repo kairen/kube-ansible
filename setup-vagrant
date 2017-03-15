@@ -69,4 +69,4 @@ set_inventory
 set_hosts
 
 # Run vagrant
-# vagrant up
+vagrant up
