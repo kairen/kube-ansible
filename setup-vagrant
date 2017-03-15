@@ -3,7 +3,51 @@
 # Program: Setup a vagrant env
 # History: 2017/1/19 Kyle.b Release
 
-set -e
+set -eu
+
+: ${MASTERS:="1"}
+: ${NODES:="2"}
+: ${CPU:="1"}
+: ${MEMORY:="1024"}
+
+function usage() {
+  echo -e "Usage : setup-vagrant [options]\n"
+  echo "        -b|--boss       This option is launch master count."
+  echo "        -n|--node       This option is launch node count."
+  echo "        -c|--cpu       This option is vbox vcpu."
+  echo "        -m|--memory     This option is vbox memory."
+  exit 1
+}
+
+function isnum() {
+  re='^[0-9]+$'
+  if ! [[ ${1} =~ ${re} ]] ; then
+    echo "Error: Not a number." >&2; exit 1
+  fi
+}
+
+function replace_config() {
+    perl -i -pe "s/${1}\s*=\s*\d*/${1} = ${2}/g" config.rb
+}
+
+[ ${#} -gt 0 ] && [ ${1} == "-h" ] && usage
+
+while [ ${#} -gt 0 ]; do
+  case "${1}" in
+      -b|--boss)   isnum ${2}; MASTERS=${2}; shift;;
+      -n|--node)   isnum ${2}; NODES=${2}; shift;;
+      -c|--cpu)    isnum ${2}; CPU=${2}; shift;;
+      -m|--memory) isnum ${2}; MEMORY=${2}; shift;;
+      *) usage; break;;
+  esac
+  shift
+done
+
+replace_config "master_count" ${MASTERS}
+replace_config "node_count" ${NODES}
+replace_config "system_memory" ${MEMORY}
+replace_config "system_vcpus" ${CPU}
+
 source ./scripts/func-vars.sh
 
 # Prepare config file
@@ -25,4 +69,4 @@ set_inventory
 set_hosts
 
 # Run vagrant
-vagrant up
+# vagrant up
