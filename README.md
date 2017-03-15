@@ -1,30 +1,39 @@
-# My Kubernetes and Ceph development environment
-A vagrant development environment for Kubernetes and Ceph
+# kube-ansible
+A vagrant development environment for Kubernetes and Ceph.
 
 TODO:
 - [x] Vagrant scripts.
 - [x] Kubernetes cluster setup(v1.5.0+).
-- [x] Kubernetes High Availability
+- [x] Kubernetes addons.
+    - Dashboard
+    - Kube-DNS
+    - Monitor
+    - Kube-Proxy
+- [x] Kubernetes High Availability.
 - [x] Ceph cluster on Kubernetes(v11.2.0+).
 - [ ] Kubernetes Ceph RBD/FS volume.
 - [ ] Support other plugin.
 
 ## Quick Start
-Following the below steps to create Kubernetes setup on `CentOS 7.x` and `Ubuntu Server 16.x` .
+Following the below steps to create Kubernetes cluster on `CentOS 7.x` and `Ubuntu Server 16.x`.
+
+Requirement:
+* Vagrant >= 1.7.0
+* VirtualBox >= 5.0.0
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
 $ ./setup-vagrant
 ```
 
-### Requirement
-* Deploy node need install Ansible.
-* All master/node should have password-less access from Deploy node.
+## Virtual machine and Bare machine Setup
+Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
 
-### VM and BareMetal Setup
-Add the system information gathered above into a file called inventory.
+Requirement:
+* Deploy node must be install `Ansible v2.0.0+`.
+* All Master/Node should have password-less access from Deploy node.
 
-For inventory example:
+Add the system information gathered above into a file called `inventory`. For inventory example:
 ```
 [etcd]
 172.16.35.13
@@ -43,24 +52,24 @@ For inventory example:
 
 Set the variables in `group_vars/all.yml` to reflect you need options.
 
-If everything is ready, just execute `cluster.yml` to deploy cluster:
+If everything is ready, just run `cluster.yml` to deploy cluster:
 ```sh
 $ ansible-playbook -i inventory cluster.yml
 ```
 
-And then just execute `addons.yml` to create addons(Dashboard, proxy, DNS):
+And then just run `addons.yml` to create addons(Dashboard, proxy, DNS):
 ```sh
 $ ansible-playbook -i inventory addons.yml
 ```
 
-If you want to deploying a Ceph cluster on to a Kubernetes cluster, just execute `ceph-cluster.yml`:
+If you want to deploying a Ceph cluster on to a Kubernetes, just run `ceph-cluster.yml`:
 ```sh
 $ ansible-playbook -i inventory ceph-cluster.yml
 ```
 
 When ceph cluster is fully running, you must label your storage nodes in order to run Ceph pods on them:
 ```sh
-$ kubectl label node <nodename> node-type=storage
+$ kubectl label node <node_name> node-type=storage
 ```
 
 ## Verify cluster
