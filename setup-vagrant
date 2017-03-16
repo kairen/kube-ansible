@@ -12,10 +12,10 @@ set -eu
 
 function usage() {
   echo -e "Usage : setup-vagrant [options]\n"
-  echo "        -b|--boss       This option is launch master count."
-  echo "        -n|--node       This option is launch node count."
-  echo "        -c|--cpu       This option is vbox vcpu."
-  echo "        -m|--memory     This option is vbox memory."
+  echo " -b|--boss        This option is launch master count."
+  echo " -n|--node        This option is launch node count."
+  echo " -c|--cpu         This option is vbox vcpu."
+  echo " -m|--memory      This option is vbox memory."
   exit 1
 }
 
@@ -42,6 +42,10 @@ while [ ${#} -gt 0 ]; do
   esac
   shift
 done
+
+echo "Cluster Size: ${MASTERS} master, ${NODES} node."
+echo "     VM Size: ${CPU} vCPU, ${MEMORY} MB"
+read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
 
 replace_config "master_count" ${MASTERS}
 replace_config "node_count" ${NODES}
