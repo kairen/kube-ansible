@@ -23,7 +23,10 @@ Requirement:
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
-$ ./setup-vagrant
+$ ./setup-vagrant -b 1 -n 3 -c 1 -m 1024
+Cluster Size: 1 master, 3 node.
+     VM Size: 1 vCPU, 1024 MB
+Start deploying?(y):
 ```
 
 ## Virtual machine and Bare machine Setup
