@@ -24,7 +24,7 @@
 
 - name: Copy kube-dash config file
   when: kube_dash
-  template: src=dashboard.yaml.j2  dest={{ kube_addon_dir }}/dashboard.yaml
+  template: src=kube-dash.yaml.j2  dest={{ kube_addon_dir }}/kube-dash.yaml
 
 - name: Check kube-proxy
   when: kube_proxy
@@ -57,7 +57,7 @@
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube dns
+- name: Check kube-dns
   when: kube_dns
   shell: "kubectl get pods --all-namespaces=true | grep kube-dns"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -95,6 +95,6 @@
 
 - name: Create kube-dash
   when: kube_dash and check_dash|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/dashboard.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

@@ -5,6 +5,7 @@ controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.2
 scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.2
 kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.2
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
+kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.8
 haproxy_image: haproxy:1.7
 
 # Kubernetes cluster network

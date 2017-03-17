@@ -60,7 +60,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: heapster-v1.2.0
+  name: heapster
   namespace: kube-system
   labels:
     k8s-app: heapster
@@ -123,14 +123,6 @@ spec:
         env:
           - name: INFLUXDB_SERVICE_URL
             value: http://{{ influx_ip }}:{{ influx_port }}
-#          - name: GF_AUTH_BASIC_ENABLED
-#            value: "false"
-#          - name: GF_AUTH_ANONYMOUS_ENABLED
-#            value: "true"
-#          - name: GF_AUTH_ANONYMOUS_ORG_ROLE
-#            value: Admin
-#          - name: GF_SERVER_ROOT_URL
-#            value: /api/v1/proxy/namespaces/kube-system/services/monitoring-grafana/
         volumeMounts:
         - mountPath: /var
           name: grafana-storage
@@ -139,4 +131,3 @@ spec:
         emptyDir: {}
       - name: grafana-storage
         emptyDir: {}
-
