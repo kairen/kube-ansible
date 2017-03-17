@@ -1,6 +1,5 @@
 [Unit]
-Description=Kubernetes Kubelet Server
-Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Description=Kubelet Service
 After=docker.service
 Requires=docker.service
 
@@ -15,7 +14,9 @@ ExecStart=/usr/bin/kubelet \
 	$KUBE_ALLOW_PRIV \
 	$KUBELET_NETWORK_ARGS \
 	$KUBELET_DNS_ARGS
-Restart=on-failure # The value of the Restart parameter can set to `always`
+
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
