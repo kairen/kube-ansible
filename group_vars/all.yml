@@ -73,12 +73,11 @@ kibana_port: 5601
 elasticsearch_port: 9200
 
 # kube-monitoring addon
-cluster_monitoring: false # turn to true to enable
+kube_monitoring: false # turn to true to enable
+monitoring_ip: 172.16.35.9
 heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
 heapster_port: 80
-grafana_ip: 172.16.35.9 # it should be one of cluster node IP
 grafana_port: 100
-influx_ip: 172.16.35.9 # it should be one of cluster node IP
 influx_port: 8086
 
 # Component directory path
