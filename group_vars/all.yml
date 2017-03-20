@@ -66,7 +66,13 @@ kube_proxy_mode: iptables # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
 
-# Cluster monitoring with heapster and influxdb addon
+# kube-logging addon
+kube_logging: false # turn to true to enable
+logging_ip: 172.16.35.9 # it should be one of cluster node IP
+kibana_port: 5601
+elasticsearch_port: 9200
+
+# kube-monitoring addon
 cluster_monitoring: false # turn to true to enable
 heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
 heapster_port: 80
