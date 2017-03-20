@@ -30,3 +30,11 @@
 - name: Enable and restart kubelet
   service: name=kubelet enabled=yes state=restarted
   register: kubelet_start
+
+- name: Wait for API server start
+  when: kubelet_start
+  wait_for:
+    host: "127.0.0.1"
+    port: "8080"
+    connect_timeout: 5
+    state: started
