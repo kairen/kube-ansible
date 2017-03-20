@@ -9,6 +9,7 @@ TODO:
     - Kube-DNS
     - Monitor
     - Kube-Proxy
+    - Logging
 - [x] Kubernetes High Availability.
 - [x] Ceph cluster on Kubernetes(v11.2.0+).
 - [ ] Kubernetes Ceph RBD/FS volume.
