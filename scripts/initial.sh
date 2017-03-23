@@ -21,7 +21,7 @@ if [ ${HOST_NAME} == "master1" ]; then
   esac
 
   sudo easy_install pip
-  sudo pip install ansible ansible-lint
+  sudo pip install ansible
 
   # Create ssh key
   yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
@@ -36,11 +36,10 @@ if [ ${HOST_NAME} == "master1" ]; then
   done
 
   # Move file to destination
-  sudo mv /home/vagrant/ha-kube-ansible /root/
-  sudo mv /root/ha-kube-ansible/hosts /etc/
+  sudo cp /vagrant/hosts /etc/
 
   if ${DEPLOY_KUBE}; then
-    cd /root/ha-kube-ansible
+    cd /vagrant
     sudo ansible-playbook -i inventory cluster.yml
 
     WAIT_MES="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
@@ -53,5 +52,5 @@ if [ ${HOST_NAME} == "master1" ]; then
     sudo ansible-playbook -i inventory addons.yml
   fi
 else
-  sudo mv /home/vagrant/ha-kube-ansible/hosts /etc/
+  sudo cp /vagrant/hosts /etc/
 fi
