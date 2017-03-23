@@ -1,2 +1,1 @@
-docker_version: 1.12.6
 docker_service_dir: "/usr/lib/systemd/system"
