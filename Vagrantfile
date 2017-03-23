@@ -10,10 +10,6 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.box = $box_image
-  cores_prefixs = $box_image.split("-")
-  if cores_prefixs[0] == 'coreos'
-    config.vm.box_url = "https://storage.googleapis.com/%s.release.core-os.net/amd64-usr/%s/coreos_production_vagrant.json" % [cores_prefixs[1], $coreos_version]
-  end
 
   ## Setting bridge network and vm infos
   if $bridge_enable && $bridge_eth.to_s != ''
@@ -58,6 +54,6 @@ Vagrant.configure("2") do |config|
   end
 
   # Install of dependency packages using script
-  config.vm.provision "file", source: "../kube-ansible", destination: "~/"
+  config.vm.provision "file", source: "../ha-kube-ansible", destination: "~/"
   config.vm.provision :shell, path: "./scripts/initial.sh"
 end

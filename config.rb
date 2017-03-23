@@ -1,7 +1,6 @@
 # Machine configuration variable
-# examples : "bento/centos-7.2", "bento/ubuntu-16.04", "coreos-{alpha/beta/stable}"
+# examples : "bento/centos-7.2", "bento/ubuntu-16.04"
 $box_image = "bento/ubuntu-16.04"
-$coreos_version = "current"
 
 $master_count = 1 # The HA-cluster at least 3 node.
 $node_count = 2
