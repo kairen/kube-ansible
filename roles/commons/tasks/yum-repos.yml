@@ -1,8 +1,10 @@
 ---
 - name: Adding EPEL repository
+  when: docker_source_type == "package-manager"
   yum: name=epel-release state=present
 
 - name: Adding Docker yum repository
+  when: docker_source_type == "package-manager"
   yum_repository:
     name: Docker
     description: Docker Repository

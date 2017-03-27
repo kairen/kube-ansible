@@ -1,13 +1,10 @@
 [Unit]
-Description=Docker Application Container Engine
-Documentation=https://docs.docker.com
+Description=Docker Engine
 After=network.target
 
 [Service]
 Type=notify
 EnvironmentFile=-{{ config_dir }}/docker
-EnvironmentFile=-{{ config_dir }}/docker-storage
-EnvironmentFile=-{{ config_dir }}/docker-network
 ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
                         $OPTIONS \
                         $DOCKER_STORAGE_OPTIONS \
@@ -18,10 +15,10 @@ ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% e
                         $INSECURE_REGISTRY
 
 ExecReload=/bin/kill -s HUP $MAINPID
-LimitNOFILE=infinity
+Restart=always
+LimitNOFILE=1048576
 LimitNPROC=infinity
 LimitCORE=infinity
-#TasksMax=infinity
 TimeoutStartSec=0
 Delegate=yes
 KillMode=process

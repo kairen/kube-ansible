@@ -1,9 +1,12 @@
-# This value determines how kubernetes binaries, config files, and service
+# Define all component group variable
+# Install available type: package-manager, git-release
+docker_source_type: "package-manager"
+
 # Kubernetes component images
-api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.2
-controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.2
-scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.2
-kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.2
+api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.5
+controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.5
+scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.5
+kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.5
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.8
 haproxy_image: haproxy:1.7

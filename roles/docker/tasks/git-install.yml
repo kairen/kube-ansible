@@ -1,0 +1,19 @@
+---
+- name: Download docker tar file
+  get_url:
+    url: "{{ docker_download_url }}"
+    dest: "/tmp"
+    validate_certs: False
+  register: docker_download
+
+- name: Extract docker tar file
+  when: docker_download|succeeded
+  unarchive:
+    src: "/tmp/docker-{{ docker_version }}.tgz"
+    dest: "/tmp/"
+    copy: no
+
+- name: Copy docker files to bin
+  copy: src={{ item }} dest={{ bin_dir }} owner=root mode=0755
+  with_fileglob:
+  - /tmp/docker/*

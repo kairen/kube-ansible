@@ -1,0 +1,15 @@
+---
+- name: Stop docker engine service
+  service: name=docker state=stopped
+  when: '"docker0" in ansible_interfaces'
+  register: docker_stoped
+
+- name: Delete docker0 interface
+  command: ip link delete docker0
+  when: '"docker0" in ansible_interfaces'
+
+- name: Enable and restart docker socket
+  service: name=docker.socket enabled=yes state=restarted
+
+- name: Enable and restart docker
+  service: name=docker enabled=yes state=restarted

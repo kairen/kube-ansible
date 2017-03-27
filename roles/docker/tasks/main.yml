@@ -1,11 +1,22 @@
 ---
 - name: Install docker engine (RHEL/CentOS)
-  when: ansible_os_family == "RedHat"
+  when:
+    - ansible_os_family == "RedHat"
+    - docker_source_type == "package-manager"
   yum: name=docker-engine state=present
 
 - name: Install docker engine (Debian/Ubuntu)
-  when: ansible_os_family == "Debian"
+  when:
+    - ansible_os_family == "Debian"
+    - docker_source_type == "package-manager"
   apt: name=docker-engine state=present
+
+- name: Install docker engine from source
+  when: docker_source_type == "git-release"
+  include: git-install.yml
+
+- name: Setup docker systemd service
+  include: systemd.yml
 
 - name: Fix docker 1.13.0+ forward issue
   command: iptables -P FORWARD ACCEPT
@@ -20,16 +31,10 @@
   when:
     - add_registry is defined and add_registry > 0
 
-- name: Override docker service file directory for Debian
-  when: ansible_os_family == "Debian"
-  set_fact:
-    docker_service_dir: "/lib/systemd/system"
-
-- name: Add docker service file
-  template: src="docker.service.j2" dest={{ docker_service_dir }}/docker.service owner=root group=root mode=0755
-
 - name: Reload systemd daemon
   command: systemctl daemon-reload
-
-- name: Enable and restart docker
-  service: name=docker enabled=yes state=restarted
+  notify:
+    - Stop docker engine service
+    - Delete docker0 interface
+    - Enable and restart docker socket
+    - Enable and restart docker
