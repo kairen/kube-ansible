@@ -13,11 +13,13 @@
     filename: 'docker'
 
 - name: Adding Kubernetes APT GPG key
+  when: kube_install_type == "binary"
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
 
 - name: Adding Kubernetes APT repository
+  when: kube_install_type == "binary"
   apt_repository:
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present

@@ -1,6 +1,7 @@
 # Define all component group variable
-# Install available type: package-manager, git-release
+# Install available type: binary, source
 docker_source_type: "package-manager"
+kube_install_type: "source"
 
 # Kubernetes component images
 api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.5

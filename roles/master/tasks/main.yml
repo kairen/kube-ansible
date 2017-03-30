@@ -1,25 +1,11 @@
 ---
-- name: Install Kubernetes packages (RHEL/CentOS)
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "{{ item }}"
-    update_cache: yes
-  with_items:
-    -  kubectl
-    -  kubelet
-    -  kubernetes-cni
-  register: masterpackage
+- name: Kubernetes from binary release
+  when: kube_install_type == "binary"
+  include: binary.yml
 
-- name: Install Kubernetes packages (Debian/Ubuntu)
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    update_cache: yes
-  with_items:
-    -  kubectl
-    -  kubelet
-    -  kubernetes-cni
-  register: masterpackage
+- name: Kubernetes from source release
+  when: kube_install_type == "source"
+  include: source.yml
 
 - name: Create and copy master config file
   include: config.yml

@@ -15,6 +15,7 @@
     gpgkey: https://yum.dockerproject.org/gpg
 
 - name: Adding Kubernetes yum repository
+  when: kube_install_type == "binary"
   yum_repository:
     name: Kubernetes
     description: Kubernetes Repository

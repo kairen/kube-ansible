@@ -1,0 +1,20 @@
+---
+- name: Install kubernetes packages (RHEL/CentOS)
+  when: ansible_os_family == "RedHat"
+  yum:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    -  kubectl
+    -  kubelet
+    -  kubernetes-cni
+
+- name: Install kubernetes packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    -  kubectl
+    -  kubelet
+    -  kubernetes-cni
