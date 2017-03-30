@@ -1,0 +1,8 @@
+---
+- name: Install docker engine (RHEL/CentOS)
+  when: ansible_os_family == "RedHat"
+  yum: name=docker-engine state=present
+
+- name: Install docker engine (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt: name=docker-engine state=present

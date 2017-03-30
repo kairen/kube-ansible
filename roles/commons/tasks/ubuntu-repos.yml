@@ -1,12 +1,12 @@
 ---
 - name: Adding Docker APT GPG key
-  when: docker_source_type == "package-manager"
+  when: docker_install_type == "binary"
   apt_key:
     keyserver: hkp://ha.pool.sks-keyservers.net:80
     id: 58118E89F3A912897C070ADBF76221572C52609D
 
 - name: Adding Docker APT repository
-  when: docker_source_type == "package-manager"
+  when: docker_install_type == "binary"
   apt_repository:
     repo: deb https://apt.dockerproject.org/repo ubuntu-xenial main
     state: present

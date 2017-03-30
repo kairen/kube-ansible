@@ -1,12 +1,12 @@
 ---
 - name: Create docker system group
-  when: docker_source_type == "git-release"
+  when: docker_install_type == "source"
   group:
     name: docker
     state: present
 
 - name: Create docker system  user
-  when: docker_source_type == "git-release"
+  when: docker_install_type == "source"
   user:
     name=docker
     comment="Docker user"
@@ -16,11 +16,11 @@
     groups=docker
 
 - name: Add docker config file
-  when: docker_source_type == "git-release"
+  when: docker_install_type == "source"
   copy: src=docker dest={{ config_dir }}/docker
 
 - name: Add docker socket service file
-  when: docker_source_type == "git-release"
+  when: docker_install_type == "source"
   copy: src=docker.socket dest={{ service_dir }}/docker.socket owner=root group=root mode=0755
 
 - name: Add docker service file

@@ -1,19 +1,11 @@
 ---
-- name: Install docker engine (RHEL/CentOS)
-  when:
-    - ansible_os_family == "RedHat"
-    - docker_source_type == "package-manager"
-  yum: name=docker-engine state=present
+- name: Docker engine from binary
+  when: docker_install_type == "binary"
+  include: binary.yml
 
-- name: Install docker engine (Debian/Ubuntu)
-  when:
-    - ansible_os_family == "Debian"
-    - docker_source_type == "package-manager"
-  apt: name=docker-engine state=present
-
-- name: Install docker engine from source
-  when: docker_source_type == "git-release"
-  include: git-install.yml
+- name: Docker engine from source
+  when: docker_install_type == "source"
+  include: source.yml
 
 - name: Setup docker systemd service
   include: systemd.yml
@@ -36,5 +28,5 @@
   notify:
     - Stop docker engine service
     - Delete docker0 interface
-    - Enable and restart docker socket
+    - Enable and start docker socket
     - Enable and restart docker

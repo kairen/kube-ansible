@@ -1,6 +1,6 @@
 # Define all component group variable
 # Install available type: binary, source
-docker_source_type: "package-manager"
+docker_install_type: "source"
 kube_install_type: "source"
 
 # Kubernetes component images
