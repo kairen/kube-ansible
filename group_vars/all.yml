@@ -1,17 +1,20 @@
 # Define all component group variable
+kube_version: 1.5.5 # support 1.4.0+
+
 # Install available type: package, source
-kube_version: 1.5.5
-docker_install_type: "source"
+docker_install_type: "package"
 kube_install_type: "source"
 
-# Kubernetes component images
+# Kubernetes system images
 api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.5.5
 controller_image: gcr.io/google_containers/kube-controller-manager-amd64:v1.5.5
 scheduler_image: gcr.io/google_containers/kube-scheduler-amd64:v1.5.5
+haproxy_image: haproxy:1.7
+
+# Kubernetes add-ons images
 kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.5.5
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.8
-haproxy_image: haproxy:1.7
 
 # Kubernetes cluster network
 kubernetes_service_ip: 192.160.0.1
@@ -25,6 +28,14 @@ api_secure_port: 5443
 
 # SSL cert handler, it should be true during ansible first run
 sslcert_create: true
+
+# All master fqdn name - it require to create ssl certificate
+# Set it to only available api server
+masters_fqdn: ['kube.master1.com',]
+
+# A list of insecure registrys you might need to define
+insecure_registrys:
+# - "gcr.io"
 
 # Etcd variable
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
@@ -45,14 +56,6 @@ flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8
 weave_net: false # turn to true to enable
 weaveui_port: 90
 weaveui_ip: 172.16.35.9 # it should be one of cluster node IP
-
-# All master fqdn name - it require to create ssl certificate
-# Set it to only available api server
-masters_fqdn: ['kube.master1.com',]
-
-# A list of insecure registrys you might need to define
-insecure_registrys:
-# - "gcr.io"
 
 # kube-dash addon (https://github.com/kubernetes/dashboard)
 kube_dash: true  # turn to false to disable
