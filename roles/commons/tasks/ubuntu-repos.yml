@@ -1,25 +1,25 @@
 ---
 - name: Adding Docker APT GPG key
-  when: docker_install_type == "binary"
+  when: docker_install_type == "package"
   apt_key:
     keyserver: hkp://ha.pool.sks-keyservers.net:80
     id: 58118E89F3A912897C070ADBF76221572C52609D
 
 - name: Adding Docker APT repository
-  when: docker_install_type == "binary"
+  when: docker_install_type == "package"
   apt_repository:
     repo: deb https://apt.dockerproject.org/repo ubuntu-xenial main
     state: present
     filename: 'docker'
 
 - name: Adding Kubernetes APT GPG key
-  when: kube_install_type == "binary"
+  when: kube_install_type == "package"
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
 
 - name: Adding Kubernetes APT repository
-  when: kube_install_type == "binary"
+  when: kube_install_type == "package"
   apt_repository:
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present

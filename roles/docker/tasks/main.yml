@@ -1,7 +1,7 @@
 ---
-- name: Docker engine from binary
-  when: docker_install_type == "binary"
-  include: binary.yml
+- name: Docker engine from package
+  when: docker_install_type == "package"
+  include: package.yml
 
 - name: Docker engine from source
   when: docker_install_type == "source"

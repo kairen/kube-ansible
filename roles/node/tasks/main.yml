@@ -1,7 +1,7 @@
 ---
 - name: Kubernetes from binary release
-  when: kube_install_type == "binary"
-  include: binary.yml
+  when: kube_install_type == "package"
+  include: package.yml
 
 - name: Kubernetes from source release
   when: kube_install_type == "source"

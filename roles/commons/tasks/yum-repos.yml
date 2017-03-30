@@ -1,10 +1,10 @@
 ---
 - name: Adding EPEL repository
-  when: docker_install_type == "binary"
+  when: docker_install_type == "package"
   yum: name=epel-release state=present
 
 - name: Adding Docker yum repository
-  when: docker_install_type == "binary"
+  when: docker_install_type == "package"
   yum_repository:
     name: Docker
     description: Docker Repository
@@ -15,7 +15,7 @@
     gpgkey: https://yum.dockerproject.org/gpg
 
 - name: Adding Kubernetes yum repository
-  when: kube_install_type == "binary"
+  when: kube_install_type == "package"
   yum_repository:
     name: Kubernetes
     description: Kubernetes Repository
