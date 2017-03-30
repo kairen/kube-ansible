@@ -1,13 +1,11 @@
 ---
 - name: Add kubelet service file
   copy: src=kubelet.service dest={{ service_dir }}/kubelet.service owner=root group=root mode=0755
-  register: kubelet
 
 - name: Create kubernetes manifest config directory
   file: path={{ manifest_config_dir }} state=directory
-  register: manifest
 
-- name: Create weave dir
+- name: Create weave directory
   when: weave_net
   file: path={{ weave_dir }} state=directory
 
@@ -17,7 +15,6 @@
 
 - name: Create kubernetes config directory
   file: path={{ kube_config_dir }} state=directory
-  register: config_dir
 
 - name: Copy kubeadmin config file
   template: src="admin.conf.j2" dest={{ kubeadmin_config }}
@@ -25,15 +22,12 @@
 
 - name: Copy kubelet config file
   template: src="kubelet.j2" dest={{ kube_config_dir }}/kubelet
-  register: kubeletconfig
 
 - name: Copy kube config file
   template: src="kubelet.conf.j2" dest={{ kubelet_config }}
-  register: kube_config
 
-- name: Create ssl cert dir
+- name: Create ssl cert directory
   file: path={{ cert_dir }} state=directory
-  register: ssl_dir
 
 - name: Copy CA certificate from ansible host
   template: src={{ master_cert_dir }}/{{ item }} dest={{ cert_dir }}/{{ item }}
@@ -47,10 +41,8 @@
 - name: Copy openssl
   when: ca_cert|changed
   template: src="openssl.conf.j2" dest={{ kube_config_dir }}/pki/openssl.conf
-  register: openssl_config
 
 - name: Create certificate for node
-  register: create_ssl_cert
   command: "{{ item }}"
   with_items:
     - "openssl genrsa -out {{ cert_dir }}/node-key.pem 2048"

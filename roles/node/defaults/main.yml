@@ -1,4 +1,7 @@
----
 node_interface: ""
 node_ip_address: "{% if node_interface != '' %}{{ hostvars[inventory_hostname]['ansible_' + node_interface].ipv4.address }}
 {%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
+
+# Kubernetes git release binary url
+kube_base_url: "https://storage.googleapis.com/kubernetes-release/release"
+kube_download_url: "{{ kube_base_url }}/v{{ kube_version }}/bin/linux/amd64"

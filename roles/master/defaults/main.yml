@@ -1,5 +1,3 @@
----
-kube_version: 1.5.5
 cluster_name: kubernetes
 
 # kube-apiserver options

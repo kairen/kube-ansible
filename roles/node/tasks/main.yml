@@ -1,23 +1,11 @@
 ---
-- name: Install Kubernetes packages (RHEL/CentOS)
-  when: ansible_os_family == "RedHat"
-  yum:
-    name: "{{ item }}"
-    update_cache: yes
-  with_items:
-    -  kubelet
-    -  kubernetes-cni
-  register: nodepackage
+- name: Kubernetes from binary release
+  when: kube_install_type == "binary"
+  include: binary.yml
 
-- name: Install Kubernetes packages (Debian/Ubuntu)
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    update_cache: yes
-  with_items:
-    -  kubelet
-    -  kubernetes-cni
-  register: nodepackage
+- name: Kubernetes from source release
+  when: kube_install_type == "source"
+  include: source.yml
 
 - name: Create and copy node config file
   include: config.yml
@@ -27,4 +15,4 @@
 
 - name: Enable and restart kubelet
   service: name=kubelet enabled=yes state=restarted
-  register: kubelet_start_node
+  register: kubenode_start

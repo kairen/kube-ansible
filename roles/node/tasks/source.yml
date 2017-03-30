@@ -1,0 +1,6 @@
+---
+- name: Download kubernetes component files
+  get_url: url="{{ kube_download_url }}/{{ item }}" dest={{ bin_dir }} mode=0755
+  with_items:
+    - kubelet
+  register: kube_download
