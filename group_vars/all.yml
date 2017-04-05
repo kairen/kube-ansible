@@ -1,9 +1,9 @@
 # Define all component group variable
-kube_version: 1.6.0 # support 1.4.0+
+kube_version: 1.6.0 # support 1.4.0+ for source type
 
 # Install available type: package, source
 docker_install_type: "package"
-kube_install_type: "source"
+kube_install_type: "package" # package type only support last version
 
 # Kubernetes system images
 api_image: gcr.io/google_containers/kube-apiserver-amd64:v1.6.0
