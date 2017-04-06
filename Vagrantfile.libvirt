@@ -1,0 +1,27 @@
+
+Vagrant.require_version ">= 1.7.0"
+Vagrant.require_plugin "vagrant-libvirt"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ky1ebai/libvirt-xenial"
+  config.vm.network :public_network, :dev => "eno1", :mode => "bridge"
+
+  config.vm.define "master1" do |subconfig|
+    subconfig.vm.hostname = "master1"
+    subconfig.vm.provider :libvirt do |domain|
+       domain.memory = 2048
+       domain.cpus = 1
+       domain.nested = true
+     end
+  end
+  (1..3).each do |id|
+    config.vm.define "node#{id}" do |subconfig|
+      subconfig.vm.hostname = "node#{id}"
+      subconfig.vm.provider :libvirt do |domain|
+         domain.memory = 4096
+         domain.cpus = 2
+         domain.nested = true
+       end
+    end
+  end
+end
