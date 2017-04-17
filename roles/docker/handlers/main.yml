@@ -15,4 +15,7 @@
   service: name=docker enabled=yes state=restarted
 
 - name: Fix docker 1.13.0+ forward issue
-  command: iptables -P FORWARD ACCEPT
+  command: "{{ item }}"
+  with_items:
+    - iptables -P FORWARD ACCEPT
+    - iptables-save
