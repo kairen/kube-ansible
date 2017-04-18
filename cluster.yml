@@ -41,8 +41,8 @@
   tags:
     - master
 
-# - hosts: nodes
-#   roles:
-#     - node
-#   tags:
-#     - node
+- hosts: nodes
+  roles:
+    - node
+  tags:
+    - node
