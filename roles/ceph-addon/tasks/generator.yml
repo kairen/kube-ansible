@@ -10,11 +10,19 @@
     path: "{{ ceph_dir }}/generate_secrets.sh"
     mode: "u+x"
 
-- name: Generate ceph keys and configuration
+- name: Generate ceph cluster fsid
+  command: "./generate_secrets.sh fsid"
+  args:
+    chdir: "{{ ceph_dir }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: ceph_fsid
+
+- name: Generate ceph config and keys
   environment:
     osd_cluster_network: "{{ osd_cluster_network }}"
     osd_public_network:  "{{ osd_public_network }}"
-  command: "./generate_secrets.sh all `./generate_secrets.sh fsid`"
+  command: "./generate_secrets.sh all {{ ceph_fsid['stdout'] }}"
   args:
     chdir: "{{ ceph_dir }}"
   run_once: true
