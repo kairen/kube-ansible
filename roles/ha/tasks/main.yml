@@ -16,12 +16,6 @@
 - name: Create kubernetes manifests config directory
   file: path={{ manifest_config_dir }} state=directory
 
-- name: Create keepalived config directory
-  file: path={{ keepalived_dir }} state=directory
-
-- name: Copy keepalived config file
-  template: src="keepalived.conf.j2" dest="/etc/keepalived/keepalived.conf"
-
 - name: Copy keepalived yaml config file
   template: src="keepalived.yml.j2" dest={{ manifest_config_dir }}/keepalived.yml
 
