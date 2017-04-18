@@ -11,14 +11,14 @@
   when: weave_net
   copy: src=10-weave.conf  dest=/etc/cni/net.d/10-weave.conf
 
-- name: Copy apiserver config file
-  template: src="kube-apiserver.json.j2" dest={{ manifest_config_dir }}/kube-apiserver.json
+- name: Copy apiserver yml config file
+  template: src="kube-apiserver.yml.j2" dest={{ manifest_config_dir }}/kube-apiserver.yml
 
-- name: Copy controller-manager config file
-  template: src="kube-controller-manager.json.j2" dest={{ manifest_config_dir }}/kube-controller-manager.json
+- name: Copy controller-manager yml config file
+  template: src="kube-controller-manager.yml.j2" dest={{ manifest_config_dir }}/kube-controller-manager.yml
 
-- name: Copy scheduler config file
-  template: src="kube-scheduler.json.j2" dest={{ manifest_config_dir }}/kube-scheduler.json
+- name: Copy scheduler yml config file
+  template: src="kube-scheduler.yml.j2" dest={{ manifest_config_dir }}/kube-scheduler.yml
 
 - name: Copy kubeadmin config file
   template: src="admin.conf.j2" dest={{ kubeadmin_config }}
