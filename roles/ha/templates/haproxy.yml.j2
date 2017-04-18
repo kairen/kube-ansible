@@ -16,7 +16,7 @@ spec:
     image: "{{ haproxy_image }}"
     resources:
       requests:
-        cpu: 250m
+        cpu: 100m
     volumeMounts:
     - name: cfg-volume
       readOnly: true
