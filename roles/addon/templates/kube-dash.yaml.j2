@@ -1,25 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kubernetes-dashboard
+  name: kube-dashboard
   namespace: kube-system
   labels:
-    k8s-app: kubernetes-dashboard
+    k8s-app: kube-dashboard
     kubernetes.io/cluster-service: "true"
 spec:
   selector:
     matchLabels:
-      k8s-app: kubernetes-dashboard
+      k8s-app: kube-dashboard
   template:
     metadata:
       labels:
-        k8s-app: kubernetes-dashboard
+        k8s-app: kube-dashboard
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
-      - name: kubernetes-dashboard
+      - name: kube-dashboard
         image: {{ kube_dash_image }}
         resources:
           # keep request = limit to keep this container in guaranteed class
@@ -41,14 +41,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubernetes-dashboard
+  name: kube-dashboard
   namespace: kube-system
   labels:
-    k8s-app: kubernetes-dashboard
+    k8s-app: kube-dashboard
     kubernetes.io/cluster-service: "true"
 spec:
   selector:
-    k8s-app: kubernetes-dashboard
+    k8s-app: kube-dashboard
   externalIPs:
   - {{ kube_dash_ip }}
   ports:
