@@ -1,12 +1,4 @@
 ---
-# - name: Install keepalived packages (RHEL/CentOS)
-#   when: ansible_os_family == "RedHat"
-#   yum: name=keepalived state=present
-#
-# - name: Install keepalived packages (Debian/Ubuntu)
-#   when: ansible_os_family == "Debian"
-#   apt: name=keepalived state=present
-
 - name: Enable the shared IP address variable
   shell: "{{ item }}"
   with_items:
@@ -27,7 +19,3 @@
 
 - name: Copy haproxy config file
   template: src="haproxy.cfg.j2" dest={{ haproxy_dir }}/haproxy.cfg
-
-# - name: Enable and restart keepalived
-#   service: name=keepalived enabled=yes state=restarted
-#   register: keepalived_started
