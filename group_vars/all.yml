@@ -2,7 +2,7 @@
 kube_version: 1.6.1 # support 1.4.0+ for source type
 
 # Install available type: package, source
-docker_install_type: "source" # package type only support latest version
+docker_install_type: "package" # package type only support latest version
 kube_install_type: "source" # package type only support latest version
 
 # Kubernetes system images
