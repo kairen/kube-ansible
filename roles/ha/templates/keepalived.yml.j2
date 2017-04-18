@@ -1,0 +1,34 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: keepalived
+  namespace: kube-system
+  labels:
+    component: keepalived
+    tier: control-plane
+spec:
+  containers:
+  - name: keepalived
+    image: "{{ keepalived_image }}"
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN
+    env:
+    - name: VIRTUAL_IP
+      value: {{ lb_vip_address }}
+    - name: VIRTUAL_MASK
+      value: "24"
+    - name: CHECK_IP
+      value: "any"
+    - name: CHECK_PORT
+      value: "2379"
+    - name: VRID
+      value: "51"
+    - name: INTERFACE
+      value: {{ vip_interface }}
+    resources:
+      requests:
+        cpu: 250m
+  hostNetwork: true

@@ -55,7 +55,7 @@ BIND_ETH="enp0s8"
 GROUP_VARS_PATH="./group_vars/all.yml"
 ETCD_DEFAULT_PATH="./roles/etcd/defaults/main.yml"
 NODE_DEFAULT_PATH="./roles/node/defaults/main.yml"
-VIP_DEFAULT_PATH="./roles/vip-haproxy/defaults/main.yml"
+VIP_DEFAULT_PATH="./roles/ha/defaults/main.yml"
 INITIAL_SCRIPT_PATH="./scripts/initial.sh"
 
 MASTER_COUNT=$(get_vagrant_config "master_count")

@@ -1,0 +1,24 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: haproxy
+  namespace: kube-system
+  labels:
+    component: haproxy
+    tier: control-plane
+spec:
+  volumes:
+  - name: cfg-volume
+    hostPath:
+      path: "/etc/haproxy/haproxy.cfg"
+  containers:
+  - name: haproxy
+    image: "{{ haproxy_image }}"
+    resources:
+      requests:
+        cpu: 250m
+    volumeMounts:
+    - name: cfg-volume
+      readOnly: true
+      mountPath: "/usr/local/etc/haproxy/haproxy.cfg"
+  hostNetwork: true

@@ -3,7 +3,7 @@
 set -e
 HOST_NAME=$(hostname)
 OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release | grep -o "\w*" | head -n 1)
-DEPLOY_KUBE=true
+DEPLOY_KUBE=false
 
 if [ ${HOST_NAME} == "master1" ]; then
   case "${OS_NAME}" in

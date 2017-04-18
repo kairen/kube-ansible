@@ -1,5 +1,6 @@
 # Keepalived variables
 vip_interface: "{{ ansible_default_ipv4.interface }}"
+keepalived_dir: /etc/keepalived
 
 # HAProxy variables
 haproxy_dir: /etc/haproxy

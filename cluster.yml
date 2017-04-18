@@ -5,51 +5,44 @@
   tags:
     - commons
 
-# install ssl cert
 - hosts: sslhost
   roles:
      -  sslcert
   tags:
      -  sslcert
 
-# Install etcd
 - hosts: etcd
   roles:
    -   etcd
   tags:
     - etcd
 
-# Install flannel
 - hosts: all
   roles:
    - flannel
   tags:
     - flannel
 
-# Install docker
 - hosts: all
   roles:
     - docker
   tags:
     - docker
 
-# install vip-haproxy
 - hosts: masters
   roles:
-    - vip-haproxy
+    - ha
   tags:
-    - vip-haproxy
+    - ha
 
-# install kubernetes master
 - hosts: masters
   roles:
     - master
   tags:
     - master
 
-# install kubernetes nodes
-- hosts: nodes
-  roles:
-    - node
-  tags:
-    - node
+# - hosts: nodes
+#   roles:
+#     - node
+#   tags:
+#     - node
