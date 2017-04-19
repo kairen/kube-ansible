@@ -22,8 +22,6 @@ spec:
             path: /dev
         - name: ceph
           emptyDir: {}
-#          hostPath:
-#            path: /opt/ceph
         - name: ceph-conf
           secret:
             secretName: ceph-conf-combined
@@ -38,11 +36,9 @@ spec:
             secretName: ceph-bootstrap-rgw-keyring
         - name: osd-directory
           emptyDir: {}
-#          hostPath:
-#            path: /home/core/data/ceph/osd
       containers:
         - name: osd-pod
-          image: ceph/daemon:latest
+          image: "ceph/daemon:{{ ceph_image_tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: devices
