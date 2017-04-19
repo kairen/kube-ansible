@@ -8,6 +8,6 @@
 
 - hosts: masters
   roles:
-    - ceph-addon
+    - ceph-k8s
   tags:
-    - ceph-addon
+    - ceph-k8s
