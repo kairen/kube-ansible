@@ -1,10 +1,5 @@
 ---
-- when: ansible_os_family == "RedHat"
-  include: yum-repos.yml
-
-- when: ansible_os_family == "Debian"
-  include: ubuntu-repos.yml
-
+# Fact os vars
 - name: Override config file directory for Debian
   when: ansible_os_family == "Debian"
   set_fact:

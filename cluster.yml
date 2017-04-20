@@ -1,9 +1,5 @@
 ---
-- hosts: all
-  roles:
-    - commons
-  tags:
-    - commons
+# Deploy a kubernetes cluster.
 
 - hosts: sslhost
   roles:

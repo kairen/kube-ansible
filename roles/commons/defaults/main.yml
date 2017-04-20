@@ -1,0 +1,33 @@
+# Define all common vars
+service_dir: /etc/systemd/system
+config_dir: /etc/sysconfig
+kube_config_dir: /etc/kubernetes
+manifest_config_dir: /etc/kubernetes/manifests
+cert_dir: /etc/kubernetes/pki
+master_cert_dir: /opt/kubernetes/pki
+kube_addon_dir: /etc/kubernetes/addon
+weave_dir: /etc/cni/net.d
+ceph_config_dir: /etc/ceph
+
+# Cluster certifactes file path
+account_key: /etc/kubernetes/pki/apiserver-key.pem
+ca_cert: /etc/kubernetes/pki/ca.pem
+ca_key: /etc/kubernetes/pki/ca-key.pem
+api_cert: /etc/kubernetes/pki/apiserver.pem
+api_key: /etc/kubernetes/pki/apiserver-key.pem
+admin_key: /etc/kubernetes/pki/admin-key.pem
+admin_cert: /etc/kubernetes/pki/admin.pem
+node_cert: /etc/kubernetes/pki/node.pem
+node_key: /etc/kubernetes/pki/node-key.pem
+
+# Kubeconfig file path
+kubelet_config: /etc/kubernetes/kubelet.conf
+kubeadmin_config: /etc/kubernetes/admin.conf
+
+# Etcd certificate file path
+etcd_ca_file: /etc/kubernetes/pki/ca.pem
+etcd_cert_file: /etc/kubernetes/pki/etcd.pem
+etcd_key_file: /etc/kubernetes/pki/etcd-key.pem
+etcd_peer_ca_file: /etc/kubernetes/pki/ca.pem
+etcd_peer_cert_file: /etc/kubernetes/pki/etcd.pem
+etcd_peer_key_file: /etc/kubernetes/pki/etcd-key.pem
