@@ -52,17 +52,17 @@ Set the variables in `group_vars/all.yml` to reflect you need options.
 
 If everything is ready, just run `cluster.yml` to deploy cluster:
 ```sh
-$ ansible-playbook -i inventory cluster.yml
+$ ansible-playbook cluster.yml
 ```
 
 And then run `addons.yml` to create addons(Dashboard, proxy, DNS):
 ```sh
-$ ansible-playbook -i inventory addons.yml
+$ ansible-playbook addons.yml
 ```
 
 If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-cluster.yml`:
 ```sh
-$ ansible-playbook -i inventory ceph-cluster.yml
+$ ansible-playbook ceph-cluster.yml
 ```
 
 When Ceph cluster is fully running, you must label your storage nodes in order to run osd pods on them:
