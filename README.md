@@ -3,7 +3,7 @@ A vagrant development environment for Kubernetes and Ceph.
 
 TODO:
 - [x] Vagrant virtualbox scripts.
-- []  Vagrant libvirt scripts.
+- [ ] Vagrant libvirt scripts.
 - [x] Kubernetes HA cluster setup(v1.5.0+).
 - [x] Kubernetes addons.
 - [x] Ceph on Kubernetes(v11.2.0+).
