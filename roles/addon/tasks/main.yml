@@ -103,15 +103,15 @@
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube-dash
+- name: Check kube-dashboard
   when: kube_dash
-  shell: "kubectl get pods --all-namespaces=true | grep kubernetes-dashboard"
+  shell: "kubectl get pods --all-namespaces=true | grep kube-dashboard"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: check_dash
   ignore_errors: True
 
-- name: Create kube-dash
+- name: Create kube-dashboard
   when: kube_dash and check_dash|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yaml"
   delegate_to: "{{ groups['masters'][0] }}"
