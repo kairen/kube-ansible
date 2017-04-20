@@ -1,26 +1,20 @@
-# kube-ansible
+# My Highly Available Kubernetes Ansible
 A vagrant development environment for Kubernetes and Ceph.
 
 TODO:
-- [x] Vagrant scripts.
-- [x] Kubernetes cluster setup(v1.5.0+).
+- [x] Vagrant virtualbox scripts.
+- []  Vagrant libvirt scripts.
+- [x] Kubernetes HA cluster setup(v1.5.0+).
 - [x] Kubernetes addons.
-    - Dashboard
-    - Kube-DNS
-    - Monitor
-    - Kube-Proxy
-    - Logging
-- [x] Kubernetes High Availability.
-- [x] Ceph cluster on Kubernetes(v11.2.0+).
-- [ ] Kubernetes Ceph RBD/FS volume.
-- [ ] Support other plugin.
+- [x] Ceph on Kubernetes(v11.2.0+).
+- [x] Kubernetes Ceph RBD/FS volume.
 
 ## Quick Start
 Following the below steps to create Kubernetes cluster on `CentOS 7.x` and `Ubuntu Server 16.x`.
 
 Requirement:
-* Vagrant >= 1.7.0
-* VirtualBox >= 5.0.0
+* [Vagrant](https://www.vagrantup.com/downloads.html) >= 1.7.0
+* [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.0
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
@@ -61,17 +55,17 @@ If everything is ready, just run `cluster.yml` to deploy cluster:
 $ ansible-playbook -i inventory cluster.yml
 ```
 
-And then just run `addons.yml` to create addons(Dashboard, proxy, DNS):
+And then run `addons.yml` to create addons(Dashboard, proxy, DNS):
 ```sh
 $ ansible-playbook -i inventory addons.yml
 ```
 
-If you want to deploying a Ceph cluster on to a Kubernetes, just run `ceph-cluster.yml`:
+If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-cluster.yml`:
 ```sh
 $ ansible-playbook -i inventory ceph-cluster.yml
 ```
 
-When ceph cluster is fully running, you must label your storage nodes in order to run Ceph pods on them:
+When Ceph cluster is fully running, you must label your storage nodes in order to run osd pods on them:
 ```sh
 $ kubectl label node <node_name> node-type=storage
 ```
