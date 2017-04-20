@@ -18,13 +18,14 @@ kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0
 kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.9
 
 # Kubernetes cluster network
-kubernetes_service_ip: 192.160.0.1
-service_ip_range: 192.160.0.0/12
+cluster_subnet: 192.160.0
+kubernetes_service_ip: "{{ cluster_subnet }}.1"
+service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
 
 # Set if you want to access kubernetes cluster via load balancer
 lb_vip_address: 172.16.35.9
-lb_api_url: https://172.16.35.9
+lb_api_url: "https://{{ lb_vip_address }}"
 api_secure_port: 5443
 
 # SSL cert handler, it should be true during ansible first run
@@ -55,36 +56,22 @@ flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8
 
 # Weave network (only one network plugin run on cluster)
 weave_net: false # turn to true to enable
-weaveui_port: 90
-weaveui_ip: 172.16.35.9 # it should be one of cluster node IP
 
 # kube-dash addon (https://github.com/kubernetes/dashboard)
 kube_dash: true  # turn to false to disable
-kube_dash_ip: 172.16.35.9 # it should be one of cluster node IP
-kube_dash_port: 80
 
 # kube-dns addon
 kube_dns: true # turn to false to disable
 dns_name: cluster.local # cluster dns name
-dns_ip: 192.160.0.10 # it should be from cluster service_ip_range
-dns_replicas: 1
+dns_ip: "{{ cluster_subnet }}.10"
 
 # kube-proxy addon
 kube_proxy: true # turn to false to disable
 kube_proxy_mode: iptables # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
-
 # kube-logging addon
 kube_logging: false # turn to true to enable
-logging_ip: 172.16.35.9 # it should be one of cluster node IP
-kibana_port: 5601
-elasticsearch_port: 9200
 
 # kube-monitoring addon
 kube_monitoring: false # turn to true to enable
-monitoring_ip: 172.16.35.9
-heapster_ip: 192.160.0.11 # it should be from cluster service_ip_range
-heapster_port: 80
-grafana_port: 100
-influx_port: 8086

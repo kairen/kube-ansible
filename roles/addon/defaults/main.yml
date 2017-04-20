@@ -1,0 +1,18 @@
+# Define addon vars
+weaveui_ip: "{{ lb_vip_address }}"
+weaveui_port: 90
+
+kube_dash_ip: "{{ lb_vip_address }}"
+kube_dash_port: 80
+
+dns_replicas: 1
+
+logging_ip: "{{ lb_vip_address }}"
+kibana_port: 5601
+elasticsearch_port: 9200
+
+monitoring_ip: "{{ lb_vip_address }}"
+heapster_ip: "{{ cluster_subnet }}.11"
+heapster_port: 80
+grafana_port: 100
+influx_port: 8086
