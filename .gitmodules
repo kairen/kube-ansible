@@ -1,0 +1,3 @@
+[submodule "examples"]
+	path = examples
+	url = https://github.com/kairen/k8s-examples.git
