@@ -16,7 +16,7 @@
 - name: Create etcd symlinks
   file:
     src: "{{ etcd_releases_dir }}/etcd-v{{ etcd_version }}-linux-amd64/{{ item }}"
-    dest: "{{ bin_dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
     state: link
     force: yes
   with_items:

@@ -1,19 +1,19 @@
 ---
 - name: Create ceph generator dir
-  file: path="{{ ceph_dir }}" state=directory
+  file: path="{{ ceph_config_dir }}" state=directory
 
 - name: Copy ceph generator files
-  copy: src="generator/" dest="{{ ceph_dir }}"
+  copy: src="generator/" dest="{{ ceph_config_dir }}"
 
 - name: Set generate secrets script permission
   file:
-    path: "{{ ceph_dir }}/generate_secrets.sh"
+    path: "{{ ceph_config_dir }}/generate_secrets.sh"
     mode: "u+x"
 
 - name: Generate ceph cluster fsid
   command: "./generate_secrets.sh fsid"
   args:
-    chdir: "{{ ceph_dir }}"
+    chdir: "{{ ceph_config_dir }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: ceph_fsid
@@ -24,7 +24,7 @@
     osd_public_network:  "{{ osd_public_network }}"
   command: "./generate_secrets.sh all {{ ceph_fsid['stdout'] }}"
   args:
-    chdir: "{{ ceph_dir }}"
+    chdir: "{{ ceph_config_dir }}"
   run_once: true
 
 - name: Check ceph namespace
@@ -49,6 +49,6 @@
     - "kubectl create secret generic ceph-bootstrap-osd-keyring --from-file=ceph.keyring=ceph.osd.keyring --namespace=ceph"
     - "kubectl create secret generic ceph-client-key --from-file=ceph-client-key --namespace=ceph"
   args:
-    chdir: "{{ ceph_dir }}"
+    chdir: "{{ ceph_config_dir }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

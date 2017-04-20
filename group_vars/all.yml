@@ -90,7 +90,6 @@ grafana_port: 100
 influx_port: 8086
 
 # Component directory path
-bin_dir: /usr/bin
 service_dir: /etc/systemd/system
 config_dir: /etc/sysconfig
 kube_config_dir: /etc/kubernetes
@@ -99,7 +98,7 @@ cert_dir: /etc/kubernetes/pki
 master_cert_dir: /opt/kubernetes/pki
 kube_addon_dir: /etc/kubernetes/addon
 weave_dir: /etc/cni/net.d
-ceph_dir: /etc/ceph
+ceph_config_dir: /etc/ceph
 
 # Cluster certifactes file path
 account_key: /etc/kubernetes/pki/apiserver-key.pem

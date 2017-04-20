@@ -14,6 +14,6 @@
     copy: no
 
 - name: Copy docker files to bin
-  copy: src={{ item }} dest={{ bin_dir }} owner=root mode=0755
+  copy: src={{ item }} dest="/usr/bin" owner=root mode=0755
   with_fileglob:
   - /tmp/docker/*

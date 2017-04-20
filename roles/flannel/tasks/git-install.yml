@@ -31,7 +31,7 @@
 - name: Create flannel symlinks
   file:
     src: "{{ flannel_dir }}/flannel-{{ flannel_version }}/{{ item }}"
-    dest: "{{ bin_dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
     state: link
     force: yes
   with_items:

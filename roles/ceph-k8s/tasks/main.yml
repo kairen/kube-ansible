@@ -11,7 +11,7 @@
     - sigil_download|succeeded
   unarchive:
     src: "/tmp/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
-    dest: "{{ bin_dir }}"
+    dest: "/usr/bin"
     copy: no
 
 - name: Create and copy generator config file
