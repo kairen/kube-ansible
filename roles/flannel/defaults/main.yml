@@ -1,7 +1,7 @@
 flannel_key: /atomic.io/network
 flannel_host_prefix: 24
 flannel_backend: vxlan # overlay network type
-flannel_opts: --iface=enp0s8 # when use vagrant to deploy, you should set to "--iface=enp0s8"
+flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8"
 
 flannel_dir: "/opt"
 flannel_dropin_dir: "/usr/lib/systemd/system"

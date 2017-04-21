@@ -6,8 +6,10 @@
 set -e
 source ./scripts/func-vars.sh
 
+: ${ETH:="enp0s8"}
+
 # Replace of variables
-perl -i -pe "s/flannel_opts: --iface=${BIND_ETH}/flannel_opts: \"\"/g" ${GROUP_VARS_PATH}
+perl -i -pe "s/flannel_opts: --iface=${ETH}/flannel_opts: \"\"/g" ${FLANNEL_DEFAULT_PATH}
 perl -i -pe "s/etcd_interface:.*/etcd_interface: \"\"/g" ${ETCD_DEFAULT_PATH}
 perl -i -pe "s/node_interface:.*/node_interface: \"\"/g" ${NODE_DEFAULT_PATH}
 perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${SUBNET}.10 ${SUBNET}.11 ${SUBNET}.12\"/g" ${INITIAL_SCRIPT_PATH}
