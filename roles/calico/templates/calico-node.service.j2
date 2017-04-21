@@ -1,0 +1,33 @@
+[Unit]
+Description=calico node
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=notify
+EnvironmentFile={{ config_dir }}/calico-node
+PermissionsStartOnly=true
+ExecStartPre=-/usr/bin/docker rm -f calico-node
+ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
+  -e ETCD_ENDPOINTS=${ETCD_ENDPOINTS} \
+  -e NODENAME=${HOSTNAME} \
+  -e IP= \
+  -e NO_DEFAULT_POOLS= \
+  -e AS= \
+  -e CALICO_LIBNETWORK_ENABLED=true \
+  -e IP6= \
+  -e CALICO_NETWORKING_BACKEND=bird \
+  -e FELIX_DEFAULTENDPOINTTOHOSTACTION=ACCEPT \
+  -v /var/run/calico:/var/run/calico \
+  -v /lib/modules:/lib/modules \
+  -v /run/docker/plugins:/run/docker/plugins \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /var/log/calico:/var/log/calico \
+  ${CALICO_NODE_IMAGE}
+
+ExecStop=-/usr/bin/docker stop calico-node
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

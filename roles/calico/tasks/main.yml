@@ -1,0 +1,17 @@
+---
+- name: Install calico network
+  include: source.yml
+
+- name: Setup calico systemd service
+  include: systemd.yml
+
+- name: Configure calico plugin
+  include: config.yml
+
+- name: Reload systemd daemon
+  command: systemctl daemon-reload
+
+- name: Enable and restart calico network
+  when: change_calico|succeeded
+  service: name=calico-node enabled=yes state=started
+  register: calico_started

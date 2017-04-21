@@ -9,6 +9,7 @@ kube_config_dir: /etc/kubernetes
 manifest_config_dir: "{{ kube_config_dir }}/manifests"
 cert_dir: "{{ kube_config_dir }}/pki"
 kube_addon_dir: "{{ kube_config_dir }}/addon"
+kube_network_dir: "{{ kube_config_dir }}/network"
 kubelet_config: "{{ kube_config_dir }}/kubelet.conf"
 kubeadmin_config: "{{ kube_config_dir }}/admin.conf"
 

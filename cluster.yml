@@ -15,12 +15,6 @@
 
 - hosts: all
   roles:
-   - flannel
-  tags:
-    - flannel
-
-- hosts: all
-  roles:
     - docker
   tags:
     - docker
@@ -42,3 +36,11 @@
     - node
   tags:
     - node
+
+- hosts: all
+  roles:
+   - { role: flannel, when: networking == 'flannel' }
+   - { role: calico, when: networking == 'calico' }
+  tags:
+    - flannel
+    - calico

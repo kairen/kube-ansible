@@ -1,0 +1,32 @@
+---
+- name: Create calico bin directory
+  file: path="{{ cni_bin_dir }}" state=directory
+
+- name: Download calico plugins
+  get_url:
+    url: "{{ calico_download_url }}/{{ item }}"
+    dest: "{{ cni_bin_dir }}"
+    validate_certs: False
+    owner: root
+    mode: 0755
+  with_items:
+    - calico
+    - calico-ipam
+  register: calico_download
+
+- name: Download cni lo plugin tgz file
+  get_url:
+    url: "{{ cni_download_url }}"
+    dest: "/tmp"
+    validate_certs: False
+  register: cni_download
+
+- name: Extract cni plugin tgz file
+  when: cni_download|succeeded
+  unarchive:
+    src: "/tmp/cni-v{{ cni_version }}.tgz"
+    dest: "/tmp/"
+    copy: no
+
+- name: Copy cni lo plugin to cni bin
+  copy: src="/tmp/loopback" dest="{{ cni_bin_dir }}" owner=root mode=0755
