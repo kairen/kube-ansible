@@ -1,9 +1,13 @@
-etcd_client_port: 2379
+flannel_key: /atomic.io/network
+flannel_host_prefix: 24
+flannel_backend: vxlan # overlay network type
+flannel_opts: --iface=enp0s8 # when use vagrant to deploy, you should set to "--iface=enp0s8"
+
+flannel_dir: "/opt"
+flannel_dropin_dir: "/usr/lib/systemd/system"
+
 
 # The default url to download the flannel tar from
 flannel_download_url_base: "https://github.com/coreos/flannel/releases/download/v{{ flannel_version }}"
 flannel_version_uri: "{% if flannel_version == '0.5.5' %}{{ flannel_version }}{% else %}v{{ flannel_version }}{% endif -%}"
 flannel_download_url: "{{ flannel_download_url_base }}/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
-
-flannel_dir: "/opt"
-flannel_dropin_dir: "/usr/lib/systemd/system"

@@ -43,16 +43,13 @@ insecure_registrys:
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
 etcd_version: 3.1.5 # etcd version, support 2.1.0+
 etcd_peer_url_scheme: http # http / https
+etcd_client_port: 2379
 
 # Flannel network (only one network plugin run on cluster)
 flannel: true # turn to false to disable
 flannel_version: 0.7.0 # flannel version, support 0.5.5+
-flannel_key: /atomic.io/network
 flannel_subnet: 10.244.0.0 # flannel subnet range
 flannel_prefix: 16
-flannel_host_prefix: 24
-flannel_backend: vxlan # overlay network type
-flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8"
 
 # Weave network (only one network plugin run on cluster)
 weave_net: false # turn to true to enable

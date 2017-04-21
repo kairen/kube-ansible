@@ -9,13 +9,15 @@ set -eu
 : ${NODES:="2"}
 : ${CPU:="1"}
 : ${MEMORY:="1024"}
+: ${ETH:="enp0s8"}
 
 function usage() {
   echo -e "Usage : setup-vagrant [options]\n"
-  echo " -b|--boss        This option is launch master count."
-  echo " -n|--node        This option is launch node count."
-  echo " -c|--cpu         This option is vbox vcpu."
-  echo " -m|--memory      This option is vbox memory."
+  echo " -b|--boss        Launch number of master."
+  echo " -n|--node        Launch number of node."
+  echo " -c|--cpu         Setting number of cores per CPU in a virtual machine."
+  echo " -m|--memory      Setting number of memory in a virtual machine."
+  echo " -i|--interface   Setting network policys to bind to interfaces."
   exit 1
 }
 
@@ -38,6 +40,7 @@ while [ ${#} -gt 0 ]; do
       -n|--node)   isnum ${2}; NODES=${2}; shift;;
       -c|--cpu)    isnum ${2}; CPU=${2}; shift;;
       -m|--memory) isnum ${2}; MEMORY=${2}; shift;;
+      -i|--interface) isnum ${2}; ETH=${2}; shift;;
       *) usage; break;;
   esac
   shift
@@ -60,13 +63,13 @@ for ((i=0; i<${TOTAL}; i++)) do
   HOSTS="${HOSTS} ${SUBNET}.$((${NET_COUNT}+${i}))"
 done
 
-perl -i -pe "s/flannel_opts: \"\"/flannel_opts: --iface=${BIND_ETH}/g" ${GROUP_VARS_PATH}
-perl -i -pe "s/etcd_interface: \"\"/etcd_interface: ${BIND_ETH}/g" ${ETCD_DEFAULT_PATH}
-perl -i -pe "s/node_interface: \"\"/node_interface: ${BIND_ETH}/g" ${NODE_DEFAULT_PATH}
+perl -i -pe "s/flannel_opts: \"\"/flannel_opts: --iface=${ETH}/g" ${FLANNEL_DEFAULT_PATH}
+perl -i -pe "s/etcd_interface: \"\"/etcd_interface: ${ETH}/g" ${ETCD_DEFAULT_PATH}
+perl -i -pe "s/node_interface: \"\"/node_interface: ${ETH}/g" ${NODE_DEFAULT_PATH}
+perl -i -pe "s/vip_interface:.*/vip_interface: ${ETH}/g" ${VIP_DEFAULT_PATH}
 perl -i -pe "s/${SUBNET}.[0-9]*/${SUBNET}.9/g" ${GROUP_VARS_PATH}
 perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${HOSTS}\"/g" ${INITIAL_SCRIPT_PATH}
 perl -i -pe "s/${MASTER_PREFIX}[0-9]*/${MASTER_PREFIX}${MASTER_COUNT}/g" ${INITIAL_SCRIPT_PATH}
-perl -i -pe "s/vip_interface:.*/vip_interface: ${BIND_ETH}/g" ${VIP_DEFAULT_PATH}
 
 # Create inventory
 set_inventory
