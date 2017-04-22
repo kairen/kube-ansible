@@ -3,7 +3,7 @@
 - name: Override config file directory for Debian
   when: ansible_os_family == "Debian"
   set_fact:
-    config_dir: "/etc/default"
+    env_config_dir: "/etc/default"
 
 - name: Override service file directory for Debian
   when: ansible_os_family == "Debian"

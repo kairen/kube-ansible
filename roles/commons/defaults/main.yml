@@ -3,7 +3,7 @@ pod_network_cidr: "10.244.0.0/16"
 
 # System file path
 service_dir: /etc/systemd/system
-config_dir: /etc/sysconfig
+env_config_dir: /etc/sysconfig
 dropin_dir: "/usr/lib/systemd/system"
 ceph_config_dir: /etc/ceph
 weave_dir: /etc/cni/net.d

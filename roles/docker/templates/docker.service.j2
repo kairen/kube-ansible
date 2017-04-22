@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=notify
-EnvironmentFile=-{{ config_dir }}/docker
+EnvironmentFile=-{{ env_config_dir }}/docker
 ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
                         $OPTIONS \
                         $DOCKER_STORAGE_OPTIONS \

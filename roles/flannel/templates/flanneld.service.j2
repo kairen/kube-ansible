@@ -7,7 +7,7 @@ Before=docker.service
 
 [Service]
 Type=notify
-EnvironmentFile={{ config_dir }}/flanneld
+EnvironmentFile={{ env_config_dir }}/flanneld
 ExecStart=/usr/bin/flanneld -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} -etcd-prefix=${FLANNEL_ETCD_PREFIX} $FLANNEL_OPTIONS
 ExecStartPost=/usr/bin/mk-docker-opts.sh -d /run/flannel/docker
 Restart=always

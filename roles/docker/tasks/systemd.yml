@@ -17,7 +17,7 @@
 
 - name: Add docker config file
   when: docker_install_type == "source"
-  copy: src=docker dest={{ config_dir }}/docker
+  copy: src=docker dest={{ env_config_dir }}/docker
 
 - name: Add docker socket service file
   when: docker_install_type == "source"

@@ -48,8 +48,6 @@ etcd_client_port: 2379
 # Network implementation('flannel', 'weave', 'calico')
 networking: flannel
 
-
-
 # kube-dash addon (https://github.com/kubernetes/dashboard)
 kube_dash: true  # turn to false to disable
 

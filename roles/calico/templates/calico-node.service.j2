@@ -5,7 +5,7 @@ Requires=docker.service
 
 [Service]
 Type=notify
-EnvironmentFile={{ config_dir }}/calico-node
+EnvironmentFile={{ env_config_dir }}/calico-node
 PermissionsStartOnly=true
 ExecStartPre=-/usr/bin/docker rm -f calico-node
 ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
