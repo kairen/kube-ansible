@@ -1,17 +1,12 @@
 ---
-- name: Install flannel
-  include: git-install.yml
+- name: Install flannel network
+  include: source.yml
 
 - name: Setup flannel systemd service
   include: systemd.yml
 
-- name: Prepare and write flannel configuration to etcd
+- name: Configure flannel network plugin
   include: config.yml
-
-- name: Copy etcd certificate from ansible host
-  when: etcd_peer_url_scheme == 'https'
-  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
-  register: etcd_cert
 
 - name: Reload systemd daemon
   command: systemctl daemon-reload
@@ -20,3 +15,6 @@
   when: change_flannel|succeeded
   service: name=flanneld enabled=yes state=restarted
   register: flannel_started
+  notify:
+    - Enable and restart docker
+    - Fix docker 1.13.0+ forward issue

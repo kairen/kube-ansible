@@ -1,0 +1,9 @@
+---
+- name: Enable and restart docker
+  service: name=docker enabled=yes state=restarted
+
+- name: Fix docker 1.13.0+ forward issue
+  command: "{{ item }}"
+  with_items:
+    - iptables -P FORWARD ACCEPT
+    - iptables-save

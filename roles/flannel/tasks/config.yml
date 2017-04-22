@@ -1,8 +1,4 @@
 ---
-- name: Update flannel config
-  template: src="flanneld.j2" dest={{ config_dir }}/flanneld
-  register: change_flannel
-
 - name: Set facts about etcdctl command
   set_fact:
     peers: "{% for hostname in groups['etcd'] %}http://{{ hostname }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
@@ -11,7 +7,7 @@
   run_once: true
   delegate_to: "{{ groups['etcd'][0] }}"
 
-- name: Create flannel config file to go in etcd
+- name: Copy etcd flannel config file
   template: src=flannel-config.json dest={{ conf_file }}
   run_once: true
   delegate_to: "{{ groups['etcd'][0] }}"
@@ -19,7 +15,6 @@
 - name: Copy etcd certificate from ansible host
   when: etcd_peer_url_scheme == 'https'
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
-  register: etcd_cert
 
 - name: Load the flannel config file into etcd
   when: etcd_peer_url_scheme == 'http'

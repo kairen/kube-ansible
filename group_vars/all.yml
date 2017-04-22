@@ -48,13 +48,7 @@ etcd_client_port: 2379
 # Network implementation('flannel', 'weave', 'calico')
 networking: flannel
 
-# Flannel network (only one network plugin run on cluster)
-flannel_version: 0.7.0 # flannel version, support 0.5.5+
-flannel_subnet: 10.244.0.0 # flannel subnet range
-flannel_prefix: 16
 
-# Weave network (only one network plugin run on cluster)
-weave_net: false # turn to true to enable
 
 # kube-dash addon (https://github.com/kubernetes/dashboard)
 kube_dash: true  # turn to false to disable

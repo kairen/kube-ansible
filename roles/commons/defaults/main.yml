@@ -1,9 +1,14 @@
 # Define all common vars
+pod_network_cidr: "10.244.0.0/16"
+
+# System file path
 service_dir: /etc/systemd/system
 config_dir: /etc/sysconfig
+dropin_dir: "/usr/lib/systemd/system"
 ceph_config_dir: /etc/ceph
 weave_dir: /etc/cni/net.d
 
+# Kubernetes component file path
 master_cert_dir: /opt/kubernetes/pki
 kube_config_dir: /etc/kubernetes
 manifest_config_dir: "{{ kube_config_dir }}/manifests"
@@ -13,6 +18,7 @@ kube_network_dir: "{{ kube_config_dir }}/network"
 kubelet_config: "{{ kube_config_dir }}/kubelet.conf"
 kubeadmin_config: "{{ kube_config_dir }}/admin.conf"
 
+# TSL and certificate file path
 account_key: "{{ cert_dir }}/apiserver-key.pem"
 ca_cert: "{{ cert_dir }}/ca.pem"
 ca_key: "{{ cert_dir }}/ca-key.pem"

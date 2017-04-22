@@ -1,4 +1,8 @@
 ---
+- name: Create flannel release directory
+  when: flannel_version != "0.5.5"
+  file: path="{{ flannel_dir }}/flannel-{{ flannel_version }}" state=directory
+
 - name: Download flannel tar file
   get_url:
     url: "{{ flannel_download_url }}"
@@ -6,16 +10,12 @@
     validate_certs: False
   register: flannel_download
 
-- name: Create flannel release directory
-  when: flannel_version != "0.5.5"
-  file: path="{{ flannel_dir }}/flannel-{{ flannel_version }}" state=directory
-
 - name: Extract flannel tar file (0.5.5)
   when:
     - flannel_download|succeeded
     - flannel_version == "0.5.5"
   unarchive:
-    src: "/tmp/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
+    src: "/tmp/{{ flannel_tar_name }}"
     dest: "{{ flannel_dir }}"
     copy: no
 
@@ -24,7 +24,7 @@
     - flannel_download|succeeded
     - flannel_version != "0.5.5"
   unarchive:
-    src: "/tmp/flannel-{{ flannel_version_uri }}-linux-amd64.tar.gz"
+    src: "/tmp/{{ flannel_tar_name }}"
     dest: "{{ flannel_dir }}/flannel-{{ flannel_version }}"
     copy: no
 
