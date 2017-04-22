@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kube-dashboard
+  name: kubernetes-dashboard
   namespace: kube-system
   labels:
     app: kubernetes-dashboard
@@ -17,31 +17,31 @@ spec:
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
-      - name: kube-dashboard
+      - name: kubernetes-dashboard
         image: {{ kube_dash_image }}
         resources:
-          limits:
-            cpu: 100m
-            memory: 50Mi
           requests:
             cpu: 100m
             memory: 50Mi
-       ports:
-       - containerPort: 9090
-       livenessProbe:
-         httpGet:
-           path: /
-           port: 9090
-         initialDelaySeconds: 30
-         timeoutSeconds: 30
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        ports:
+        - containerPort: 9090
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    name: kube-dashboard
-    kubernetes.io/cluster-service: "true"
   name: kubernetes-dashboard
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
 spec:
   selector:
     app: kubernetes-dashboard

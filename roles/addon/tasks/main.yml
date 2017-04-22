@@ -105,7 +105,7 @@
 
 - name: Check kubernetes dashboard is working
   when: kube_dash
-  shell: "kubectl get pods --all-namespaces=true | grep kube-dashboard"
+  shell: "kubectl get pods --all-namespaces=true | grep kubernetes-dashboard"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: check_dash
