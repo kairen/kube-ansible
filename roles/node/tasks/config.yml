@@ -5,14 +5,6 @@
 - name: Create kubernetes manifest config directory
   file: path={{ manifest_config_dir }} state=directory
 
-- name: Create weave directory
-  when: weave_net
-  file: path={{ weave_dir }} state=directory
-
-- name: Copy weave file
-  when: weave_net
-  copy: src=10-weave.conf  dest=/etc/cni/net.d/10-weave.conf
-
 - name: Create kubernetes config directory
   file: path={{ kube_config_dir }} state=directory
 

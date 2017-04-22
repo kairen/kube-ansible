@@ -3,14 +3,6 @@
 - name: Create kubernetes config directory
   file: path={{ manifest_config_dir }} state=directory
 
-- name: Create weave directory
-  when: weave_net
-  file: path={{ weave_dir }} state=directory
-
-- name: Copy weave file
-  when: weave_net
-  copy: src=10-weave.conf  dest=/etc/cni/net.d/10-weave.conf
-
 - name: Copy apiserver yml config file
   template: src="kube-apiserver.yml.j2" dest={{ manifest_config_dir }}/kube-apiserver.yml
 
