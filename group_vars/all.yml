@@ -16,6 +16,8 @@ keepalived_image: kairen/keepalived:1.2.24
 kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.6.1
 kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0
 kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.9
+kube_dnsmasq_image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
+kube_healthz_image: gcr.io/google_containers/exechealthz-amd64:1.2
 
 # Kubernetes cluster network
 cluster_subnet: 192.160.0
