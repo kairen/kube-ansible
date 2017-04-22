@@ -3,34 +3,34 @@
   file: path={{ kube_addon_dir }} state=directory
   register: addon_dir
 
-- name: Copy kube-proxy config file
+- name: Copy kubernetes proxy config file
   when: kube_proxy
-  template: src=kube-proxy.yaml.j2 dest={{ kube_addon_dir }}/kube-proxy.yaml
+  template: src=kube-proxy.yml.j2 dest={{ kube_addon_dir }}/kube-proxy.yml
 
-- name: Copy kube-dns config file
+- name: Copy kubernetes dns config file
   when: kube_dns
-  template: src=kube-dns.yaml.j2 dest={{ kube_addon_dir }}/kube-dns.yaml
+  template: src=kube-dns.yml.j2 dest={{ kube_addon_dir }}/kube-dns.yml
 
 - name: Copy weavnet and weavescope config file
-  when: weave_net
+  when: weave_scope_ui
   template: src={{ item.src }} dest={{ kube_addon_dir }}/{{ item.dest }}
   with_items:
-    - { src: "weavenet.yaml.j2", dest: "weavenet.yaml" }
-    - { src: "weavescopeui.yaml.j2", dest: "weavescopeui.yaml" }
+    - { src: "weavenet.yml.j2", dest: "weavenet.yml" }
+    - { src: "weavescopeui.yml.j2", dest: "weavescopeui.yml" }
 
-- name: Copy kube-monitoring config file
+- name: Copy kkubernetes monitoring config file
   when: kube_monitoring
-  template: src=kube-monitoring.yaml.j2 dest={{ kube_addon_dir }}/kube-monitoring.yaml
+  template: src=kube-monitoring.yml.j2 dest={{ kube_addon_dir }}/kube-monitoring.yml
 
-- name: Copy kube-logging config file
+- name: Copy kubernetes logging config file
   when: kube_logging
-  template: src=kube-logging.yaml.j2 dest={{ kube_addon_dir }}/kube-logging.yaml
+  template: src=kube-logging.yml.j2 dest={{ kube_addon_dir }}/kube-logging.yml
 
-- name: Copy kube-dash config file
+- name: Copy kubernetes dashboard config file
   when: kube_dash
-  template: src=kube-dash.yaml.j2  dest={{ kube_addon_dir }}/kube-dash.yaml
+  template: src=kube-dash.yml.j2  dest={{ kube_addon_dir }}/kube-dash.yml
 
-- name: Check kube-proxy
+- name: Check kubernetes proxy is working
   when: kube_proxy
   shell: "kubectl get pods --all-namespaces=true | grep kube-proxy"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -38,30 +38,30 @@
   register: check_kube_proxy
   ignore_errors: True
 
-- name: Create kube-proxy
+- name: Create kubernetes proxy addon
   when: kube_proxy and check_kube_proxy|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check weavenet
-  when: weave_net
+- name: Check weavenet is working
+  when: weave_scope_ui
   shell: "kubectl get pods --all-namespaces=true | grep weave-net"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: check_weavenet
   ignore_errors: True
 
-- name: Create weavenet and weave-ui
-  when: weave_net and check_weavenet|failed
+- name: Create weavenet and weave-ui addon
+  when: weave_scope_ui and check_weavenet|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/{{ item }}"
   with_items:
-    - "weavenet.yaml"
-    - "weavescopeui.yaml"
+    - "weavenet.yml"
+    - "weavescopeui.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube-dns
+- name: Check kubernetes dns is working
   when: kube_dns
   shell: "kubectl get pods --all-namespaces=true | grep kube-dns"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -69,13 +69,13 @@
   register: check_dns
   ignore_errors: True
 
-- name: Create kube-dns
+- name: Create kubernetes dns addon
   when: kube_dns and check_dns|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube-monitoring
+- name: Check kubernetes monitoring is working
   when: kube_monitoring
   shell: "kubectl get pods --all-namespaces=true | grep heapster"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -83,13 +83,13 @@
   register: check_monitoring
   ignore_errors: True
 
-- name: Create kube-monitoring
+- name: Create kubernetes monitoring addon
   when: kube_monitoring and check_monitoring|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube-logging
+- name: Check kubernetes logging is working
   when: kube_logging
   shell: "kubectl get pods --all-namespaces=true | grep kibana-logging"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -97,13 +97,13 @@
   register: check_logging
   ignore_errors: True
 
-- name: Create kube-logging
+- name: Create kubernetes logging addon
   when: kube_logging and check_logging|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kube-dashboard
+- name: Check kubernetes dashboard is working
   when: kube_dash
   shell: "kubectl get pods --all-namespaces=true | grep kube-dashboard"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -111,8 +111,8 @@
   register: check_dash
   ignore_errors: True
 
-- name: Create kube-dashboard
+- name: Create kubernetes dashboard addon
   when: kube_dash and check_dash|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yaml"
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

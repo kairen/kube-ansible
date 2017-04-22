@@ -1,16 +1,21 @@
 # Define addon vars
+# Weave net and scope ui
 weaveui_ip: "{{ lb_vip_address }}"
 weaveui_port: 90
 
+# Kubernetes dashboard
 kube_dash_ip: "{{ lb_vip_address }}"
 kube_dash_port: 80
 
+# Kubernetes dns
 dns_replicas: 1
 
+# Kubernetes logging
 logging_ip: "{{ lb_vip_address }}"
 kibana_port: 5601
 elasticsearch_port: 9200
 
+# Kubernetes monitoring
 monitoring_ip: "{{ lb_vip_address }}"
 heapster_ip: "{{ cluster_subnet }}.11"
 heapster_port: 80
