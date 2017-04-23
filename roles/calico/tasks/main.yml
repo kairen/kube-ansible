@@ -13,5 +13,9 @@
 
 - name: Enable and restart calico network
   when: change_calico|succeeded
-  service: name=calico-node enabled=yes state=started
+  systemd:
+    name: calico-node
+    daemon_reload: yes
+    state: started
+    enabled: yes
   register: calico_started
