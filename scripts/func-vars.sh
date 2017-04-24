@@ -52,9 +52,9 @@ done
 
 # Define variables
 GROUP_VARS_PATH="./group_vars/all.yml"
-FLANNEL_DEFAULT_PATH="./roles/flannel/defaults/main.yml"
+FLANNEL_DEFAULT_PATH="./roles/networking/flannel/defaults/main.yml"
 ETCD_DEFAULT_PATH="./roles/etcd/defaults/main.yml"
-NODE_DEFAULT_PATH="./roles/node/defaults/main.yml"
+NODE_DEFAULT_PATH="./roles/kubernetes/node/defaults/main.yml"
 VIP_DEFAULT_PATH="./roles/ha/defaults/main.yml"
 INITIAL_SCRIPT_PATH="./scripts/initial.sh"
 
