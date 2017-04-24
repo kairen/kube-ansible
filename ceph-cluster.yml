@@ -1,12 +1,14 @@
 ---
 # Require the cluster is fully operation and running
 - hosts: all
+  become: yes
   roles:
    - ceph
   tags:
    - ceph
 
 - hosts: masters
+  become: yes
   roles:
     - ceph-k8s
   tags:

@@ -2,42 +2,49 @@
 # Deploy a kubernetes cluster.
 
 - hosts: sslhost
+  become: yes
   roles:
      -  sslcert
   tags:
      -  sslcert
 
 - hosts: etcd
+  become: yes
   roles:
    -   etcd
   tags:
     - etcd
 
 - hosts: all
+  become: yes
   roles:
     - docker
   tags:
     - docker
 
 - hosts: masters
+  become: yes
   roles:
     - ha
   tags:
     - ha
 
 - hosts: masters
+  become: yes
   roles:
     - master
   tags:
     - master
 
 - hosts: nodes
+  become: yes
   roles:
     - node
   tags:
     - node
 
 - hosts: all
+  become: yes
   roles:
    - { role: flannel, when: networking == 'flannel' }
    - { role: calico, when: networking == 'calico' }
