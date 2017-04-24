@@ -1,5 +1,5 @@
 docker_version: "17.04.0-ce"
 
-# Docker git release binary url
-docker_download_url_base: "https://get.docker.com/builds/Linux/x86_64"
-docker_download_url: "{{ docker_download_url_base }}/docker-{{ docker_version }}.tgz"
+# The default url to download the docker tar from
+docker_base_url: "https://get.docker.com/builds/Linux/x86_64"
+docker_download_url: "{{ docker_base_url }}/docker-{{ docker_version }}.tgz"
