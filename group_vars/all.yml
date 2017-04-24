@@ -43,9 +43,7 @@ insecure_registrys:
 
 # Etcd variable
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
-etcd_version: 3.1.5 # etcd version, support 2.1.0+
 etcd_peer_url_scheme: http # http / https
-etcd_client_port: 2379
 
 # Network implementation('flannel', 'weave', 'calico')
 networking: flannel

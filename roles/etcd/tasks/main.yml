@@ -1,19 +1,11 @@
 ---
-# - name: Install etcd (RHEL/CentOS)
-#   when: ansible_os_family == "RedHat"
-#   yum: name=etcd state=latest
-#
-# - name: Install etcd (Debian/Ubuntu)
-#   when: ansible_os_family == "Debian"
-#   apt: name=etcd state=latest
-
-- name: Install etcd
-  include: git-install.yml
+- name: Install etcd key/value store
+  include: source.yml
 
 - name: Setup etcd systemd service
   include: systemd.yml
 
-- name: Prepare and write etcd configuration
+- name: Configure etcd key/value store
   include: config.yml
 
 - name: Reload systemd daemon

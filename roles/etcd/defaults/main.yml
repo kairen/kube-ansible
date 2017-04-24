@@ -1,10 +1,9 @@
+# Etcd common vars
+etcd_version: 3.1.6 # etcd version, support 2.1.0+
+
+etcd_client_port: 2379
 etcd_peer_port: 2380
 etcd_peers_group: etcd
-etcd_conf_dir: /etc/etcd
-etcd_script_dir: /usr/libexec/etcd
-etcd_data_dir: /var/lib/etcd
-etcd_releases_dir: "/opt"
-
 etcd_initial_cluster_state: new
 etcd_initial_cluster_token: etcd-k8s-cluster
 etcd_interface: ""
@@ -15,6 +14,12 @@ etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_port }
 etcd_advertise_client_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }}"
 etcd_listen_client_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_client_port }}"
 
-# etcd git release binary url
-etcd_download_url_base: "https://github.com/coreos/etcd/releases/download/v{{ etcd_version }}"
-etcd_download_url: "{{ etcd_download_url_base }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+# Etcd dir vars
+etcd_conf_dir: /etc/etcd
+etcd_script_dir: /usr/libexec/etcd
+etcd_data_dir: /var/lib/etcd
+etcd_releases_dir: "/opt"
+
+# The default url to download the flannel tar from
+etcd_base_url: "https://github.com/coreos/etcd/releases/download"
+etcd_download_url: "{{ etcd_base_url }}/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
