@@ -2,7 +2,7 @@
 KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 
 # pod infrastructure container
-KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest"
+KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ pod_infra_image }}"
 
 # Add your own!
 KUBELET_ARGS="--kubeconfig={{ kubeadmin_config }} --require-kubeconfig=true --pod-manifest-path={{ manifest_config_dir }}"

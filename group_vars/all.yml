@@ -6,6 +6,7 @@ docker_install_type: "package" # package type only support latest version
 kube_install_type: "source" # package type only support latest version
 
 # Kubernetes system images
+pod_infra_image: registry.access.redhat.com/rhel7/pod-infrastructure:latest
 api_image: "gcr.io/google_containers/kube-apiserver-amd64:v{{ kube_version }}"
 controller_image: "gcr.io/google_containers/kube-controller-manager-amd64:v{{ kube_version }}"
 scheduler_image: "gcr.io/google_containers/kube-scheduler-amd64:v{{ kube_version }}"
