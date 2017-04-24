@@ -15,7 +15,7 @@ spec:
   - name: kube-scheduler
     image: "{{ scheduler_image }}"
     command:
-    - "/usr/local/bin/kube-scheduler"
+    - "kube-scheduler"
     - "--v=0"
     - "--address=127.0.0.1"
     - "--leader-elect={{ leader_elect }}"

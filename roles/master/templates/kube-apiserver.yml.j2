@@ -18,7 +18,7 @@ spec:
   - name: kube-apiserver
     image: "{{ api_image }}"
     command:
-    - "/usr/local/bin/kube-apiserver"
+    - "kube-apiserver"
     - "--v=0"
     - "--insecure-bind-address=127.0.0.1"
     - "--admission-control={{ admission_control }}"

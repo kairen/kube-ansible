@@ -15,7 +15,7 @@ spec:
   - name: kube-controller-manager
     image: "{{ controller_image }}"
     command:
-    - "/usr/local/bin/kube-controller-manager"
+    - "kube-controller-manager"
     - "--v=0"
     - "--address=127.0.0.1"
     - "--leader-elect={{ leader_elect }}"
