@@ -14,6 +14,16 @@
     - calico-ipam
   register: calico_download
 
+- name: Download calico ctl tool
+  get_url:
+    url: "{{ calicoctl_download_url }}"
+    dest: "/usr/bin/"
+    validate_certs: False
+    owner: root
+    mode: 0755
+  delegate_to: "{{ groups['masters'][0] }}"
+  register: calicoctl_download
+
 - name: Download cni lo plugin tgz file
   get_url:
     url: "{{ cni_download_url }}"

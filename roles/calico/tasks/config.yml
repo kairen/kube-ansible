@@ -10,6 +10,7 @@
 
 - name: Copy calico policy controller yml
   template: src=policy-controller.yml.j2 dest="{{ kube_network_dir }}/policy-controller.yml"
+  delegate_to: "{{ groups['masters'][0] }}"
 
 - name: Check the calico policy controller
   shell: "kubectl get pods --all-namespaces=true | grep calico-policy-controller"
