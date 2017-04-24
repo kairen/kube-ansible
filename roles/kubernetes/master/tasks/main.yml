@@ -10,6 +10,9 @@
 - name: Create and copy master config file
   include: config.yml
 
+- name: Add extra authenticating
+  include: auth.yml
+
 - name: Reload systemd daemon
   command: systemctl daemon-reload
 

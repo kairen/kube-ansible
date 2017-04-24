@@ -1,0 +1,8 @@
+---
+- name: Copy extra basic auth config file
+  when: extra_auth.basic.enable
+  template: src="auth/user.csv.j2" dest={{ kube_config_dir }}/user.csv
+
+- name: Copy extra token auth config file
+  when: extra_auth.token.enable
+  template: src="auth/token.csv.j2" dest={{ kube_config_dir }}/token.csv

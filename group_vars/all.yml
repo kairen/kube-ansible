@@ -34,6 +34,19 @@ api_secure_port: 5443
 # SSL cert handler, it should be true during ansible first run
 sslcert_create: true
 
+# Extra authenticating
+extra_auth:
+  basic:
+    enable: true
+    password: "p@ssw0rd"
+    user: admin
+    uid: admin
+  token:
+    enable: false
+    value: "022f7e19-3d8e-492f-93e6-3d6bc1c11174"
+    user: admin
+    uid: admin
+
 # All master fqdn name - it require to create ssl certificate
 # Set it to only available api server
 masters_fqdn: ['kube.master1.com',]
