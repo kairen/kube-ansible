@@ -3,6 +3,4 @@
 - hosts: masters
   become: yes
   roles:
-   - addon
-  tags:
-   - addon
+   - { role: addon, tags: addon }
