@@ -20,6 +20,6 @@ etcd_script_dir: /usr/libexec/etcd
 etcd_data_dir: /var/lib/etcd
 etcd_releases_dir: "/opt"
 
-# The default url to download the flannel tar from
+# The default url to download the etcd tar from
 etcd_base_url: "https://github.com/coreos/etcd/releases/download"
 etcd_download_url: "{{ etcd_base_url }}/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
