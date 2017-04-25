@@ -59,7 +59,7 @@ insecure_registrys:
 etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
 etcd_peer_url_scheme: http # http / https
 
-# Network implementation('flannel', 'weave', 'calico')
+# Network implementation('flannel', 'calico')
 networking: flannel
 
 # kube-dash addon (https://github.com/kubernetes/dashboard)

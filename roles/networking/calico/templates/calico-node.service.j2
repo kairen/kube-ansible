@@ -5,7 +5,7 @@ Requires=docker.service
 
 [Service]
 EnvironmentFile={{ env_config_dir }}/calico-node
-ExecStartPre=-/usr/bin/docker rm -f calico-node
+PermissionsStartOnly=true
 ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -e ETCD_ENDPOINTS=${ETCD_ENDPOINTS} \
   -e NODENAME=${HOSTNAME} \
@@ -22,8 +22,7 @@ ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /var/log/calico:/var/log/calico \
   ${CALICO_NODE_IMAGE}
-
-ExecStop=-/usr/bin/docker stop calico-node
+ExecStop=/usr/bin/docker rm -f calico-node
 Restart=always
 RestartSec=10
 
