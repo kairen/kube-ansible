@@ -1,36 +1,34 @@
 #!/bin/bash
+#
+# Program: Initial vagrant.
+# History: 2017/1/16 Kyle.b Release
 
 set -e
 HOST_NAME=$(hostname)
-OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release | grep -o "\w*" | head -n 1)
+OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release | grep -o "\w*")
 DEPLOY_KUBE=true
 
 if [ ${HOST_NAME} == "master1" ]; then
   case "${OS_NAME}" in
     "CentOS")
-      sudo yum install -y gcc git vim openssl-devel python python-devel python-setuptools
-      sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/sshpass-1.06-1.el6.x86_64.rpm
+      sudo yum install -y epel-release
+      sudo yum install -y git ansible sshpass python-netaddr openssl-devel
     ;;
     "Ubuntu")
       sudo sed -i 's/us.archive.ubuntu.com/tw.archive.ubuntu.com/g' /etc/apt/sources.list
-      sudo apt-get update
-      sudo apt-get install -y python-dev python-setuptools libssl-dev git gcc sshpass
+      sudo apt-add-repository -y ppa:ansible/ansible
+      sudo apt-get update && sudo apt-get install -y ansible git sshpass python-netaddr libssl-dev
     ;;
     *)
       echo "${OS_NAME} is not support ..."; exit 1
   esac
-
-  sudo easy_install pip
-  sudo pip install ansible
 
   # Create ssh key
   yes "/root/.ssh/id_rsa" | sudo ssh-keygen -t rsa -N ""
 
   HOSTS="172.16.35.10 172.16.35.11 172.16.35.12"
   for host in ${HOSTS}; do
-    # Create dir
     sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo mkdir -p /root/.ssh"
-    # Write authorized_keys file
     sudo cat /root/.ssh/id_rsa.pub | \
          sudo sshpass -p "vagrant" ssh -o StrictHostKeyChecking=no vagrant@${host} "sudo tee /root/.ssh/authorized_keys"
   done
