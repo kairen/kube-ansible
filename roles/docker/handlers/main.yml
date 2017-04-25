@@ -9,14 +9,8 @@
   when: '"docker0" in ansible_interfaces'
 
 - name: Enable and start docker socket
-  when: docker_install_type == "source"
+  when: install_type == "src"
   service: name=docker.socket enabled=yes state=started
 
 - name: Enable and restart docker
   service: name=docker enabled=yes state=restarted
-
-- name: Fix docker 1.13.0+ forward issue
-  command: "{{ item }}"
-  with_items:
-    - iptables -P FORWARD ACCEPT
-    - iptables-save

@@ -1,12 +1,12 @@
 ---
 - name: Create docker system group
-  when: docker_install_type == "source"
+  when: install_type == "src"
   group:
     name: docker
     state: present
 
 - name: Create docker system  user
-  when: docker_install_type == "source"
+  when: install_type == "src"
   user:
     name=docker
     comment="Docker user"
@@ -15,12 +15,11 @@
     system=yes
     groups=docker
 
-- name: Add docker config file
-  when: docker_install_type == "source"
-  copy: src=docker dest={{ env_config_dir }}/docker
+- name: Add docker env config file
+  template: src=docker.j2 dest={{ env_config_dir }}/docker
 
 - name: Add docker socket service file
-  when: docker_install_type == "source"
+  when: install_type == "src"
   copy: src=docker.socket dest={{ service_dir }}/docker.socket owner=root group=root mode=0755
 
 - name: Add docker service file

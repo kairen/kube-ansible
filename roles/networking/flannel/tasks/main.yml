@@ -17,4 +17,3 @@
   register: flannel_started
   notify:
     - Enable and restart docker
-    - Fix docker 1.13.0+ forward issue

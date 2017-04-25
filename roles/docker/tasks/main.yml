@@ -1,10 +1,10 @@
 ---
-- name: Docker engine from package
-  when: docker_install_type == "package"
+- name: Install docker engine from package
+  when: install_type == "pkg"
   include: package.yml
 
-- name: Docker engine from source
-  when: docker_install_type == "source"
+- name: Install docker engine from source
+  when: install_type == "src"
   include: source.yml
 
 - name: Setup docker systemd service
@@ -27,4 +27,3 @@
     - Delete docker0 interface
     - Enable and start docker socket
     - Enable and restart docker
-    - Fix docker 1.13.0+ forward issue

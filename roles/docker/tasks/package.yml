@@ -1,4 +1,10 @@
 ---
+- name: Check docker version is match
+  when:
+    - docker_version not in pkg_versions.debain
+    - docker_version not in pkg_versions.centos
+  fail: msg="Docker version not support."
+
 - name: Add Docker APT GPG key
   when: ansible_os_family == "Debian"
   apt_key:
@@ -11,10 +17,6 @@
     repo: deb https://apt.dockerproject.org/repo ubuntu-xenial main
     state: present
     filename: 'docker'
-
-- name: Add EPEL repository
-  when: ansible_os_family == "RedHat"
-  yum: name=epel-release state=present
 
 - name: Add Docker yum repository
   when: ansible_os_family == "RedHat"
@@ -29,8 +31,12 @@
 
 - name: Install docker engine (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
-  yum: name=docker-engine state=present
+  yum:
+   name: "{{ pkg_versions.centos[docker_version] }}"
+   state: present
 
 - name: Install docker engine (Debian/Ubuntu)
   when: ansible_os_family == "Debian"
-  apt: name=docker-engine state=present
+  apt:
+    name: "{{ pkg_versions.debain[docker_version] }}"
+    state: present

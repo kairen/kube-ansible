@@ -5,14 +5,15 @@ After=network.target
 [Service]
 Type=notify
 EnvironmentFile=-{{ env_config_dir }}/docker
+ExecStartPost=/sbin/iptables -I FORWARD -s 0.0.0.0/0 -j ACCEPT
 ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
-                        $OPTIONS \
-                        $DOCKER_STORAGE_OPTIONS \
-                        $DOCKER_OPTS \
-                        $DOCKER_NETWORK_OPTIONS \
-                        $ADD_REGISTRY \
-                        $BLOCK_REGISTRY \
-                        $INSECURE_REGISTRY
+  $OPTIONS \
+  $DOCKER_STORAGE_OPTIONS \
+  $DOCKER_OPTS \
+  $DOCKER_NETWORK_OPTIONS \
+  $ADD_REGISTRY \
+  $BLOCK_REGISTRY \
+  $INSECURE_REGISTRY
 
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always

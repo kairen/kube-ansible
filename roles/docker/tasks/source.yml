@@ -1,19 +1,25 @@
 ---
+- name: Check docker version not latest
+  when: docker_version == 'latest'
+  fail: msg="The source install type not support 'latest' version tag."
+
+- name: Check docker tar file already exists
+  stat:
+    path: "/tmp/docker-{{ docker_version }}.tgz"
+  register: check_docker
+
 - name: Download docker tar file
+  when: not check_docker.stat.exists
   get_url:
     url: "{{ docker_download_url }}"
     dest: "/tmp"
     validate_certs: False
   register: docker_download
 
-- name: Extract docker tar file
+- name: Extract docker tar file to bin
   when: docker_download|succeeded
   unarchive:
     src: "/tmp/docker-{{ docker_version }}.tgz"
-    dest: "/tmp/"
+    dest: "/usr/bin/"
     copy: no
-
-- name: Copy docker files to bin
-  copy: src={{ item }} dest="/usr/bin" owner=root mode=0755
-  with_fileglob:
-  - /tmp/docker/*
+    extra_opts: ['--strip-components=1']
