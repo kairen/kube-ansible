@@ -16,9 +16,8 @@ etcd_listen_client_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_client_po
 
 # Etcd dir vars
 etcd_conf_dir: /etc/etcd
-etcd_script_dir: /usr/libexec/etcd
 etcd_data_dir: /var/lib/etcd
-etcd_releases_dir: "/opt"
+etcd_releases_dir: /opt/etcd
 
 # The default url to download the etcd tar from
 etcd_base_url: "https://github.com/coreos/etcd/releases/download"

@@ -1,5 +1,14 @@
 ---
+- name: Create etcd opt bin directory
+  file: path={{ etcd_releases_dir }} state=directory
+
+- name: Check etcd tar file already exists
+  stat:
+    path: "/tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+  register: check_etcd
+
 - name: Download etcd tar file
+  when: not check_etcd.stat.exists
   get_url:
     url: "{{ etcd_download_url }}"
     dest: "/tmp"
@@ -12,10 +21,11 @@
     src: "/tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
     dest: "{{ etcd_releases_dir }}"
     copy: no
+    extra_opts: ['--strip-components=1']
 
 - name: Create etcd symlinks
   file:
-    src: "{{ etcd_releases_dir }}/etcd-v{{ etcd_version }}-linux-amd64/{{ item }}"
+    src: "{{ etcd_releases_dir }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"
     state: link
     force: yes
