@@ -29,4 +29,8 @@ cat <<EOF > inventory
 
 [nodes]
 172.16.35.[10:11]
+
+[cluster:children]
+masters
+nodes
 EOF

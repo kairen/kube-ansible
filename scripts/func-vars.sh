@@ -28,6 +28,10 @@ ${master}
 
 [nodes]
 ${nodes}
+
+[cluster:children]
+masters
+nodes
 EOF
 }
 
