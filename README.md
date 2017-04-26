@@ -1,7 +1,7 @@
 # My Highly Available Kubernetes Ansible
-A vagrant development environment for Kubernetes and Ceph.
+This is my learning `Ansible`、`Vagrant` and `Kubernetes` repos, Goal is quick deployment and operation for Kubernetes and Ceph.
 
-TODO:
+TODO List:
 - [x] Vagrant virtualbox scripts.
 - [ ] Vagrant libvirt scripts.
 - [x] Kubernetes HA cluster setup(v1.5.0+).
@@ -28,7 +28,7 @@ Start deploying?(y): y
 Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
 
 Requirement:
-* Deploy node must be install `Ansible v2.0.0+`.
+* Deploy node must be install `Ansible v2.1.0+`.
 * All Master/Node should have password-less access from Deploy node.
 
 Add the system information gathered above into a file called `inventory`. For inventory example:
@@ -46,10 +46,18 @@ Add the system information gathered above into a file called `inventory`. For in
 172.16.35.10
 172.16.35.11
 172.16.35.12
+
+[cluster:children]
+masters
+nodes
 ```
 
-Set the variables in `group_vars/all.yml` to reflect you need options.
+Set the variables in `group_vars/all.yml` to reflect you need options. For example:
+```
+lb_vip_address: 172.16.35.9
+```
 
+### Deploy a Kubernetes cluster
 If everything is ready, just run `cluster.yml` to deploy cluster:
 ```sh
 $ ansible-playbook cluster.yml
@@ -60,6 +68,7 @@ And then run `addons.yml` to create addons(Dashboard, proxy, DNS):
 $ ansible-playbook addons.yml
 ```
 
+### Deploy Ceph cluster on Kubernetes
 If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-cluster.yml`:
 ```sh
 $ ansible-playbook ceph-cluster.yml
@@ -130,4 +139,10 @@ Run a simple nginx application:
 ```sh
 $ kubectl create -f examples/nginx/
 $ kubectl get svc,po -o wide
+```
+
+## Reset cluster
+Reset all kubernetes cluster installed state:
+```sh
+$ ansible-playbook playbooks/reset.yml
 ```
