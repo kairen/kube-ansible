@@ -1,0 +1,18 @@
+registry_image: registry:2.6.1
+registry_ui_image: parabuzzle/craneoperator:latest
+
+registry_name: registry-2.6.1
+registry_ui_name: registry-ui-2.6.1
+
+registry_port: 5000
+registry_ui_port: 8080
+
+registry_proto: http
+registry_ssl_verify: false
+
+account:
+  user: admin
+  password: p@ssw0rd
+  allow_delete: true
+
+registry_data_dir: /opt/registry/data

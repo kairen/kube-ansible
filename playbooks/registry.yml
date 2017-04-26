@@ -1,0 +1,12 @@
+---
+# Create local docker registry
+
+- hosts: registry
+  become: yes
+  roles:
+    - { role: docker, tags: docker }
+
+- hosts: registry
+  become: yes
+  roles:
+    - { role: registry, tags: registry }

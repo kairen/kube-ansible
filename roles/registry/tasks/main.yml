@@ -1,0 +1,43 @@
+---
+- name: Create docker registry data directory
+  file: path="{{ registry_data_dir }}" state=directory
+
+- name: Check docker registry is working
+  shell: "docker ps | grep {{ registry_name }}"
+  delegate_to: "{{ groups['registry'][0] }}"
+  run_once: true
+  register: check_registry
+  ignore_errors: True
+
+- name: Create docker registry container
+  when: check_registry|failed
+  shell: |
+    docker run -d -p {{ registry_port }}:5000 \
+               -v {{ registry_data_dir }}:/var/lib/registry \
+               --restart=always --name {{ registry_name }} \
+               {{ registry_image }}
+  delegate_to: "{{ groups['registry'][0] }}"
+  run_once: true
+
+- name: Check docker registry ui is working
+  shell: "docker ps | grep {{ registry_ui_name }}"
+  delegate_to: "{{ groups['registry'][0] }}"
+  run_once: true
+  register: check_registry_ui
+  ignore_errors: True
+
+- name: Create docker registry ui container
+  when: check_registry_ui|failed
+  shell: |
+    docker run -d -p {{ registry_ui_port }}:80 \
+               -e REGISTRY_HOST={{ groups['registry'][0] }} \
+               -e REGISTRY_PORT={{ registry_port }} \
+               -e REGISTRY_PROTO={{ registry_proto }} \
+               -e REGISTRY_SSL_VERIFY={{ registry_ssl_verify }} \
+               -e USERNAME={{ account.user }} \
+               -e PASSWORD={{ account.password }} \
+               -e REGISTRY_ALLOW_DELETE={{ account.allow_delete }} \
+               --restart=always --name {{ registry_ui_name }} \
+               {{ registry_ui_image }}
+  delegate_to: "{{ groups['registry'][0] }}"
+  run_once: true
