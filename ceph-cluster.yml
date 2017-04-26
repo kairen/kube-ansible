@@ -1,6 +1,6 @@
 ---
 # Require the cluster is fully operation and running
-- hosts: all
+- hosts: cluster
   become: yes
   roles:
     - { role: ceph, tags: ceph }

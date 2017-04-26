@@ -2,6 +2,7 @@
 - hosts: sslhost
   gather_facts: no
   become: yes
+  tags: sslhost
   tasks:
     - name: Remove ssl cert directory
       ignore_errors: True
@@ -9,6 +10,7 @@
 
 - hosts: cluster
   become: yes
+  tags: cluster
   tasks:
     - name: Stop all component systemd service
       ignore_errors: True
@@ -29,7 +31,7 @@
       mount: name={{ item }} state=unmounted
       with_items: "{{ mounts.stdout_lines|list }}"
 
-    - name: Purge all component package ((RHEL/CentOS))
+    - name: Purge all component package (RHEL/CentOS)
       ignore_errors: True
       when: ansible_os_family == "RedHat"
       yum: name="{{ item }}" state=removed
@@ -74,6 +76,7 @@
 - hosts: etcd
   gather_facts: no
   become: yes
+  tags: etcd
   tasks:
     - name: Stop etcd systemd service
       ignore_errors: True
@@ -86,3 +89,29 @@
         - /etc/etcd
         - /var/lib/etcd
         - /opt/etcd
+
+- hosts: registry
+  become: yes
+  tags: registry
+  tasks:
+    - name: Stop docker systemd service
+      ignore_errors: True
+      systemd: name=docker state=stopped enabled=no
+
+    - name: Purge docker engine package (RHEL/CentOS)
+      ignore_errors: True
+      when: ansible_os_family == "RedHat"
+      yum: name="docker-engine" state=removed
+
+    - name: Purge docker engine package (Debian/Ubuntu)
+      ignore_errors: True
+      when: ansible_os_family == "Debian"
+      apt: name="docker-engine" state=removed
+
+    - name: Delete docker container and registry data
+      ignore_errors: True
+      file: path="{{ item }}" state=absent
+      with_items:
+        - /opt/registry
+        - /var/lib/docker/containers
+        - /var/lib/docker/vfs/dir
