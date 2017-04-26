@@ -9,7 +9,6 @@
   when: '"docker0" in ansible_interfaces'
 
 - name: Enable and start docker socket
-  when: install_type == "src"
   service: name=docker.socket enabled=yes state=started
 
 - name: Enable and restart docker

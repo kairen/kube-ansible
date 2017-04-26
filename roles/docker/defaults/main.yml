@@ -20,6 +20,8 @@ pkg_versions:
     '1.12.5': docker-engine-1.12.5-1.el7.centos
     '1.11.2': docker-engine-1.11.2-1.el7.centos
 
+docker_dir: /opt/docker
+
 # The default url to download the docker tar from
 docker_base_url: "https://get.docker.com/builds/Linux/x86_64"
 docker_download_url: "{{ docker_base_url }}/docker-{{ docker_version }}.tgz"
