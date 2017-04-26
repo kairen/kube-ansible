@@ -4,13 +4,13 @@ KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 # pod infrastructure container
 KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ pod_infra_image }}"
 
-# Add your own!
+# add your own!
 KUBELET_ARGS="--kubeconfig={{ kubeadmin_config }} --require-kubeconfig=true --pod-manifest-path={{ manifest_config_dir }}"
 
 # set log
 KUBE_LOGTOSTDERR="--logtostderr=true --v=0"
 
-# Should this cluster be allowed to run privileged docker containers
+# should this cluster be allowed to run privileged docker containers
 KUBE_ALLOW_PRIV="--allow-privileged=true"
 
 # kubelet network policy

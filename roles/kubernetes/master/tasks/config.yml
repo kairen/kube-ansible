@@ -3,25 +3,25 @@
 - name: Create kubernetes config directory
   file: path={{ manifest_config_dir }} state=directory
 
-- name: Copy apiserver yml config file
+- name: Copy kubernetes apiserver yml config file
   template: src="kube-apiserver.yml.j2" dest={{ manifest_config_dir }}/kube-apiserver.yml
 
-- name: Copy controller-manager yml config file
+- name: Copy kubernetes controller-manager yml config file
   template: src="kube-controller-manager.yml.j2" dest={{ manifest_config_dir }}/kube-controller-manager.yml
 
-- name: Copy scheduler yml config file
+- name: Copy kubernetes scheduler yml config file
   template: src="kube-scheduler.yml.j2" dest={{ manifest_config_dir }}/kube-scheduler.yml
 
-- name: Copy kubeadmin config file
+- name: Copy kubernetes admin account config file
   template: src="admin.conf.j2" dest={{ kubeadmin_config }}
 
 - name: Copy openssl certificate from ansible host
   copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
 
-- name: Copy kubelet config file
+- name: Copy kubelet env config file
   template: src="kubelet.j2" dest={{ kube_config_dir }}/kubelet
 
-- name: Copy kubelet service file
+- name: Copy kubelet systemd service file
   copy: src=kubelet.service dest={{ service_dir }}/kubelet.service owner=root group=root mode=0755
 
 - name: Create kubelet directory

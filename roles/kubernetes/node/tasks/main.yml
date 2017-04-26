@@ -1,13 +1,21 @@
 ---
-- name: Kubernetes from binary release
-  when: kube_install_type == "package"
+- name: Check kubelet service already exists
+  stat: path="{{ service_dir }}/kubelet.service"
+  register: check_kubelet_service
+
+- name: Stop systemd service and upgrade component file
+  when: check_kubelet_service.stat.exists
+  service: name=kubelet enabled=yes state=stopped
+
+- name: Install Kubernetes from binary release
+  when: install_type == "pkg"
   include: package.yml
 
-- name: Kubernetes from source release
-  when: kube_install_type == "source"
+- name:  InstallKubernetes from source release
+  when: install_type == "src"
   include: source.yml
 
-- name: Create and copy node config file
+- name: Configure kubernetes component
   include: config.yml
 
 - name: Reload systemd daemon

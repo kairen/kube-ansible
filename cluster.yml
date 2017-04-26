@@ -19,7 +19,7 @@
 - hosts: masters
   become: yes
   roles:
-    - { role: ha, tags: ha }
+    - { role: kubernetes/ha, tags: ha }
     - { role: kubernetes/master, tags: master }
 
 - hosts: nodes

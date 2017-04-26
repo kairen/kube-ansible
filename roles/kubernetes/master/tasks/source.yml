@@ -1,7 +1,20 @@
 ---
+- name: Create kubernetes release directory
+  file: path="{{ kube_dir }}" state=directory
+
 - name: Download kubernetes component files
-  get_url: url="{{ kube_download_url }}/{{ item }}" dest="/usr/bin" mode=0755
+  get_url: url="{{ kube_download_url }}/{{ item }}" dest="{{ kube_dir }}" mode=0755
   with_items:
     - kubectl
     - kubelet
   register: kube_download
+
+- name: Create kubernetes component symlinks
+  file:
+    src: "{{ kube_dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - kubectl
+    - kubelet

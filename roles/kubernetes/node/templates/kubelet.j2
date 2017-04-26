@@ -4,7 +4,7 @@ KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 # pod infrastructure container
 KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ pod_infra_image }}"
 
-# Add your own!
+# add your own!
 KUBELET_ARGS="--kubeconfig={{ kubelet_config }} --require-kubeconfig=true --pod-manifest-path=/etc/kubernetes/manifests"
 
 # set log

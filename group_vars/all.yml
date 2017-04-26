@@ -1,22 +1,5 @@
 # Define all component group variable
-kube_version: 1.6.1 # support 1.4.0+ for source type
-
-kube_install_type: "source" # package type only support latest version
-
-# Kubernetes system images
-pod_infra_image: registry.access.redhat.com/rhel7/pod-infrastructure:latest
-api_image: "gcr.io/google_containers/kube-apiserver-amd64:v{{ kube_version }}"
-controller_image: "gcr.io/google_containers/kube-controller-manager-amd64:v{{ kube_version }}"
-scheduler_image: "gcr.io/google_containers/kube-scheduler-amd64:v{{ kube_version }}"
-haproxy_image: haproxy:1.7
-keepalived_image: kairen/keepalived:1.2.24
-
-# Kubernetes add-ons images
-kube_proxy_image: gcr.io/google_containers/kube-proxy-amd64:v1.6.1
-kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0
-kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.9
-kube_dnsmasq_image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
-kube_healthz_image: gcr.io/google_containers/exechealthz-amd64:1.2
+kube_version: 1.6.2 # support 1.4.0+ for source type
 
 # Kubernetes cluster network
 cluster_subnet: 192.160.0
@@ -81,3 +64,19 @@ kube_monitoring: false # turn to true to enable
 
 # Weave scope ui
 weave_scope_ui: false # turn to true to enable
+
+# Kubernetes system images
+# Provide ceph storage class must be use 'quay.io/attcomdev/kube-controller-manager:v{{ kube_version }}'
+pod_infra_image: registry.access.redhat.com/rhel7/pod-infrastructure:latest
+api_image: "gcr.io/google_containers/kube-apiserver-amd64:v{{ kube_version }}"
+controller_image: "gcr.io/google_containers/kube-controller-manager-amd64:v{{ kube_version }}"
+scheduler_image: "gcr.io/google_containers/kube-scheduler-amd64:v{{ kube_version }}"
+haproxy_image: haproxy:1.7
+keepalived_image: kairen/keepalived:1.2.24
+
+# Kubernetes add-ons images
+kube_proxy_image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
+kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0
+kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.9
+kube_dnsmasq_image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
+kube_healthz_image: gcr.io/google_containers/exechealthz-amd64:1.2

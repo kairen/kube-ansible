@@ -9,7 +9,3 @@ leader_elect_lease_duration: 15s
 leader_elect_renew_deadline: 10s
 leader_elect_retry_period: 2s
 pod_eviction_timeout: 1m0s
-
-# Kubernetes git release binary url
-kube_base_url: "https://storage.googleapis.com/kubernetes-release/release"
-kube_download_url: "{{ kube_base_url }}/v{{ kube_version }}/bin/linux/amd64"
