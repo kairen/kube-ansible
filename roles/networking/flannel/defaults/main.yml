@@ -4,7 +4,7 @@ flannel_host_prefix: 24
 flannel_backend: vxlan # overlay network type
 flannel_opts: "" # when use vagrant to deploy, you should set to "--iface=enp0s8"
 
-flannel_dir: "/opt"
+flannel_dir: /opt/flannel
 
 # The default url to download the flannel tar from
 flannel_base_url: "https://github.com/coreos/flannel/releases/download"
