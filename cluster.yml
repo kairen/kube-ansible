@@ -11,7 +11,7 @@
   roles:
    - { role: etcd, tags: etcd }
 
-- hosts: all
+- hosts: cluster
   become: yes
   roles:
     - { role: docker, tags: docker }
@@ -27,7 +27,7 @@
   roles:
     - { role: kubernetes/node, tags: node }
 
-- hosts: all
+- hosts: cluster
   become: yes
   roles:
    - { role: networking/flannel, when: networking == 'flannel', tags: flannel }
