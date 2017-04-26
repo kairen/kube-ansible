@@ -1,0 +1,88 @@
+---
+- hosts: sslhost
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Remove ssl cert directory
+      ignore_errors: True
+      file: path="/opt/kubernetes" state=absent
+
+- hosts: cluster
+  become: yes
+  tasks:
+    - name: Stop all component systemd service
+      ignore_errors: True
+      systemd: name={{ item }} state=stopped enabled=no
+      with_items:
+        - kubelet.service
+        - flanneld.service
+        - calico-node.service
+        - docker.service
+
+    - name: Find all kubelet mount volume
+      ignore_errors: True
+      shell: "df | grep -o '/var/lib/kubelet.*'"
+      register: mounts
+
+    - name: Unmounted all kubelet volume
+      ignore_errors: True
+      mount: name={{ item }} state=unmounted
+      with_items: "{{ mounts.stdout_lines|list }}"
+
+    - name: Purge all component package ((RHEL/CentOS))
+      ignore_errors: True
+      when: ansible_os_family == "RedHat"
+      yum: name="{{ item }}" state=removed
+      with_items:
+        - kubectl
+        - kubelet
+        - kubernetes-cni
+        - docker-engine
+
+    - name: Purge all component package (Debian/Ubuntu)
+      ignore_errors: True
+      when: ansible_os_family == "Debian"
+      apt: name="{{ item }}" state=removed
+      with_items:
+        - kubectl
+        - kubelet
+        - kubernetes-cni
+        - docker-engine
+
+    - name: Delete all component data directory
+      ignore_errors: True
+      file: path="{{ item }}" state=absent
+      with_items:
+        - /etc/kubernetes
+        - /var/lib/kubelet
+        - /var/lib/docker/containers
+        - /var/lib/docker/vfs/dir
+        - /opt/kube
+        - /opt/flannel
+        - /opt/docker
+        - /opt/cni
+        - /etc/cni
+
+    - name: Delete docker0 interface
+      command: ip link delete docker0
+      when: '"docker0" in ansible_interfaces'
+
+    - name: Delete flannel.1 interface
+      command: ip link delete flannel.1
+      when: '"flannel.1" in ansible_interfaces'
+
+- hosts: etcd
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Stop etcd systemd service
+      ignore_errors: True
+      systemd: name=etcd state=stopped enabled=no
+
+    - name: Delete etcd all file and directory
+      ignore_errors: True
+      file: path="{{ item }}" state=absent
+      with_items:
+        - /etc/etcd
+        - /var/lib/etcd
+        - /opt/etcd
