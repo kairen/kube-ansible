@@ -1,6 +1,6 @@
 calico_version: 1.7.0
 calicoctl_version: 1.1.3
-cni_version: 0.3.0
+cni_version: 0.5.2
 calico_node_image: quay.io/calico/node:v1.1.3
 pollicy_controller_image: quay.io/calico/kube-policy-controller:v0.5.4
 
@@ -15,4 +15,4 @@ calico_base_url: "https://github.com/projectcalico/cni-plugin/releases/download"
 calico_download_url: "{{ calico_base_url }}/v{{ calico_version }}"
 
 cni_base_url: "https://github.com/containernetworking/cni/releases/download"
-cni_download_url: "{{ cni_base_url }}/v{{ cni_version }}/cni-v{{ cni_version }}.tgz"
+cni_download_url: "{{ cni_base_url }}/v{{ cni_version }}/cni-amd64-v{{ cni_version }}.tgz"
