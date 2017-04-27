@@ -1,5 +1,5 @@
 ---
-# Create local docker registry
+# Create a registry on local
 
 - hosts: registry
   become: yes

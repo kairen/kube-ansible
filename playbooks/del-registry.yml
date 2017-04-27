@@ -1,0 +1,28 @@
+---
+# Clear docker registry from hosts
+
+- hosts: registry
+  become: yes
+  tags: registry
+  tasks:
+    - name: Stop docker systemd service
+      ignore_errors: True
+      systemd: name=docker state=stopped enabled=no
+
+    - name: Purge docker engine package (RHEL/CentOS)
+      ignore_errors: True
+      when: ansible_os_family == "RedHat"
+      yum: name="docker-engine" state=removed
+
+    - name: Purge docker engine package (Debian/Ubuntu)
+      ignore_errors: True
+      when: ansible_os_family == "Debian"
+      apt: name="docker-engine" state=removed
+
+    - name: Delete docker container and registry data
+      ignore_errors: True
+      file: path="{{ item }}" state=absent
+      with_items:
+        - /opt/registry
+        - /var/lib/docker/containers
+        - /var/lib/docker/vfs/dir
