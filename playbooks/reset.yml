@@ -2,15 +2,15 @@
 - hosts: sslhost
   gather_facts: no
   become: yes
-  tags: sslhost
+  tags: del_sslhost
   tasks:
     - name: Remove ssl cert directory
       ignore_errors: True
       file: path="/opt/kubernetes" state=absent
 
-- hosts: cluster
+- hosts: "{{ hosts | default('cluster') }}"
   become: yes
-  tags: cluster
+  tags: del_kube
   tasks:
     - name: Stop all component systemd service
       ignore_errors: True
@@ -76,7 +76,7 @@
 - hosts: etcd
   gather_facts: no
   become: yes
-  tags: etcd
+  tags: del_etcd
   tasks:
     - name: Stop etcd systemd service
       ignore_errors: True

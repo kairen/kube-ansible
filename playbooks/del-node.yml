@@ -1,0 +1,26 @@
+---
+# Tear down nodes
+
+- hosts: masters
+  gather_facts: no
+  become: yes
+  vars:
+    admin_config: /etc/kubernetes/admin.conf
+  vars_prompt:
+    - name: "nodes"
+      prompt: "Which nodes would you like to delete?"
+      private: no
+  tasks:
+    - name: Drain the node
+      shell: "kubectl --kubeconfig={{ admin_config }} drain {{ item }} --delete-local-data --force --ignore-daemonsets"
+      delegate_to: "{{ groups['masters'][0] }}"
+      run_once: true
+      ignore_errors: True
+      with_items: "{{ nodes.split(',') }}"
+
+    - name: Delete the node
+      shell: "kubectl --kubeconfig={{ admin_config }} delete node {{ item }}"
+      delegate_to: "{{ groups['masters'][0] }}"
+      run_once: true
+      ignore_errors: True
+      with_items: "{{ nodes.split(',') }}"

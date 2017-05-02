@@ -141,8 +141,16 @@ $ kubectl create -f examples/nginx/
 $ kubectl get svc,po -o wide
 ```
 
-## Reset cluster
+## Reset cluster and Tear down node
 Reset all kubernetes cluster installed state:
 ```sh
 $ ansible-playbook playbooks/reset.yml
+```
+
+Tear down node using the follow command:
+```sh
+$ ansible-playbook playbooks/del-node.yml
+Which nodes would you like to delete? node2
+
+$ ansible-playbook playbooks/reset.yml --tags -e hosts=node2
 ```
