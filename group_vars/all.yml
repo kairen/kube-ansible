@@ -13,7 +13,7 @@ lb_api_url: "https://{{ lb_vip_address }}"
 api_secure_port: 5443
 
 # SSL cert handler, it should be true during ansible first run
-sslcert_create: true
+sslcert_enable: true
 
 # Extra authenticating
 extra_auth:

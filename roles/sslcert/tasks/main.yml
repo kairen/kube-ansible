@@ -1,19 +1,24 @@
 ---
-- name: Create ssl cert dir
+- name: Check ssl certificate directory already exists
+  stat: path={{ master_cert_dir }}
+  register: check_ssl_dir
+
+- name: Create ssl certificate directory
+  when: not check_ssl_dir.stat.exists
   file: path={{ master_cert_dir }} state=directory
-  register: master_ssl_dir
+  register: ssl_dir
 
-- name: Copy openssl conf file to create certificate
+- name: Copy openssl conf file to ssl certificate directory
   template: src="openssl.conf.j2" dest={{ master_cert_dir }}/openssl.conf
-  register: ssl_config
+  register: copy_kube_ssl
 
-- name: Copy openssl conf file to create certificate
+- name: Copy openssl conf file to ssl certificate directory
   template: src="openssl-etcd.conf.j2" dest={{ master_cert_dir }}/openssl-etcd.conf
-  register: ssl_config
+  register: copy_etcd_ssl
 
-- name: Create kubenetes certificates
-  when: sslcert_create
-  register: create_cert
+- name: Create kubernetes certificates
+  when: sslcert_enable and copy_kube_ssl|changed
+  register: kube_cert
   command: "{{ item }}"
   with_items:
     - "openssl genrsa -out {{ master_cert_dir }}/ca-key.pem 2048"
@@ -25,8 +30,8 @@
     - "openssl req -new -key {{ master_cert_dir }}/apiserver-key.pem -out {{ master_cert_dir }}/apiserver.csr -subj '/CN=kube-apiserver' -config {{ master_cert_dir }}/openssl.conf"
     - "openssl x509 -req -in {{ master_cert_dir }}/apiserver.csr -CA {{ master_cert_dir }}/ca.pem -CAkey {{ master_cert_dir }}/ca-key.pem -CAcreateserial -out {{ master_cert_dir }}/apiserver.pem -days 1000 -extensions v3_req -extfile {{ master_cert_dir }}/openssl.conf"
 
-- name: Create etcd certificate
-  when: etcd_peer_url_scheme == 'https'
+- name: Create etcd https certificates
+  when: etcd_peer_url_scheme == 'https' and copy_etcd_ssl|changed
   register: etcd_cert
   command: "{{ item }}"
   with_items:
