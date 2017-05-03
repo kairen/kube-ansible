@@ -59,11 +59,16 @@
         - /var/lib/kubelet
         - /var/lib/docker/containers
         - /var/lib/docker/vfs/dir
-        - /opt/kube
         - /opt/flannel
         - /opt/docker
         - /opt/cni
         - /etc/cni
+
+    - name: Delete kubernetes component symlinks
+      ignore_errors: True
+      file: path="{{ item }}" state=absent
+      with_fileglob:
+        - /usr/bin/kube*
 
     - name: Delete docker0 interface
       command: ip link delete docker0
