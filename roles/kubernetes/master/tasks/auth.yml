@@ -6,3 +6,7 @@
 - name: Copy extra token auth config file
   when: extra_auth.token is defined
   template: src="auth/token.csv.j2" dest={{ kube_config_dir }}/token.csv
+
+- name: Copy extra ABAC auth config file
+  when: extra_auth.abac is defined
+  template: src="auth/policy.json.j2" dest={{ kube_config_dir }}/policy.json

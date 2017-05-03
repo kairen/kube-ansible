@@ -1,0 +1,4 @@
+{% for policy in extra_auth.abac.policies %}
+{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {{ policy }} }
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}

@@ -18,13 +18,18 @@ sslcert_enable: true
 # Extra authenticating
 extra_auth:
   basic:
-    password: "p@ssw0rd"
-    user: admin
-    uid: admin
-#  token:
-#    value: "022f7e19-3d8e-492f-93e6-3d6bc1c11174"
-#    user: admin
-#    uid: admin
+    accounts:
+    - 'p@ssw0rd,admin,admin'
+  # abac:
+  #   policies:
+  #   - '{"user":"*", "nonResourcePath": "*", "readonly": true}'
+  #   - '{"user":"admin", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"user":"scheduler", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}'
+  # token:
+  #   values:
+  #   - '0fdd1a8875ec,admin,admin'
 
 # All master fqdn name - it require to create ssl certificate
 # Set it to only available api server

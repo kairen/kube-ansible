@@ -1,1 +1,4 @@
-{{ extra_auth.token.value }},{{ extra_auth.token.user }},{{ extra_auth.token.uid }}
+{% for val in extra_auth.token.values %}
+{{ val }}
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}

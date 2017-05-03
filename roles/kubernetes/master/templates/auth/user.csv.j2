@@ -1,1 +1,4 @@
-{{ extra_auth.basic.password }},{{ extra_auth.basic.user }},{{ extra_auth.basic.uid }}
+{% for account in extra_auth.basic.accounts %}
+{{ account }}
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}

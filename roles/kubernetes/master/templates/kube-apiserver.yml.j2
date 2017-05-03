@@ -28,6 +28,10 @@ spec:
     {% if extra_auth.token is defined -%}
     - "--token-auth-file={{ kube_config_dir }}/token.csv"
     {% endif -%}
+    {% if extra_auth.abac is defined -%}
+    - "--authorization-mode=ABAC"
+    - "--authorization-policy-file={{ kube_config_dir }}/policy.json"
+    {% endif -%}
     {% if extra_auth.basic is defined -%}
     - "--basic-auth-file={{ kube_config_dir }}/user.csv"
     {% endif -%}
