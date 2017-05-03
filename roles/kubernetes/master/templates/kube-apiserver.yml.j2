@@ -25,10 +25,10 @@ spec:
     - "--service-cluster-ip-range={{ service_ip_range }}"
     - "--service-node-port-range={{ service_node_port_range }}"
     - "--service-account-key-file={{ account_key }}"
-    {% if extra_auth.token.enable|default(true) -%}
+    {% if extra_auth.token is defined -%}
     - "--token-auth-file={{ kube_config_dir }}/token.csv"
     {% endif -%}
-    {% if extra_auth.basic.enable|default(true) -%}
+    {% if extra_auth.basic is defined -%}
     - "--basic-auth-file={{ kube_config_dir }}/user.csv"
     {% endif -%}
     - "--client-ca-file={{ ca_cert }}"

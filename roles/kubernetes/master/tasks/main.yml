@@ -19,6 +19,7 @@
   include: config.yml
 
 - name: Add extra authenticating
+  when: extra_auth is defined
   include: auth.yml
 
 - name: Reload systemd daemon
