@@ -2,7 +2,7 @@
 - name: Set facts about etcdctl command
   set_fact:
     peers: "{% for hostname in groups['etcd'] %}http://{{ hostname }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
-    conf_file: "/tmp/flannel-config.json"
+    conf_file: "{{ tmp_dir }}/flannel-config.json"
     conf_loc: "/{{ flannel_key }}/config"
   run_once: true
   delegate_to: "{{ groups['etcd'][0] }}"

@@ -26,21 +26,21 @@
 
 - name: Check cni plugin tgz file already exists
   stat:
-    path: "/tmp/cni-amd64-v{{ cni_version }}.tgz"
+    path: "{{ tmp_dir }}/cni-amd64-v{{ cni_version }}.tgz"
   register: check_cni
 
 - name: Download cni plugin tgz file
   when: not check_cni.stat.exists
   get_url:
     url: "{{ cni_download_url }}"
-    dest: "/tmp"
+    dest: "{{ tmp_dir }}"
     validate_certs: False
   register: cni_download
 
 - name: Extract cni plugin tgz file to cni bin
   when: cni_download|succeeded
   unarchive:
-    src: "/tmp/cni-amd64-v{{ cni_version }}.tgz"
+    src: "{{ tmp_dir }}/cni-amd64-v{{ cni_version }}.tgz"
     dest: "{{ cni_bin_dir }}"
     copy: no
     owner: root

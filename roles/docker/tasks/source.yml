@@ -8,21 +8,21 @@
 
 - name: Check docker tar file already exists
   stat:
-    path: "/tmp/docker-{{ docker_version }}.tgz"
+    path: "{{ tmp_dir }}/docker-{{ docker_version }}.tgz"
   register: check_docker
 
 - name: Download docker tar file
   when: not check_docker.stat.exists
   get_url:
     url: "{{ docker_download_url }}"
-    dest: "/tmp"
+    dest: "{{ tmp_dir }}"
     validate_certs: False
   register: docker_download
 
 - name: Extract docker tar file to bin
   when: docker_download|succeeded
   unarchive:
-    src: "/tmp/docker-{{ docker_version }}.tgz"
+    src: "{{ tmp_dir }}/docker-{{ docker_version }}.tgz"
     dest: "{{ docker_dir }}"
     copy: no
     extra_opts: ['--strip-components=1']

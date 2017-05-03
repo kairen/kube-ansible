@@ -4,21 +4,21 @@
 
 - name: Check etcd tar file already exists
   stat:
-    path: "/tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+    path: "{{ tmp_dir }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
   register: check_etcd
 
 - name: Download etcd tar file
   when: not check_etcd.stat.exists
   get_url:
     url: "{{ etcd_download_url }}"
-    dest: "/tmp"
+    dest: "{{ tmp_dir }}"
     validate_certs: False
   register: etcd_download
 
 - name: Extract etcd tar file
   when: etcd_download|succeeded
   unarchive:
-    src: "/tmp/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+    src: "{{ tmp_dir }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
     dest: "{{ etcd_releases_dir }}"
     copy: no
     extra_opts: ['--strip-components=1']

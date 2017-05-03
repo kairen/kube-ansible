@@ -4,14 +4,14 @@
 
 - name: Check flannel tar file already exists
   stat:
-    path: "/tmp/{{ flannel_tar_name }}"
+    path: "{{ tmp_dir }}/{{ flannel_tar_name }}"
   register: check_flannel
 
 - name: Download flannel tar file
   when: not check_flannel.stat.exists
   get_url:
     url: "{{ flannel_download_url }}"
-    dest: "/tmp"
+    dest: "{{ tmp_dir }}"
     validate_certs: False
   register: flannel_download
 
@@ -20,7 +20,7 @@
     - flannel_download|succeeded
     - flannel_version == "0.5.5"
   unarchive:
-    src: "/tmp/{{ flannel_tar_name }}"
+    src: "{{ tmp_dir }}/{{ flannel_tar_name }}"
     dest: "{{ flannel_dir }}"
     copy: no
     extra_opts: ['--strip-components=1']
@@ -30,7 +30,7 @@
     - flannel_download|succeeded
     - flannel_version != "0.5.5"
   unarchive:
-    src: "/tmp/{{ flannel_tar_name }}"
+    src: "{{ tmp_dir }}/{{ flannel_tar_name }}"
     dest: "{{ flannel_dir }}"
     copy: no
 

@@ -2,7 +2,7 @@
 - name: Download sigil tar file
   get_url:
     url: "{{ sigil_download_url }}"
-    dest: "/tmp"
+    dest: "{{ tmp_dir }}"
     validate_certs: False
   register: sigil_download
 
@@ -10,7 +10,7 @@
   when:
     - sigil_download|succeeded
   unarchive:
-    src: "/tmp/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
+    src: "{{ tmp_dir }}/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
     dest: "/usr/bin"
     copy: no
 
