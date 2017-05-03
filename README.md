@@ -135,6 +135,11 @@ cluster bafca3e9-b361-464c-b8fa-04bf60b3189f
 ```
 
 ## Nginx application example
+First, get example submodules that need to be checked out with:
+```sh
+$ git submodule update --init --recursive
+```
+
 Run a simple nginx application:
 ```sh
 $ kubectl create -f examples/nginx/
