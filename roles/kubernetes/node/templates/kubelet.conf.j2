@@ -1,18 +1,18 @@
 apiVersion: v1
+kind: Config
 clusters:
-- cluster:
+- name: kubernetes
+  cluster:
     certificate-authority: {{ ca_cert }}
     server: {{ lb_api_url }}
-  name: kubernetes
-contexts:
-- context:
-    cluster: kubernetes
-    user: kubelet-devmaster
-  name: kubelet-devmaster@kubernetes
-current-context: kubelet-devmaster@kubernetes
-kind: Config
 users:
-- name: kubelet-devmaster
+- name: kubelet
   user:
     client-certificate: {{ node_cert }}
     client-key: {{ node_key }}
+contexts:
+- name: kubelet-context
+  context:
+    cluster: kubernetes
+    user: kubelet
+current-context: kubelet-context
