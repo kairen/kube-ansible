@@ -31,6 +31,7 @@ spec:
     {% if extra_auth.abac is defined -%}
     - "--authorization-mode=ABAC"
     - "--authorization-policy-file={{ kube_config_dir }}/policy.json"
+    - "--anonymous-auth=false"
     {% endif -%}
     {% if extra_auth.basic is defined -%}
     - "--basic-auth-file={{ kube_config_dir }}/user.csv"

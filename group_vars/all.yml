@@ -22,8 +22,9 @@ extra_auth:
     - 'p@ssw0rd,admin,admin'
   # abac:
   #   policies:
-  #   - '{"user":"*", "nonResourcePath": "*", "readonly": true}'
-  #   - '{"user":"admin", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"user":"admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"user":"kube-admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
+  #   - '{"user":"kube-node", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
   #   - '{"user":"scheduler", "namespace": "*", "resource": "*", "apiGroup": "*"}'
   #   - '{"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*"}'
   #   - '{"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}'
