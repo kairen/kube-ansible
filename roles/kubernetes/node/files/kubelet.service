@@ -15,7 +15,7 @@ ExecStart=/usr/bin/kubelet \
 	$KUBELET_NETWORK_ARGS \
 	$KUBELET_DNS_ARGS
 
-Restart=always
+Restart=on-failure
 RestartSec=10
 
 [Install]
