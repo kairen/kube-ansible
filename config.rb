@@ -1,14 +1,9 @@
-# Machine configuration variable
-# examples : "bento/centos-7.2", "bento/ubuntu-16.04"
-$box_image = "bento/ubuntu-16.04"
-
-$master_count = 1 # The HA-cluster at least 3 node.
+# The HA-cluster at least 3 node.
+$master_count = 1
 $node_count = 2
-$disk_count = 0
-$storage_path = "./tmp/"
-$storage_size = "20480"
 
-$system_memory = 1024 # If enable 'ceph-cluster', the memory need more than 2048MB.
+# If enable 'ceph-cluster', the memory need more than 2048MB.
+$system_memory = 1024
 $system_vcpus = 1
 
 $bridge_enable = false

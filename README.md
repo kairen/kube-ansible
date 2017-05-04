@@ -2,8 +2,8 @@
 This is my learning `Ansible`、`Vagrant` and `Kubernetes` repos, Goal is quick deployment and operation for Kubernetes and Ceph.
 
 TODO List:
-- [x] Vagrant virtualbox scripts.
-- [ ] Vagrant libvirt scripts.
+- [x] Vagrant virtualbox script.
+- [x] Vagrant libvirt script.
 - [x] Kubernetes HA cluster setup(v1.5.0+).
 - [x] Kubernetes addons.
 - [x] Ceph on Kubernetes(v11.2.0+).
@@ -18,10 +18,15 @@ Requirement:
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
-$ ./setup-vagrant -b 1 -n 3 -c 1 -m 1024
+$ ./setup-vagrant -n 3
 Cluster Size: 1 master, 3 node.
      VM Size: 1 vCPU, 1024 MB
+     VM Info: ubuntu16, virtualbox
 Start deploying?(y): y
+```
+> Using libvirt provider:
+```sh
+$ sudo ./setup-vagrant -p libvirt -i eth1
 ```
 
 ## Virtual machine and Bare machine Setup
