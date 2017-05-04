@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubewatch
+  namespace: kube-system
+data:
+  .kubewatch.yaml: |
+    handler:
+      slack:
+        token: "{{ watch.slack.token }}"
+        channel: "{{ watch.slack.channel }}"
+    resource:
+      deployment: {{ watch_res.deploy }}
+      replicationcontroller: {{ watch_res.rc }}
+      replicaset: {{ watch_res.rs }}
+      daemonset: {{ watch_res.ds }}
+      services: {{ watch_res.svc }}
+      pod: {{ watch_res.pod }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubewatch
+  namespace: kube-system
+  labels:
+    k8s-app: kubewatch
+    kubernetes.io/cluster-service: "true"
+spec:
+  containers:
+  - image: tuna/kubewatch:v0.0.1
+    imagePullPolicy: Always
+    name: kubewatch
+    volumeMounts:
+    - name: config-volume
+      mountPath: /root
+  - image: gcr.io/skippbox/kubectl:v1.3.0
+    args:
+      - proxy
+      - "-p"
+      - "8080"
+    name: proxy
+    imagePullPolicy: Always
+  restartPolicy: Always
+  volumes:
+  - name: config-volume
+    configMap:
+      name: kubewatch
