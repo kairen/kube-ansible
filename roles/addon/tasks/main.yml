@@ -30,6 +30,10 @@
   when: kube_dash
   template: src=kube-dash.yml.j2  dest={{ kube_addon_dir }}/kube-dash.yml
 
+- name: Copy kubernetes watch config file
+  when: kube_watch
+  template: src=kube-watch.yml.j2  dest={{ kube_addon_dir }}/kube-watch.yml
+
 - name: Check kubernetes proxy is working
   when: kube_proxy
   shell: "kubectl get pods --all-namespaces=true | grep kube-proxy"
@@ -114,5 +118,19 @@
 - name: Create kubernetes dashboard addon
   when: kube_dash and check_dash|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yml"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: Check kubernetes watch is working
+  when: kube_watch
+  shell: "kubectl get pods --all-namespaces=true | grep kubewatch"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_watch
+  ignore_errors: True
+
+- name: Create kubernetes watch addon
+  when: kube_watch and check_watch|failed
+  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-watch.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

@@ -47,24 +47,31 @@ etcd_peer_url_scheme: http # http / https
 # Network implementation('flannel', 'calico')
 networking: flannel
 
-# kube-dash addon (https://github.com/kubernetes/dashboard)
+# Dashboard
 kube_dash: true  # turn to false to disable
 
-# kube-dns addon
+# DNS service addon
 kube_dns: true # turn to false to disable
 dns_name: cluster.local # cluster dns name
 dns_ip: "{{ cluster_subnet }}.10"
 
-# kube-proxy addon
+# Kubernetes Proxy addon
 kube_proxy: true # turn to false to disable
 kube_proxy_mode: iptables # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
-# kube-logging addon
+# EFK logging addon
 kube_logging: false # turn to true to enable
 
-# kube-monitoring addon
+# Grafana + Infuxdb monitoring addon
 kube_monitoring: false # turn to true to enable
+
+# Watch event addon
+kube_watch: false # turn to true to enable
+watch:
+  slack:
+    token: "<Slack legacy token>"
+    channel: "<Slack channel>"
 
 # Weave scope ui
 weave_scope_ui: false # turn to true to enable
