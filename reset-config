@@ -3,34 +3,18 @@
 # Program: Reset all config
 # History: 2017/1/25 Kyle.b Release
 
-set -e
 source ./scripts/func-vars.sh
 
-: ${ETH:="enp0s8"}
+set -eu
 
-# Replace of variables
-perl -i -pe "s/flannel_opts: --iface=${ETH}/flannel_opts: \"\"/g" ${FLANNEL_DEFAULT_PATH}
-perl -i -pe "s/etcd_interface:.*/etcd_interface: \"\"/g" ${ETCD_DEFAULT_PATH}
-perl -i -pe "s/node_interface:.*/node_interface: \"\"/g" ${NODE_DEFAULT_PATH}
-perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${SUBNET}.10 ${SUBNET}.11 ${SUBNET}.12\"/g" ${INITIAL_SCRIPT_PATH}
-perl -i -pe "s/${MASTER_PREFIX}[0-9]*/master1/g" ${INITIAL_SCRIPT_PATH}
-perl -i -pe "s/${SUBNET}.[0-9]*/${SUBNET}.9/g" ${GROUP_VARS_PATH}
-perl -i -pe "s/vip_interface:.*/vip_interface: \"{{ ansible_default_ipv4.interface }}\"/g" ${VIP_DEFAULT_PATH}
+ETH=${1:-"enp0s8"}
 
-cat <<EOF > inventory
-[etcd]
-172.16.35.12
+role_config "flannel_opts: --iface=\w*" "flannel_opts: \"\"" ${FLANNEL_DEFAULT_PATH}
+role_config "etcd_interface:.*" "etcd_interface: \"\"" ${ETCD_DEFAULT_PATH}
+role_config "node_interface:.*" "node_interface: \"\"" ${NODE_DEFAULT_PATH}
+role_config "vip_interface:.*" "vip_interface: \"{{ ansible_default_ipv4.interface }}\"" ${VIP_DEFAULT_PATH}
+role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
+role_config "HOSTS=\".*\"" "HOSTS=\"${SUBNET}.10 ${SUBNET}.11 ${SUBNET}.12\"" ${INITIAL_SCRIPT_PATH}
+role_config "${MASTER_PREFIX}[0-9]*" "master1" ${INITIAL_SCRIPT_PATH}
 
-[masters]
-172.16.35.12
-
-[sslhost]
-172.16.35.12
-
-[nodes]
-172.16.35.[10:11]
-
-[cluster:children]
-masters
-nodes
-EOF
+rm -rf inventory

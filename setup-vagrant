@@ -3,6 +3,8 @@
 # Program: Setup a vagrant env
 # History: 2017/1/19 Kyle.b Release
 
+source ./scripts/func-vars.sh
+
 set -eu
 
 : ${MASTERS:="1"}
@@ -10,37 +12,32 @@ set -eu
 : ${CPU:="1"}
 : ${MEMORY:="1024"}
 : ${ETH:="enp0s8"}
+: ${PROVIDER:="virtualbox"}
+: ${OS_IMAGE:="ubuntu16"}
 
 function usage() {
   echo -e "Usage : setup-vagrant [options]\n"
-  echo " -b|--boss        Launch number of master."
-  echo " -n|--node        Launch number of node."
-  echo " -c|--cpu         Setting number of cores per CPU in a virtual machine."
-  echo " -m|--memory      Setting number of memory in a virtual machine."
-  echo " -i|--interface   Setting network policys to bind to interfaces."
+  echo " -b|--boss        Set number of master."
+  echo " -n|--node        Set number of node."
+  echo " -c|--cpu         Set number of cores per vm."
+  echo " -m|--memory      Set memory size per vm."
+  echo " -p|--provider    Set virtual machine provider(virtualbox, libvirt)."
+  echo " -o|--os-image    Set virtual machine operation system(ubuntu16, centos7)."
+  echo " -i|--interface   Set the network bind interface."
   exit 1
-}
-
-function isnum() {
-  re='^[0-9]+$'
-  if ! [[ ${1} =~ ${re} ]] ; then
-    echo "Error: Not a number." >&2; exit 1
-  fi
-}
-
-function replace_config() {
-    perl -i -pe "s/${1}\s*=\s*\d*/${1} = ${2}/g" config.rb
 }
 
 [ ${#} -gt 0 ] && [ ${1} == "-h" ] && usage
 
 while [ ${#} -gt 0 ]; do
   case "${1}" in
-      -b|--boss)   isnum ${2}; MASTERS=${2}; shift;;
-      -n|--node)   isnum ${2}; NODES=${2}; shift;;
-      -c|--cpu)    isnum ${2}; CPU=${2}; shift;;
+      -b|--boss) isnum ${2}; MASTERS=${2}; shift;;
+      -n|--node) isnum ${2}; NODES=${2}; shift;;
+      -c|--cpu) isnum ${2}; CPU=${2}; shift;;
       -m|--memory) isnum ${2}; MEMORY=${2}; shift;;
-      -i|--interface) isnum ${2}; ETH=${2}; shift;;
+      -i|--interface) ETH=${2}; shift;;
+      -o|--os-image) OS_IMAGE=${2}; shift;;
+      -p|--provider) PROVIDER=${2}; shift;;
       *) usage; break;;
   esac
   shift
@@ -48,32 +45,26 @@ done
 
 echo "Cluster Size: ${MASTERS} master, ${NODES} node."
 echo "     VM Size: ${CPU} vCPU, ${MEMORY} MB"
+echo "     VM Info: ${OS_IMAGE}, ${PROVIDER}"
 read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
 
-replace_config "master_count" ${MASTERS}
-replace_config "node_count" ${NODES}
-replace_config "system_memory" ${MEMORY}
-replace_config "system_vcpus" ${CPU}
+vagrant_config "master_count" ${MASTERS}
+vagrant_config "node_count" ${NODES}
+vagrant_config "system_memory" ${MEMORY}
+vagrant_config "system_vcpus" ${CPU}
 
-source ./scripts/func-vars.sh
+role_config "flannel_opts: \"\"" "flannel_opts: --iface=${ETH}" ${FLANNEL_DEFAULT_PATH}
+role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}
+role_config "node_interface: \"\"" "node_interface: ${ETH}" ${NODE_DEFAULT_PATH}
+role_config "vip_interface:.*" "vip_interface: ${ETH}" ${VIP_DEFAULT_PATH}
+role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
+role_config "HOSTS=\".*\"" "HOSTS=\"${HOSTS}\"" ${INITIAL_SCRIPT_PATH}
+role_config "${MASTER_PREFIX}[0-9]*" "${MASTER_PREFIX}${MASTER_COUNT}" ${INITIAL_SCRIPT_PATH}
 
-# Prepare config file
-HOSTS=""
-for ((i=0; i<${TOTAL}; i++)) do
-  HOSTS="${HOSTS} ${SUBNET}.$((${NET_COUNT}+${i}))"
-done
-
-perl -i -pe "s/flannel_opts: \"\"/flannel_opts: --iface=${ETH}/g" ${FLANNEL_DEFAULT_PATH}
-perl -i -pe "s/etcd_interface: \"\"/etcd_interface: ${ETH}/g" ${ETCD_DEFAULT_PATH}
-perl -i -pe "s/node_interface: \"\"/node_interface: ${ETH}/g" ${NODE_DEFAULT_PATH}
-perl -i -pe "s/vip_interface:.*/vip_interface: ${ETH}/g" ${VIP_DEFAULT_PATH}
-perl -i -pe "s/${SUBNET}.[0-9]*/${SUBNET}.9/g" ${GROUP_VARS_PATH}
-perl -i -pe "s/HOSTS=\".*\"/HOSTS=\"${HOSTS}\"/g" ${INITIAL_SCRIPT_PATH}
-perl -i -pe "s/${MASTER_PREFIX}[0-9]*/${MASTER_PREFIX}${MASTER_COUNT}/g" ${INITIAL_SCRIPT_PATH}
-
-# Create inventory
+# Create inventory and hosts
 set_inventory
 set_hosts
 
 # Run vagrant
-vagrant up
+export OS_IMAGE=${OS_IMAGE}
+vagrant up --provider ${PROVIDER}
