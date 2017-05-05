@@ -16,7 +16,7 @@ ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% e
   $INSECURE_REGISTRY
 
 ExecReload=/bin/kill -s HUP $MAINPID
-Restart=always
+Restart=on-failure
 LimitNOFILE=1048576
 LimitNPROC=infinity
 LimitCORE=infinity

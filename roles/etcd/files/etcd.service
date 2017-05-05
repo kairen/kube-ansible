@@ -9,7 +9,7 @@ Type=notify
 User=etcd
 PermissionsStartOnly=true
 ExecStart=/usr/bin/etcd
-Restart=always
+Restart=on-failure
 RestartSec=10
 LimitNOFILE=65536
 
