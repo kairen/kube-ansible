@@ -8,7 +8,7 @@
   delegate_to: "{{ groups['etcd'][0] }}"
 
 - name: Copy etcd flannel config file
-  template: src=flannel-config.json dest={{ conf_file }}
+  template: src=flannel-config.json.j2 dest={{ conf_file }}
   run_once: true
   delegate_to: "{{ groups['etcd'][0] }}"
 

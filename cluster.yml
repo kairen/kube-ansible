@@ -16,6 +16,11 @@
   roles:
     - { role: docker, tags: docker }
 
+- hosts: cluster
+  become: yes
+  roles:
+   - { role: networking/flannel, when: networking == 'flannel', tags: flannel }
+
 - hosts: masters
   become: yes
   roles:
@@ -30,5 +35,4 @@
 - hosts: cluster
   become: yes
   roles:
-   - { role: networking/flannel, when: networking == 'flannel', tags: flannel }
    - { role: networking/calico, when: networking == 'calico', tags: calico }
