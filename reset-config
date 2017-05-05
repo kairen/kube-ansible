@@ -8,6 +8,7 @@ source ./scripts/func-vars.sh
 set -eu
 
 ETH=${1:-"enp0s8"}
+update_vars
 
 role_config "flannel_opts: --iface=\w*" "flannel_opts: \"\"" ${FLANNEL_DEFAULT_PATH}
 role_config "etcd_interface:.*" "etcd_interface: \"\"" ${ETCD_DEFAULT_PATH}

@@ -4,7 +4,6 @@
 # History: 2017/1/19 Kyle.b Release
 
 source ./scripts/func-vars.sh
-
 set -eu
 
 : ${MASTERS:="1"}
@@ -53,6 +52,7 @@ vagrant_config "node_count" ${NODES}
 vagrant_config "system_memory" ${MEMORY}
 vagrant_config "system_vcpus" ${CPU}
 
+update_vars
 role_config "flannel_opts: \"\"" "flannel_opts: --iface=${ETH}" ${FLANNEL_DEFAULT_PATH}
 role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}
 role_config "node_interface: \"\"" "node_interface: ${ETH}" ${NODE_DEFAULT_PATH}

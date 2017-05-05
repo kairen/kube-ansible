@@ -3,6 +3,14 @@
 # Program: Vagrant func and vars
 # History: 2017/1/19 Kyle.b Release
 
+# Define variables
+GROUP_VARS_PATH="./group_vars/all.yml"
+FLANNEL_DEFAULT_PATH="./roles/networking/flannel/defaults/main.yml"
+ETCD_DEFAULT_PATH="./roles/etcd/defaults/main.yml"
+NODE_DEFAULT_PATH="./roles/kubernetes/node/defaults/main.yml"
+VIP_DEFAULT_PATH="./roles/kubernetes/ha/defaults/main.yml"
+INITIAL_SCRIPT_PATH="./scripts/initial.sh"
+
 # Get vagrant config variable
 function get_vagrant_config() {
   grep -i "^\$${1}" config.rb | awk '{ print $3 }' | sed 's/\"//g'
@@ -63,23 +71,17 @@ function isnum() {
   fi
 }
 
-# Define variables
-GROUP_VARS_PATH="./group_vars/all.yml"
-FLANNEL_DEFAULT_PATH="./roles/networking/flannel/defaults/main.yml"
-ETCD_DEFAULT_PATH="./roles/etcd/defaults/main.yml"
-NODE_DEFAULT_PATH="./roles/kubernetes/node/defaults/main.yml"
-VIP_DEFAULT_PATH="./roles/kubernetes/ha/defaults/main.yml"
-INITIAL_SCRIPT_PATH="./scripts/initial.sh"
+function update_vars() {
+    MASTER_COUNT=$(get_vagrant_config "master_count")
+    NODE_COUNT=$(get_vagrant_config "node_count")
+    SUBNET=$(get_vagrant_config "private_subnet")
+    NET_COUNT=$(get_vagrant_config "private_count")
+    MASTER_PREFIX=$(get_vagrant_config "master_prefix")
+    NODE_PREFIX=$(get_vagrant_config "node_prefix")
+    TOTAL=$((MASTER_COUNT+NODE_COUNT))
 
-MASTER_COUNT=$(get_vagrant_config "master_count")
-NODE_COUNT=$(get_vagrant_config "node_count")
-SUBNET=$(get_vagrant_config "private_subnet")
-NET_COUNT=$(get_vagrant_config "private_count")
-MASTER_PREFIX=$(get_vagrant_config "master_prefix")
-NODE_PREFIX=$(get_vagrant_config "node_prefix")
-TOTAL=$((MASTER_COUNT+NODE_COUNT))
-
-HOSTS=""
-for ((i=0; i<${TOTAL}; i++)) do
-  HOSTS="${HOSTS} ${SUBNET}.$((${NET_COUNT}+${i}))"
-done
+    HOSTS=""
+    for ((i=0; i<${TOTAL}; i++)) do
+      HOSTS="${HOSTS} ${SUBNET}.$((${NET_COUNT}+${i}))"
+    done
+}
