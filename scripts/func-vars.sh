@@ -5,7 +5,7 @@
 
 # Define variables
 GROUP_VARS_PATH="./group_vars/all.yml"
-FLANNEL_DEFAULT_PATH="./roles/networking/flannel/defaults/main.yml"
+FLANNEL_DEFAULT_PATH="./roles/network/flannel/defaults/main.yml"
 ETCD_DEFAULT_PATH="./roles/etcd/defaults/main.yml"
 NODE_DEFAULT_PATH="./roles/kubernetes/node/defaults/main.yml"
 VIP_DEFAULT_PATH="./roles/kubernetes/ha/defaults/main.yml"

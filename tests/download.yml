@@ -1,0 +1,29 @@
+---
+
+- hosts: test
+  become: yes
+  roles:
+    - { role: docker, tags: docker }
+
+- hosts: test
+  become: yes
+  gather_facts: no
+  tags:
+    - download-pkg
+  roles:
+    - { role: downloader/pkg, pkg: "{{ downloads.etcd }}" }
+
+- hosts: test
+  become: yes
+  gather_facts: no
+  vars:
+    ubuntu:
+      name: ubuntu
+      repos: ""
+      tag: "16.04"
+  tags:
+    - download-image
+  roles:
+    - { role: downloader/image, img: "{{ images.haproxy }}" }
+    - { role: downloader/image, img: "{{ images.keepalived }}", archive: true }
+    - { role: downloader/image, img: "{{ ubuntu }}", push: true }

@@ -1,26 +1,22 @@
 ---
 - name: Check kubelet service already exists
-  stat: path="{{ service_dir }}/kubelet.service"
+  stat: path="{{ systemd_dir }}/kubelet.service"
   register: check_kubelet_service
 
-- name: Stop systemd service and upgrade component file
+- name: Stop kubelet systemd service to upgrade
   when: check_kubelet_service.stat.exists
   service: name=kubelet enabled=yes state=stopped
 
-- name: Install Kubernetes from binary release
-  when: install_type == "pkg"
-  include: package.yml
-
-- name:  InstallKubernetes from source release
-  when: install_type == "src"
-  include: source.yml
-
-- name: Configure kubernetes component
+- name: Configure Kubernetes component
   include: config.yml
 
-- name: Reload systemd daemon
-  command: systemctl daemon-reload
+- name: Init kubelet systemd service
+  include: systemd.yml
 
-- name: Enable and restart kubelet
-  service: name=kubelet enabled=yes state=restarted
-  register: kubenode_start
+- name: Enable and restart kubelet engine
+  systemd:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  register: started_kubelet

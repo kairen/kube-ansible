@@ -1,7 +1,0 @@
----
-- name: Copy calico default env file
-  template: src=calico-node.j2 dest="{{ env_config_dir }}/calico-node"
-
-- name: Add calico node service file
-  template: src=calico-node.service.j2 dest="{{ service_dir }}/calico-node.service"
-  register: change_calico

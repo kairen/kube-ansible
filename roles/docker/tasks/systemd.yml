@@ -1,26 +1,33 @@
 ---
-- name: Create docker system group
-  when: install_type == "src"
+
+- name: Create Docker system group
   group:
     name: docker
     state: present
 
-- name: Create docker system  user
-  when: install_type == "src"
+- name: Create Docker system  user
   user:
-    name=docker
-    comment="Docker user"
-    shell=/sbin/nologin
-    state=present
-    system=yes
-    groups=docker
+    name: docker
+    comment: "Docker user"
+    shell: /sbin/nologin
+    state: present
+    system: yes
+    groups: docker
 
-- name: Add docker env config file
-  template: src=docker.j2 dest={{ env_config_dir }}/docker
+- name: Copy Docker socket service file
+  register: change_socket
+  copy:
+    src: docker.socket
+    dest: "{{ systemd_dir }}/docker.socket"
+    owner: root
+    group: root
+    mode: 0755
 
-- name: Add docker socket service file
-  when: install_type == "src"
-  copy: src=docker.socket dest={{ service_dir }}/docker.socket owner=root group=root mode=0755
-
-- name: Add docker service file
-  template: src="docker.service.j2" dest={{ service_dir }}/docker.service owner=root group=root mode=0755
+- name: Copy Docker engine service file
+  register: change_docker
+  template:
+    src: "docker.service.j2"
+    dest: "{{ systemd_dir }}/docker.service"
+    owner: root
+    group: root
+    mode: 0755

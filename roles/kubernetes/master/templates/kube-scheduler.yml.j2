@@ -12,8 +12,8 @@ spec:
     hostPath:
       path: "/etc/kubernetes"
   containers:
-  - name: kube-scheduler
-    image: "{{ scheduler_image }}"
+  - name: "{{ images.scheduler.name }}"
+    image: "{{ images.scheduler.repos }}{{ images.scheduler.name }}:{{ images.scheduler.tag }}"
     command:
     - "kube-scheduler"
     - "--v=0"

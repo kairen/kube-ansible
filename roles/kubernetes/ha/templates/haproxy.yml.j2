@@ -12,8 +12,8 @@ spec:
     hostPath:
       path: "/etc/haproxy/haproxy.cfg"
   containers:
-  - name: haproxy
-    image: "{{ haproxy_image }}"
+  - name: "{{ images.haproxy.name }}"
+    image: "{{ images.haproxy.repos }}{{ images.haproxy.name }}:{{ images.haproxy.tag }}"
     resources:
       requests:
         cpu: 100m

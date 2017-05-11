@@ -8,8 +8,8 @@ metadata:
     tier: control-plane
 spec:
   containers:
-  - name: keepalived
-    image: "{{ keepalived_image }}"
+  - name: "{{ images.keepalived.name }}"
+    image: "{{ images.keepalived.repos }}{{ images.keepalived.name }}:{{ images.keepalived.tag }}"
     securityContext:
       privileged: true
       capabilities:
@@ -19,13 +19,13 @@ spec:
     - name: VIRTUAL_IP
       value: {{ lb_vip_address }}
     - name: VIRTUAL_MASK
-      value: "24"
+      value: "{{ virtual_mask }}"
     - name: CHECK_IP
-      value: "any"
+      value: "{{ check_ip }}"
     - name: CHECK_PORT
-      value: "2379"
+      value: "{{ check_port }}"
     - name: VRID
-      value: "51"
+      value: "{{ virtual_id }}"
     - name: INTERFACE
       value: {{ vip_interface }}
     resources:

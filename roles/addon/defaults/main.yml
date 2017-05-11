@@ -1,0 +1,25 @@
+---
+
+# Kubernetes dns
+dns_replicas: 1
+
+# Kubernetes logging
+logging_ip: "{{ lb_vip_address }}"
+kibana_port: 5601
+elasticsearch_port: 9200
+
+# Kubernetes monitoring
+monitoring_ip: "{{ lb_vip_address }}"
+heapster_ip: "{{ cluster_subnet }}.11"
+heapster_port: 80
+grafana_port: 100
+influx_port: 8086
+
+# Kubernetes watch
+resources:
+  deploy: false
+  rc: false
+  rs: false
+  ds: false
+  svc: true
+  pod: true

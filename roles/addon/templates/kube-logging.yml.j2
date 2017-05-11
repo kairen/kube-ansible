@@ -1,4 +1,3 @@
-# fluentd component
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -17,8 +16,8 @@ spec:
         version: v1.22
     spec:
       containers:
-      - name: fluentd-es
-        image: gcr.io/google_containers/fluentd-elasticsearch:1.22
+      - name: "{{ images.fluentd_es.name }}"
+        image: "{{ images.fluentd_es.repos }}{{ images.fluentd_es.name }}:{{ images.fluentd_es.tag }}"
         command:
           - '/bin/sh'
           - '-c'
@@ -69,8 +68,8 @@ spec:
         kubernetes.io/cluster-service: "true"
     spec:
       containers:
-      - image: gcr.io/google_containers/elasticsearch:v2.4.1-2
-        name: elasticsearch-logging
+      - name: "{{ images.elasticsearch.name }}"
+        image: "{{ images.elasticsearch.repos }}{{ images.elasticsearch.name }}:{{ images.elasticsearch.tag }}"
         resources:
           limits:
             cpu: 1000m
@@ -138,8 +137,8 @@ spec:
         k8s-app: kibana-logging
     spec:
       containers:
-      - name: kibana-logging
-        image: gcr.io/google_containers/kibana:v4.6.1-1
+      - name: "{{ images.kibana.name }}"
+        image: "{{ images.kibana.repos }}{{ images.kibana.name }}:{{ images.kibana.tag }}"
         resources:
           limits:
             cpu: 100m

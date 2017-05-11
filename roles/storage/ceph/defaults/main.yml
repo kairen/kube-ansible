@@ -1,0 +1,4 @@
+---
+# Ceph cluster on Kubernetes
+
+ceph_version: kraken

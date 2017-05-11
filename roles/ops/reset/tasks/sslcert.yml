@@ -1,0 +1,5 @@
+---
+
+- name: Remove SSL cert directory
+  ignore_errors: True
+  file: path="{{ cert_dir }}" state=absent

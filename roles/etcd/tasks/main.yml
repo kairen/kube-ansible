@@ -1,16 +1,15 @@
 ---
-- name: Install etcd key/value store
-  include: source.yml
 
-- name: Setup etcd systemd service
-  include: systemd.yml
-
-- name: Configure etcd key/value store
+- name: Configure Etcd key/value store
   include: config.yml
 
-- name: Reload systemd daemon
-  command: systemctl daemon-reload
+- name: Init Etcd systemd service
+  include: systemd.yml
 
-- name: Enable and restart etcd
-  service: name=etcd enabled=yes state=restarted
-  register: etcd_started
+- name: Enable and restart Etcd
+  systemd:
+    name: etcd
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  register: started_etcd

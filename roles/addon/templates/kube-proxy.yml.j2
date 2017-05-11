@@ -29,15 +29,15 @@ spec:
         tier: node
     spec:
       containers:
-      - command:
+      - name: "{{ images.proxy.name }}"
+        image: "{{ images.proxy.repos }}{{ images.proxy.name }}:{{ images.proxy.tag }}"
+        command:
         - /usr/local/bin/kube-proxy
         - --v=0
         - --master={{ lb_api_url }}
         - --kubeconfig=/run/admin.conf
         - --proxy-mode={{ kube_proxy_mode }}
-        image: {{ kube_proxy_image }}
         imagePullPolicy: IfNotPresent
-        name: kube-proxy
         securityContext:
           privileged: true
         terminationMessagePath: /dev/termination-log
@@ -46,7 +46,7 @@ spec:
           name: dbus
         - mountPath: /run/admin.conf
           name: kubeconfig
-        - mountPath: {{ kube_config_dir }}
+        - mountPath: {{ kube_etc_dir }}
           name: pki
       dnsPolicy: ClusterFirst
       hostNetwork: true
@@ -61,5 +61,5 @@ spec:
           path: /var/run/dbus
         name: dbus
       - hostPath:
-          path: {{ kube_config_dir }}
+          path: {{ kube_etc_dir }}
         name: pki

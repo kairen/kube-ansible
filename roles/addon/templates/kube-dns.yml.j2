@@ -20,8 +20,8 @@ spec:
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
-      - name: kube-dns
-        image: {{ kube_dns_image }}
+      - name: "{{ images.dns.name }}"
+        image: "{{ images.dns.repos }}{{ images.dns.name }}:{{ images.dns.tag }}"
         resources:
           limits:
             memory: 170Mi
@@ -54,8 +54,8 @@ spec:
         - containerPort: 10053
           name: dns-tcp
           protocol: TCP
-      - name: dnsmasq
-        image: {{ kube_dnsmasq_image }}
+      - name: "{{ images.dnsmasq.name }}"
+        image: "{{ images.dnsmasq.repos }}{{ images.dnsmasq.name }}:{{ images.dnsmasq.tag }}"
         livenessProbe:
           httpGet:
             path: /healthz-dnsmasq
@@ -77,8 +77,8 @@ spec:
         - containerPort: 53
           name: dns-tcp
           protocol: TCP
-      - name: healthz
-        image: {{ kube_healthz_image }}
+      - name: "{{ images.healthz.name }}"
+        image: "{{ images.healthz.repos }}{{ images.healthz.name }}:{{ images.healthz.tag }}"
         resources:
           limits:
             memory: 50Mi

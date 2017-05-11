@@ -1,6 +1,0 @@
-# Calico configuration options
-# Etcd enpoints
-ETCD_ENDPOINTS="{% for node in groups['etcd'] %}{{ etcd_peer_url_scheme }}://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
-
-# Calico node docker image
-CALICO_NODE_IMAGE="{{ calico_node_image }}"

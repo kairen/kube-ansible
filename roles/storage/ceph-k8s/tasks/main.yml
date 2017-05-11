@@ -1,0 +1,28 @@
+---
+    
+- name: Download sigil tar file
+  get_url:
+    url: "{{ sigil_download_url }}"
+    dest: "{{ tmp_dir }}"
+    validate_certs: False
+  register: sigil_download
+
+- name: Extract sigil tar file
+  when:
+    - sigil_download|succeeded
+  unarchive:
+    src: "{{ tmp_dir }}/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
+    dest: "/usr/bin"
+    copy: no
+
+- name: Create and copy generator config file
+  include: generator.yml
+
+- name: Deploy ceph components on Kubernetes
+  include: components.yml
+
+# - name: Label all storage nodes
+#   shell: "kubectl label nodes node-type=storage"
+#   delegate_to: "{{ groups['masters'][0] }}"
+#   run_once: true
+#   ignore_errors: true

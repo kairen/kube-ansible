@@ -1,25 +1,26 @@
 ---
-- name: Create system etcd group
+
+- name: Create Etcd system group
   group:
     name: etcd
     state: present
 
-- name: Create system etcd user
+- name: Create Etcd system user
   user:
-    name=etcd
-    comment="Etcd user"
-    shell=/sbin/nologin
-    state=present
-    system=yes
-    groups=etcd
+    name: etcd
+    comment: "Etcd user"
+    shell: /sbin/nologin
+    state: present
+    system: yes
+    groups: etcd
 
-- name: Ensure /var/lib/etcd exists
+- name: "Ensure {{ etcd_data_dir }} already exists"
   file:
-    path=/var/lib/etcd
-    recurse=yes
-    state=directory
-    owner=etcd
+    path: "{{ etcd_data_dir }}"
+    recurse: yes
+    state: directory
+    owner: etcd
 
-- name: Write etcd systemd unit file
-  copy: src=etcd.service dest={{ service_dir }}/etcd.service
-  register: etcd_service
+- name: Copy Etcd systemd service file
+  template: src=etcd.service.j2 dest={{ systemd_dir }}/etcd.service owner=root group=root mode=0755
+  register: change_etcd

@@ -1,0 +1,18 @@
+---
+
+- name: Check pkg local repository is working
+  shell: "docker ps | grep {{ images.repos.name }}"
+  delegate_to: "{{ groups['registry'][0] }}"
+  run_once: true
+  register: check_repos
+  ignore_errors: True
+
+- name: Create pkg local repository container
+  when: check_repos|failed
+  shell: |
+    docker run -d -p {{ repos_port }}:80 \
+               --restart=always \
+               --name {{ images.repos.name }} \
+               {{ images.repos.repos }}{{ images.repos.name }}:{{ images.repos.tag }}
+  delegate_to: "{{ groups['repos'][0] }}"
+  run_once: true

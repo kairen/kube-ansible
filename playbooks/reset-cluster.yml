@@ -1,0 +1,22 @@
+---
+
+- hosts: sslhost
+  gather_facts: no
+  become: yes
+  tags: sslhost
+  roles:
+    - { role: ops/reset , sslcert: true }
+
+- hosts: "{{ hosts | default('cluster') }}"
+  gather_facts: no
+  become: yes
+  tags: kube
+  roles:
+    - { role: ops/reset , kube: true }
+
+- hosts: etcd
+  gather_facts: no
+  become: yes
+  tags: etcd
+  roles:
+    - { role: ops/reset , etcd: true }

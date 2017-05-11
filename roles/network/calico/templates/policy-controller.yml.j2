@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: calico-policy-controller
+  namespace: kube-system
+  labels:
+    k8s-app: calico-policy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: calico-policy-controller
+      namespace: kube-system
+      labels:
+        k8s-app: calico-policy
+    spec:
+      hostNetwork: true
+      volumes:
+      - name: pki
+        hostPath:
+          path: "{{ kube_etc_dir }}"
+      containers:
+        - name: "{{ images.calico_pollicy.name }}"
+          image: "{{ images.calico_pollicy.repos }}{{ images.calico_pollicy.name }}:{{ images.calico_pollicy.tag }}"
+          volumeMounts:
+          - name: pki
+            mountPath: "{{ kube_etc_dir }}"
+            readOnly: true
+          env:
+          - name: ETCD_ENDPOINTS
+            value: "{% for node in groups['etcd'] %}{{ etcd_peer_url_scheme }}://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+          - name: K8S_API
+            value: "https://kubernetes.default:443"
+          - name: CONFIGURE_ETC_HOSTS
+            value: "true"
+          {% if etcd_peer_url_scheme == 'https' -%}
+          - name: ETCD_CA_CERT_FILE
+            value: "{{ etcd_peer_ca_file }}"
+          - name: ETCD_CERT_FILE
+            value: "{{ etcd_peer_cert_file }}"
+          - name: ETCD_KEY_FILE
+            value: "{{ etcd_peer_key_file }}"
+          {% endif -%}

@@ -1,0 +1,12 @@
+---
+# Require the cluster is fully operation and running
+
+- hosts: cluster
+  become: yes
+  roles:
+    - { role: storage/ceph, tags: ceph }
+
+- hosts: masters
+  become: yes
+  roles:
+    - { role: storage/ceph-k8s, tags: ceph-k8s }
