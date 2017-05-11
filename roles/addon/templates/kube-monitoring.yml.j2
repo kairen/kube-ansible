@@ -24,8 +24,8 @@ spec:
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
-        - image: gcr.io/google_containers/heapster-amd64:v1.3.0
-          name: heapster
+        - name: "{{ images.heapster.name }}"
+          image: "{{ images.heapster.repos }}{{ images.heapster.name }}:{{ images.heapster.tag }}"
           livenessProbe:
             httpGet:
               path: /healthz
@@ -70,17 +70,17 @@ spec:
   template:
     metadata:
       labels:
-        name: influxGrafana
+        name: heapster-grafana
         kubernetes.io/cluster-service: "true"
     spec:
       containers:
-      - name: influxdb
-        image: gcr.io/google_containers/heapster-influxdb-amd64:v1.1.1
+      - name: "{{ images.hp_influx.name }}"
+        image: "{{ images.hp_influx.repos }}{{ images.hp_influx.name }}:{{ images.hp_influx.tag }}"
         volumeMounts:
         - mountPath: /data
           name: influxdb-persistent-storage
-      - name: grafana
-        image: gcr.io/google_containers/heapster-grafana-amd64:v4.0.2
+      - name: "{{ images.hp_grafana.name }}"
+        image: "{{ images.hp_grafana.repos }}{{ images.hp_grafana.name }}:{{ images.hp_grafana.tag }}"
         env:
           - name: INFLUXDB_SERVICE_URL
             value: http://{{ monitoring_ip }}:{{ influx_port }}
@@ -108,7 +108,7 @@ spec:
    - port: {{ grafana_port }}
      targetPort: 3000
    selector:
-      name: influxGrafana
+      name: heapster-grafana
    type: LoadBalancer
    externalIPs:
    - {{ monitoring_ip }}
@@ -132,7 +132,7 @@ spec:
      port: {{ influx_port }}
      targetPort: 8086
    selector:
-      name: influxGrafana
+      name: heapster-grafana
    type: LoadBalancer
    externalIPs:
    - {{ monitoring_ip }}

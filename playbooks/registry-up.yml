@@ -1,0 +1,8 @@
+---
+
+- hosts: registry
+  gather_facts: no
+  become: yes
+  roles:
+    - { role: docker, tags: docker }
+    - { role: registry, tags: registry, enable_ui: false }

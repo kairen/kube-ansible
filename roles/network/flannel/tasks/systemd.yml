@@ -1,0 +1,29 @@
+---
+    
+- name: Override Flannel drop-in directory for Debian
+  when: ansible_os_family == "Debian"
+  set_fact:
+    dropin_dir: "/etc/systemd/system"
+
+- name: Copy Flannel network environment config file
+  template: src="flanneld.j2" dest={{ system_env_dir }}/flanneld
+
+- name: Create Docker systemd drop-in directory
+  file: path={{ dropin_dir }}/docker.service.d state=directory
+
+- name: Copy Docker drop-in config file
+  copy:
+    src: flannel.conf
+    dest: "{{ dropin_dir }}/docker.service.d/flannel.conf"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Flannel netowrk service file
+  template:
+    src: flanneld.service.j2
+    dest: "{{ systemd_dir }}/flanneld.service"
+    owner: root
+    group: root
+    mode: 0755
+  register: change_flannel

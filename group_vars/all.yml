@@ -1,5 +1,11 @@
-# Define all component group variable
-kube_version: 1.6.2 # support 1.4.0+ for source type
+---
+
+# Kubenrtes version, only support 1.4.0+
+kube_version: 1.6.2
+
+# Network implementation('flannel', 'calico')
+network: flannel
+pod_network_cidr: "10.244.0.0/16"
 
 # Kubernetes cluster network
 cluster_subnet: 192.160.0
@@ -14,6 +20,14 @@ api_secure_port: 5443
 
 # SSL cert handler, it should be true during ansible first run
 sslcert_enable: true
+
+# Etcd variable
+etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
+etcd_peer_url_scheme: https # http / https
+
+# A list of insecure registrys you might need to define
+insecure_registrys:
+# - "gcr.io"
 
 # Extra authenticating
 extra_auth:
@@ -32,62 +46,38 @@ extra_auth:
   #   values:
   #   - '0fdd1a8875ec,admin,admin'
 
-# All master fqdn name - it require to create ssl certificate
-# Set it to only available api server
-masters_fqdn: ['kube.master1.com',]
-
-# A list of insecure registrys you might need to define
-insecure_registrys:
-# - "gcr.io"
-
-# Etcd variable
-etcd_domain_name: test.com # use to create wildcard ssl certificate for api and etcd
-etcd_peer_url_scheme: http # http / https
-
-# Network implementation('flannel', 'calico')
-networking: flannel
-
-# Dashboard
-kube_dash: true  # turn to false to disable
+# Dashboard addon
+kube_dash: true
 
 # DNS service addon
-kube_dns: true # turn to false to disable
+kube_dns: true
 dns_name: cluster.local # cluster dns name
 dns_ip: "{{ cluster_subnet }}.10"
 
-# Kubernetes Proxy addon
-kube_proxy: true # turn to false to disable
+# Kubernetes proxy addon
+kube_proxy: true
 kube_proxy_mode: iptables # it should be "iptables",
                           # but if you want to deploy ceph on kubernetes,
                           # you must set to "userspace"
 # EFK logging addon
-kube_logging: false # turn to true to enable
+kube_logging: false
 
 # Grafana + Infuxdb monitoring addon
-kube_monitoring: false # turn to true to enable
+kube_monitoring: false
 
 # Watch event addon
-kube_watch: false # turn to true to enable
+kube_watch: false
 watch:
   slack:
     token: "<Slack legacy token>"
     channel: "<Slack channel>"
 
-# Weave scope ui
-weave_scope_ui: false # turn to true to enable
+# Local Docker registry info
+registry_ui: false
+registry_port: 5000
+registry_ui_port: 5001
 
-# Kubernetes system images
-# Provide ceph storage class must be use 'quay.io/attcomdev/kube-controller-manager:v{{ kube_version }}'
-pod_infra_image: registry.access.redhat.com/rhel7/pod-infrastructure:latest
-api_image: "gcr.io/google_containers/kube-apiserver-amd64:v{{ kube_version }}"
-controller_image: "gcr.io/google_containers/kube-controller-manager-amd64:v{{ kube_version }}"
-scheduler_image: "gcr.io/google_containers/kube-scheduler-amd64:v{{ kube_version }}"
-haproxy_image: haproxy:1.7
-keepalived_image: kairen/keepalived:1.2.24
-
-# Kubernetes add-ons images
-kube_proxy_image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
-kube_dash_image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.0
-kube_dns_image: gcr.io/google_containers/kubedns-amd64:1.9
-kube_dnsmasq_image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
-kube_healthz_image: gcr.io/google_containers/exechealthz-amd64:1.2
+# Enable offline pkg repository mode
+repos_mode: false
+repos_port: 4040
+repos_url: "http://172.16.35.9:{{ repos_port }}"

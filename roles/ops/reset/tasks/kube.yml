@@ -1,0 +1,54 @@
+---
+
+- name: Stop all component systemd service
+  ignore_errors: True
+  systemd: name={{ item }} state=stopped enabled=no
+  with_items:
+    - kubelet.service
+    - flanneld.service
+    - calico-node.service
+    - docker.service
+    - docker.socket
+
+- name: Delete all systemd service file
+  ignore_errors: True
+  file: path="{{ systemd_dir }}/{{ item }}" state=absent
+  with_items:
+    - kubelet.service
+    - flanneld.service
+    - calico-node.service
+    - docker.service
+    - docker.socket
+
+- name: Find all kubelet mount volume
+  ignore_errors: True
+  shell: "df | grep -o '/var/lib/kubelet.*'"
+  register: mounts
+
+- name: Unmounted all kubelet volume
+  ignore_errors: True
+  mount: name={{ item }} state=unmounted
+  with_items: "{{ mounts.stdout_lines|list }}"
+
+- name: Delete all component data directory
+  ignore_errors: True
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ kube_etc_dir }}"
+    - /var/lib/kubelet
+    - /var/lib/docker/containers
+    - /var/lib/docker/vfs/dir
+    - "{{ downloads.flannel.dir }}"
+    - "{{ downloads.docker.dir }}"
+    - "{{ downloads.kube.dir }}"
+    - "{{ downloads.cni.dir }}"
+    - "{{ downloads.calicoctl.dir }}"
+    - "{{ cni_etc_dir }}"
+
+- name: Delete docker0 interface
+  ignore_errors: True
+  command: ip link delete docker0
+
+- name: Delete flannel.1 interface
+  ignore_errors: True
+  command: ip link delete flannel.1

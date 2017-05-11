@@ -1,0 +1,79 @@
+---
+# Download binary package from source
+
+download_tmp: /tmp
+
+pkg_bases:
+  kube:
+    url: "https://storage.googleapis.com"
+    version: "{{ kube_version }}"
+  etcd:
+    url: "https://github.com"
+    version: 3.1.6
+  docker:
+    url: "https://get.docker.com"
+    version: 17.04.0-ce
+  cni:
+    url: "https://github.com"
+    version: 0.5.2
+  flannel:
+    url: "https://github.com"
+    version: 0.7.1
+  calico:
+    url: "https://github.com"
+    version: 1.8.0
+  calicoctl:
+    url: "https://github.com"
+    version: 1.1.3
+
+downloads:
+  kube:
+    name: kube
+    description: "Kubernetes"
+    dir: /opt/kube
+    url: "{{ pkg_bases.kube.url }}/kubernetes-release/release/v{{ pkg_bases.kube.version }}/bin/linux/amd64"
+    items: [ kubelet, kubectl ]
+  etcd:
+    name: etcd
+    description: "Etcd key/value store"
+    dir: /opt/etcd
+    url: "{{ pkg_bases.etcd.url }}/coreos/etcd/releases/download/v{{ pkg_bases.etcd.version }}"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    items: [ "etcd-v{{ pkg_bases.etcd.version }}-linux-amd64.tar.gz" ]
+  docker:
+    name: docker
+    description: "Docker engine"
+    dir: /opt/docker
+    url: "{{ pkg_bases.docker.url }}/builds/Linux/x86_64"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    items: [ "docker-{{ pkg_bases.docker.version }}.tgz" ]
+  cni:
+    name: cni
+    description: "Container network interface"
+    dir: /opt/cni/bin
+    url: "{{ pkg_bases.cni.url }}/containernetworking/cni/releases/download/v{{ pkg_bases.cni.version }}"
+    items: [ "cni-amd64-v{{ pkg_bases.cni.version }}.tgz" ]
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+  flannel:
+    name: flannel
+    description: "Flannel network plugin"
+    dir: /opt/flannel
+    url: "{{ pkg_bases.flannel.url }}/coreos/flannel/releases/download/v{{ pkg_bases.flannel.version }}"
+    items: [ "flannel-v{{ pkg_bases.flannel.version }}-linux-amd64.tar.gz" ]
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+  calico:
+    name: calico
+    description: "Calico network plugin"
+    dir: /opt/cni/bin
+    url: "{{ pkg_bases.calico.url }}/projectcalico/cni-plugin/releases/download/v{{ pkg_bases.calico.version }}"
+    items: [ calico, calico-ipam ]
+  calicoctl:
+    name: calicoctl
+    description: "Calicoctl network plugin"
+    dir: /opt/calico
+    url: "{{ pkg_bases.calicoctl.url }}/projectcalico/calicoctl/releases/download/v{{ pkg_bases.calicoctl.version }}"
+    items: [ calicoctl ]

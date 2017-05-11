@@ -1,0 +1,17 @@
+---
+
+- name: Stop Etcd systemd service
+  ignore_errors: True
+  systemd: name=etcd state=stopped enabled=no
+
+- name: Delete Etcd systemd service file
+  ignore_errors: True
+  file: path="{{ systemd_dir }}/etcd.service" state=absent
+
+- name: Delete all Etcd directory
+  ignore_errors: True
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ etcd_conf_dir }}"
+    - "{{ etcd_data_dir }}"
+    - "{{ downloads.etcd.dir }}"

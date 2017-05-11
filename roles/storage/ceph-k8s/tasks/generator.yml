@@ -1,0 +1,55 @@
+---
+    
+- name: Create ceph generator dir
+  file: path="{{ ceph_config_dir }}" state=directory
+
+- name: Copy ceph generator files
+  copy: src="generator/" dest="{{ ceph_config_dir }}"
+
+- name: Set generate secrets script permission
+  file:
+    path: "{{ ceph_config_dir }}/generate_secrets.sh"
+    mode: "u+x"
+
+- name: Generate ceph cluster fsid
+  command: "./generate_secrets.sh fsid"
+  args:
+    chdir: "{{ ceph_config_dir }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: ceph_fsid
+
+- name: Generate ceph config and keys
+  environment:
+    osd_cluster_network: "{{ osd_cluster_network }}"
+    osd_public_network:  "{{ osd_public_network }}"
+  command: "./generate_secrets.sh all {{ ceph_fsid['stdout'] }}"
+  args:
+    chdir: "{{ ceph_config_dir }}"
+  run_once: true
+
+- name: Check ceph namespace
+  shell: "kubectl get namespaces | grep ceph"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_ceph_namespace
+  ignore_errors: true
+
+- name: Create ceph namespace
+  when: check_ceph_namespace|failed
+  shell: "kubectl create namespace ceph"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: Create secret generic to k8s
+  shell: "{{ item }}"
+  with_items:
+    - "kubectl create secret generic ceph-conf-combined --from-file=ceph.conf --from-file=ceph.client.admin.keyring --from-file=ceph.mon.keyring --namespace=ceph"
+    - "kubectl create secret generic ceph-bootstrap-rgw-keyring --from-file=ceph.keyring=ceph.rgw.keyring --namespace=ceph"
+    - "kubectl create secret generic ceph-bootstrap-mds-keyring --from-file=ceph.keyring=ceph.mds.keyring --namespace=ceph"
+    - "kubectl create secret generic ceph-bootstrap-osd-keyring --from-file=ceph.keyring=ceph.osd.keyring --namespace=ceph"
+    - "kubectl create secret generic ceph-client-key --from-file=ceph-client-key --namespace=ceph"
+  args:
+    chdir: "{{ ceph_config_dir }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true

@@ -1,40 +1,33 @@
 ---
-- name: Create kubernetes addon directory
-  file: path={{ kube_addon_dir }} state=directory
-  register: addon_dir
 
-- name: Copy kubernetes proxy config file
+- name: Create Kubernetes addon directory
+  file: path={{ kube_addon_dir }} state=directory
+
+- name: Copy Kubernetes proxy config file
   when: kube_proxy
   template: src=kube-proxy.yml.j2 dest={{ kube_addon_dir }}/kube-proxy.yml
 
-- name: Copy kubernetes dns config file
+- name: Copy Kubernetes dns config file
   when: kube_dns
   template: src=kube-dns.yml.j2 dest={{ kube_addon_dir }}/kube-dns.yml
 
-- name: Copy weavnet and weavescope config file
-  when: weave_scope_ui
-  template: src={{ item.src }} dest={{ kube_addon_dir }}/{{ item.dest }}
-  with_items:
-    - { src: "weavenet.yml.j2", dest: "weavenet.yml" }
-    - { src: "weavescopeui.yml.j2", dest: "weavescopeui.yml" }
-
-- name: Copy kkubernetes monitoring config file
+- name: Copy kKubernetes monitoring config file
   when: kube_monitoring
   template: src=kube-monitoring.yml.j2 dest={{ kube_addon_dir }}/kube-monitoring.yml
 
-- name: Copy kubernetes logging config file
+- name: Copy Kubernetes logging config file
   when: kube_logging
   template: src=kube-logging.yml.j2 dest={{ kube_addon_dir }}/kube-logging.yml
 
-- name: Copy kubernetes dashboard config file
+- name: Copy Kubernetes dashboard config file
   when: kube_dash
   template: src=kube-dash.yml.j2  dest={{ kube_addon_dir }}/kube-dash.yml
 
-- name: Copy kubernetes watch config file
+- name: Copy Kubernetes watch config file
   when: kube_watch
   template: src=kube-watch.yml.j2  dest={{ kube_addon_dir }}/kube-watch.yml
 
-- name: Check kubernetes proxy is working
+- name: Check Kubernetes proxy is working
   when: kube_proxy
   shell: "kubectl get pods --all-namespaces=true | grep kube-proxy"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -42,30 +35,13 @@
   register: check_kube_proxy
   ignore_errors: True
 
-- name: Create kubernetes proxy addon
+- name: Create Kubernetes proxy addon
   when: kube_proxy and check_kube_proxy|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check weavenet is working
-  when: weave_scope_ui
-  shell: "kubectl get pods --all-namespaces=true | grep weave-net"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-  register: check_weavenet
-  ignore_errors: True
-
-- name: Create weavenet and weave-ui addon
-  when: weave_scope_ui and check_weavenet|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/{{ item }}"
-  with_items:
-    - "weavenet.yml"
-    - "weavescopeui.yml"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-
-- name: Check kubernetes dns is working
+- name: Check Kubernetes dns is working
   when: kube_dns
   shell: "kubectl get pods --all-namespaces=true | grep kube-dns"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -73,13 +49,13 @@
   register: check_dns
   ignore_errors: True
 
-- name: Create kubernetes dns addon
+- name: Create Kubernetes dns addon
   when: kube_dns and check_dns|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kubernetes monitoring is working
+- name: Check Kubernetes monitoring is working
   when: kube_monitoring
   shell: "kubectl get pods --all-namespaces=true | grep heapster"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -87,13 +63,13 @@
   register: check_monitoring
   ignore_errors: True
 
-- name: Create kubernetes monitoring addon
+- name: Create Kubernetes monitoring addon
   when: kube_monitoring and check_monitoring|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kubernetes logging is working
+- name: Check Kubernetes logging is working
   when: kube_logging
   shell: "kubectl get pods --all-namespaces=true | grep kibana-logging"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -101,13 +77,13 @@
   register: check_logging
   ignore_errors: True
 
-- name: Create kubernetes logging addon
+- name: Create Kubernetes logging addon
   when: kube_logging and check_logging|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kubernetes dashboard is working
+- name: Check Kubernetes dashboard is working
   when: kube_dash
   shell: "kubectl get pods --all-namespaces=true | grep kubernetes-dashboard"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -115,13 +91,13 @@
   register: check_dash
   ignore_errors: True
 
-- name: Create kubernetes dashboard addon
+- name: Create Kubernetes dashboard addon
   when: kube_dash and check_dash|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Check kubernetes watch is working
+- name: Check Kubernetes watch is working
   when: kube_watch
   shell: "kubectl get pods --all-namespaces=true | grep kubewatch"
   delegate_to: "{{ groups['masters'][0] }}"
@@ -129,7 +105,7 @@
   register: check_watch
   ignore_errors: True
 
-- name: Create kubernetes watch addon
+- name: Create Kubernetes watch addon
   when: kube_watch and check_watch|failed
   shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-watch.yml"
   delegate_to: "{{ groups['masters'][0] }}"

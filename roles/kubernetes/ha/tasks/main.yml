@@ -5,17 +5,17 @@
     - "echo 'net.ipv4.ip_nonlocal_bind=1' > /etc/sysctl.conf"
     - "sysctl -p"
 
-- name: Create kubernetes manifests config directory
-  file: path={{ manifest_config_dir }} state=directory
+- name: Create Kubernetes manifests config directory
+  file: path={{ kube_manifest_dir }} state=directory
 
-- name: Copy keepalived yaml config file
-  template: src="keepalived.yml.j2" dest={{ manifest_config_dir }}/keepalived.yml
+- name: Copy Keepalived yaml config file
+  template: src="keepalived.yml.j2" dest={{ kube_manifest_dir }}/keepalived.yml
 
-- name: Create haproxy config directory
+- name: Create HAProxy config directory
   file: path={{ haproxy_dir }} state=directory
 
-- name: Copy haproxy yml config file
-  template: src="haproxy.yml.j2" dest={{ manifest_config_dir }}/haproxy.yml
+- name: Copy HAProxy yml config file
+  template: src="haproxy.yml.j2" dest={{ kube_manifest_dir }}/haproxy.yml
 
-- name: Copy haproxy config file
+- name: Copy HAProxy config file
   template: src="haproxy.cfg.j2" dest={{ haproxy_dir }}/haproxy.cfg

@@ -1,0 +1,14 @@
+---
+# Update kubernetes nodes.
+
+- hosts: "{{ nodes }}"
+  become: yes
+  vars_prompt:
+    - name: "nodes"
+      prompt: "Which nodes would you like to setup?"
+      private: no
+  roles:
+    - { role: docker, tags: docker }
+    - { role: kubernetes/node, tags: node }
+    - { role: network/flannel, when: network == 'flannel', tags: network }
+    - { role: network/calico, when: network == 'calico', tags: network }

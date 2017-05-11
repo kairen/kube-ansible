@@ -1,4 +1,5 @@
 ---
 dependencies:
-    - { role: commons }
-    - { role: kubernetes }
+  - { role: common }
+  - { role: downloader/pkg, pkg: "{{ downloads.kube }}" }
+  - { role: downloader/image, img: "{{ images.pod_infra }}" }

@@ -1,4 +1,8 @@
 ---
 dependencies:
-    - { role: commons }
-    - { role: kubernetes }
+  - { role: common }
+  - { role: downloader/pkg, pkg: "{{ downloads.kube }}" }
+  - { role: downloader/image, img: "{{ images.apiserver }}" }
+  - { role: downloader/image, img: "{{ images.manager }}" }
+  - { role: downloader/image, img: "{{ images.scheduler }}" }
+  - { role: downloader/image, img: "{{ images.pod_infra }}" }

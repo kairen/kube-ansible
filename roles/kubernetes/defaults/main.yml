@@ -1,6 +1,0 @@
-install_type: "src" # 'pkg' or 'src'
-kube_dir: /opt/kube
-
-# Kubernetes git release binary url
-kube_base_url: "https://storage.googleapis.com/kubernetes-release/release"
-kube_download_url: "{{ kube_base_url }}/v{{ kube_version }}/bin/linux/amd64"

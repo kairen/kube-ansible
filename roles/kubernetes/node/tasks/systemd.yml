@@ -1,0 +1,15 @@
+---
+
+- name: Copy kubelet environment config file
+  template: src="kubelet.j2" dest={{ kube_etc_dir }}/kubelet
+
+- name: Create kubelet directory
+  file: path=/var/lib/kubelet state=directory
+
+- name: Copy kubelet systemd service file
+  copy:
+    src: kubelet.service
+    dest: "{{ systemd_dir }}/kubelet.service"
+    owner: root
+    group: root
+    mode: 0755

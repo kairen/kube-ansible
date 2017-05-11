@@ -1,0 +1,21 @@
+---
+
+- hosts: test
+  become: yes
+  roles:
+    - { role: etcd, tags: etcd }
+
+- hosts: test
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Wait for Etcd start
+      uri:
+        url: http://localhost:2379/health
+        validate_certs: no
+      register: result
+      until: result.status == 200 or result.status == 401
+      retries: 10
+      delay: 5
+      delegate_to: "{{groups['etcd'][0]}}"
+      run_once: true

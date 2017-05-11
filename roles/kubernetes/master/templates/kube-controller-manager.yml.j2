@@ -12,8 +12,8 @@ spec:
     hostPath:
       path: "/etc/kubernetes"
   containers:
-  - name: kube-controller-manager
-    image: "{{ controller_image }}"
+  - name: "{{ images.manager.name }}"
+    image: "{{ images.manager.repos }}{{ images.manager.name }}:{{ images.manager.tag }}"
     command:
     - "kube-controller-manager"
     - "--v=0"
@@ -27,7 +27,7 @@ spec:
     - "--cluster-name={{ cluster_name }}"
     - "--kubeconfig={{ kubeadmin_config }}"
     - "--root-ca-file={{ ca_cert }}"
-    - "--service-account-private-key-file={{ account_key }}"
+    - "--service-account-private-key-file={{ sa_key }}"
     - "--cluster-signing-cert-file={{ ca_cert }}"
     - "--cluster-signing-key-file={{ ca_key }}"
     resources:

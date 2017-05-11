@@ -1,28 +1,41 @@
 ---
-# Prepare configuration files
-- name: Create kubernetes config directory
-  file: path={{ manifest_config_dir }} state=directory
 
-- name: Copy kubernetes apiserver yml config file
-  template: src="kube-apiserver.yml.j2" dest={{ manifest_config_dir }}/kube-apiserver.yml
+- name: Create Kubernetes config directory
+  file:
+    path: "{{ kube_manifest_dir }}"
+    state: directory
 
-- name: Copy kubernetes controller-manager yml config file
-  template: src="kube-controller-manager.yml.j2" dest={{ manifest_config_dir }}/kube-controller-manager.yml
+- name: Copy Kubernetes apiserver yml config file
+  template:
+    src: "kube-apiserver.yml.j2"
+    dest: "{{ kube_manifest_dir }}/kube-apiserver.yml"
 
-- name: Copy kubernetes scheduler yml config file
-  template: src="kube-scheduler.yml.j2" dest={{ manifest_config_dir }}/kube-scheduler.yml
+- name: Copy Kubernetes controller-manager yml config file
+  template:
+    src: "kube-controller-manager.yml.j2"
+    dest: "{{ kube_manifest_dir }}/kube-controller-manager.yml"
 
-- name: Copy kubernetes admin account config file
-  template: src="admin.conf.j2" dest={{ kubeadmin_config }}
+- name: Copy Kubernetes scheduler yml config file
+  template:
+    src: "kube-scheduler.yml.j2"
+    dest: "{{ kube_manifest_dir }}/kube-scheduler.yml"
 
-- name: Copy openssl certificate from ansible host
-  copy: src={{ master_cert_dir }} dest={{ kube_config_dir }}
+- name: Copy Kubernetes admin account config file
+  template:
+    src: "admin.conf.j2"
+    dest: "{{ kubeadmin_config }}"
 
-- name: Copy kubelet env config file
-  template: src="kubelet.j2" dest={{ kube_config_dir }}/kubelet
+- name: Copy SSL certificate from ansible host
+  copy:
+    src: "{{ cert_dir }}"
+    dest: "{{ kube_etc_dir }}"
 
-- name: Copy kubelet systemd service file
-  copy: src=kubelet.service dest={{ service_dir }}/kubelet.service owner=root group=root mode=0755
-
-- name: Create kubelet directory
-  file: path=/var/lib/kubelet state=directory
+- name: Create Kubernetes component symlinks
+  file:
+    src: "{{ downloads.kube.dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - kubectl
+    - kubelet

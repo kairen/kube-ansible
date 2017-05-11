@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=notify
-EnvironmentFile=-{{ env_config_dir }}/docker
+EnvironmentFile=-{{ system_env_dir }}/docker
 ExecStartPost=/sbin/iptables -I FORWARD -s 0.0.0.0/0 -j ACCEPT
 ExecStart=/usr/bin/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
   $OPTIONS \

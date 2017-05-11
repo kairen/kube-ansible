@@ -15,8 +15,8 @@ spec:
     hostPath:
       path: "/etc/kubernetes"
   containers:
-  - name: kube-apiserver
-    image: "{{ api_image }}"
+  - name: "{{ images.apiserver.name }}"
+    image: "{{ images.apiserver.repos }}{{ images.apiserver.name }}:{{ images.apiserver.tag }}"
     command:
     - "kube-apiserver"
     - "--v=0"
@@ -24,21 +24,21 @@ spec:
     - "--admission-control={{ admission_control }}"
     - "--service-cluster-ip-range={{ service_ip_range }}"
     - "--service-node-port-range={{ service_node_port_range }}"
-    - "--service-account-key-file={{ account_key }}"
+    - "--service-account-key-file={{ sa_key }}"
     {% if extra_auth.token is defined -%}
-    - "--token-auth-file={{ kube_config_dir }}/token.csv"
+    - "--token-auth-file={{ kube_etc_dir }}/token.csv"
     {% endif -%}
     {% if extra_auth.abac is defined -%}
     - "--authorization-mode=ABAC"
-    - "--authorization-policy-file={{ kube_config_dir }}/policy.json"
+    - "--authorization-policy-file={{ kube_etc_dir }}/policy.json"
     - "--anonymous-auth=false"
     {% endif -%}
     {% if extra_auth.basic is defined -%}
-    - "--basic-auth-file={{ kube_config_dir }}/user.csv"
+    - "--basic-auth-file={{ kube_etc_dir }}/user.csv"
     {% endif -%}
     - "--client-ca-file={{ ca_cert }}"
     - "--tls-cert-file={{ api_cert }}"
-    - "--tls-private-key-file={{ api_key }}"
+    - "--tls-private-key-file={{ sa_key }}"
     - "--secure-port={{ api_secure_port }}"
     - "--allow-privileged"
     - "--advertise-address={{ lb_vip_address }}"
