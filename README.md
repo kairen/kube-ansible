@@ -6,7 +6,7 @@ TODO List:
 - [x] Kubernetes HA cluster setup(v1.5.0+).
 - [x] Kubernetes addons.
 - [x] Ceph on Kubernetes(v11.2.0+).
-- [x] IKubernetes Ceph RBD/FS volume.
+- [x] Kubernetes Ceph RBD/FS volume.
 - [ ] Integration with existing CNI, CSI and CRI.
 - [ ] Rolling upgrade component.
 - [ ] Harbor registry.
@@ -146,5 +146,5 @@ Tear down node using the follow command:
 $ ansible-playbook playbooks/node/del.yml
 Which nodes would you like to delete? node2
 
-$ ansible-playbook playbooks/reset-cluster.yml --tags -e hosts=node2
+$ ansible-playbook playbooks/reset-cluster.yml --tags kube -e hosts=node2
 ```
