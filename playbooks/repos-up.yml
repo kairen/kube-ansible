@@ -5,4 +5,9 @@
   become: yes
   roles:
     - { role: docker, tags: docker }
+
+- hosts: repos
+  gather_facts: no
+  become: yes
+  roles:
     - { role: repos, tags: repos }
