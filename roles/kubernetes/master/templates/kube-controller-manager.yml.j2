@@ -27,6 +27,8 @@ spec:
     - "--cluster-name={{ cluster_name }}"
     - "--kubeconfig={{ kubeadmin_config }}"
     - "--root-ca-file={{ ca_cert }}"
+    - "--allocate-node-cidrs=true"
+    - "--cluster-cidr={{ pod_network_cidr }}"
     - "--service-account-private-key-file={{ sa_key }}"
     - "--cluster-signing-cert-file={{ ca_cert }}"
     - "--cluster-signing-key-file={{ ca_key }}"

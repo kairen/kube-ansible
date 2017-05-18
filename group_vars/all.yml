@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.6.2
+kube_version: 1.6.3
 
 # Network implementation('flannel', 'calico')
 network: flannel
@@ -23,7 +23,7 @@ sslcert_enable: true
 
 # Etcd variable
 etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
-etcd_peer_url_scheme: https # http / https
+etcd_peer_url_scheme: http # http / https
 
 # A list of insecure registrys you might need to define
 insecure_registrys:

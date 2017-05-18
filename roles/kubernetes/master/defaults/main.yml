@@ -3,7 +3,7 @@
 cluster_name: kubernetes
 
 # kube-apiserver options
-admission_control: NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota
+admission_control: NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
 
 # kube-controller-manager options
 leader_elect: true
