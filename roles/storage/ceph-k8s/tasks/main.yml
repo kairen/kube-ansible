@@ -1,19 +1,11 @@
 ---
-    
-- name: Download sigil tar file
-  get_url:
-    url: "{{ sigil_download_url }}"
-    dest: "{{ tmp_dir }}"
-    validate_certs: False
-  register: sigil_download
 
-- name: Extract sigil tar file
-  when:
-    - sigil_download|succeeded
-  unarchive:
-    src: "{{ tmp_dir }}/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
-    dest: "/usr/bin"
-    copy: no
+- name: Create sigil component symlinks
+  file:
+    src: "{{ sigil.dir }}/{{ sigil.name }}"
+    dest: "/usr/bin/{{ sigil.name }}"
+    state: link
+    force: yes
 
 - name: Create and copy generator config file
   include: generator.yml

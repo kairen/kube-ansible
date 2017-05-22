@@ -18,7 +18,8 @@
   template: src="openssl.conf.j2" dest={{ cert_dir }}/openssl.conf
   register: copy_kube_ssl
 
-- name: Copy openssl conf file to SSL certificate directory
+- name: Copy Etcd openssl conf file to SSL certificate directory
+  when: etcd_peer_url_scheme == 'https'
   template: src="openssl-etcd.conf.j2" dest={{ cert_dir }}/openssl-etcd.conf
   register: copy_etcd_ssl
 

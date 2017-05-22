@@ -20,7 +20,7 @@
 
 - name: Set fact ansible_os_family var to RedHat
   when:
-    - ansible_os_family is not defined 
+    - ansible_os_family is not defined
     - "'CentOS' in distro.stdout"
   set_fact:
     ansible_os_family: RedHat
@@ -29,8 +29,3 @@
   when: ansible_os_family == "Debian"
   set_fact:
     system_env_dir: "/etc/default"
-
-- name: Override service file directory for Debian
-  when: ansible_os_family == "Debian"
-  set_fact:
-    systemd_dir: "/lib/systemd/system"

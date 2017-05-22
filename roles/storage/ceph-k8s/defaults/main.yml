@@ -2,10 +2,21 @@
 # Ceph cluster on Kubernetes
 
 ceph_image_tag: "tag-build-master-kraken-ubuntu-16.04"
+rgw_external_vip: "{{ lb_vip_address }}"
+rgw_external_port: "8080"
 
-sigil_verison: 0.4.0
-sigil_download_url_base: "https://github.com/gliderlabs/sigil/releases/download/v{{ sigil_verison }}"
-sigil_download_url: "{{ sigil_download_url_base }}/sigil_{{ sigil_verison }}_Linux_x86_64.tgz"
+restapi_external_vip: "{{ lb_vip_address }}"
+restapi_external_port: "5000"
 
 osd_cluster_network: "{{ pod_network_cidr }}"
 osd_public_network: "{{ osd_cluster_network }}"
+
+sigil_verison: 0.4.0
+sigil:
+  name: sigil
+  description: "sigil tool"
+  dir: /opt/sigil
+  url: "https://github.com/gliderlabs/sigil/releases/download/v{{ sigil_verison }}/"
+  items: [ "sigil_{{ sigil_verison }}_Linux_x86_64.tgz" ]
+  unarchive:
+    extra_opt: "['--strip-components=0']"

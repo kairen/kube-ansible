@@ -1,9 +1,9 @@
 ---
 
 # System dir path
-systemd_dir: /etc/systemd/system
+systemd_dir: /lib/systemd/system
 system_env_dir: /etc/sysconfig
-dropin_dir: "/usr/lib/systemd/system"
+dropin_dir: /usr/lib/systemd/system
 ceph_config_dir: /etc/ceph
 
 # Kubernetes component
