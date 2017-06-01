@@ -1,0 +1,97 @@
+---
+
+- hosts: builder
+  become: yes
+  gather_facts: no
+  vars:
+    # System
+    baseimage:
+      name: baseimage
+      repos: "phusion/"
+      tag: "0.9.22"
+    ubuntu:
+      name: ubuntu
+      repos: ""
+      tag: "16.04"
+    centos:
+      name: centos
+      repos: ""
+      tag: "7"
+    redhat:
+      name: redhat
+      repos: "hjd48/"
+      tag: "latest"
+    rhel7:
+      name: redhat
+      repos: "aossama/"
+      tag: "rhel7"
+    fedora:
+      name: fedora
+      repos: ""
+      tag: "25"
+    busybox:
+      name: busybox
+      repos: ""
+      tag: "1.26"
+    # Dev
+    java:
+      name: java
+      repos: ""
+      tag: "7"
+    gcc:
+      name: gcc
+      repos: ""
+      tag: "7"
+    php:
+      name: php
+      repos: ""
+      tag: "7"
+    python:
+      name: python
+      repos: ""
+      tag: "2.7"
+    perl:
+      name: perl
+      repos: ""
+      tag: "5"
+    # Application
+    nginx:
+      name: nginx
+      repos: ""
+      tag: "1.13"
+    httpd:
+      name: httpd
+      repos: ""
+      tag: "2.4-alpine"
+    mysql:
+      name: mysql
+      repos: ""
+      tag: "8"
+    hello_world:
+      name: hello-world
+      repos: ""
+      tag: latest
+    hadoop:
+      name: hadoop-docker
+      repos: "sequenceiq/"
+      tag: 2.7.1
+  tags:
+    - download-image
+  roles:
+    - { role: downloader/image, img: "{{ baseimage }}", push: true }
+    - { role: downloader/image, img: "{{ ubuntu }}", push: true }
+    - { role: downloader/image, img: "{{ centos }}", push: true }
+    - { role: downloader/image, img: "{{ redhat }}", push: true }
+    - { role: downloader/image, img: "{{ rhel7 }}", push: true }
+    - { role: downloader/image, img: "{{ fedora }}", push: true }
+    - { role: downloader/image, img: "{{ busybox }}", push: true }
+    - { role: downloader/image, img: "{{ java }}", push: true }
+    - { role: downloader/image, img: "{{ gcc }}", push: true }
+    - { role: downloader/image, img: "{{ php }}", push: true }
+    - { role: downloader/image, img: "{{ python }}", push: true }
+    - { role: downloader/image, img: "{{ perl }}", push: true }
+    - { role: downloader/image, img: "{{ nginx }}", push: true }
+    - { role: downloader/image, img: "{{ httpd }}", push: true }
+    - { role: downloader/image, img: "{{ mysql }}", push: true }
+    - { role: downloader/image, img: "{{ hello_world }}", push: true }
+    - { role: downloader/image, img: "{{ hadoop }}", push: true }
