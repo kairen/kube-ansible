@@ -1,4 +1,4 @@
-#  Kubernetes kubelet config
+# Kubernetes kubelet config
 KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 
 # Pod infrastructure container
@@ -21,4 +21,11 @@ KUBELET_DNS_ARGS="--cluster-dns={{ dns_ip }} --cluster-domain={{ dns_name }}"
 # Add master label
 KUBE_NODE_LABEL="--node-labels=kubeadm.alpha.kubernetes.io/role=master"
 
-KUBELET_ARGS="--kubeconfig={{ kubeadmin_config }} --require-kubeconfig=true --pod-manifest-path={{ kube_manifest_dir }}"
+# Other args
+KUBELET_ARGS="--kubeconfig={{ kubeadmin_config }} \
+              --require-kubeconfig=true \
+              --eviction-max-pod-grace-period=30 \
+              --eviction-pressure-transition-period=5m0s \
+              --pod-manifest-path={{ kube_manifest_dir }} \
+              --image-gc-high-threshold=60 \
+              --image-gc-low-threshold=40"

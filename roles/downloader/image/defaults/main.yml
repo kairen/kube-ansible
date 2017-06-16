@@ -44,7 +44,7 @@ images:
   dashboard:
     name: kubernetes-dashboard-amd64
     repos: gcr.io/google_containers/
-    tag: "v1.6.0"
+    tag: "v1.6.1"
   dns:
     name: kubedns-amd64
     repos: gcr.io/google_containers/
@@ -60,7 +60,7 @@ images:
   fluentd_es:
     name: fluentd-elasticsearch
     repos: gcr.io/google_containers/
-    tag: "1.22"
+    tag: "1.23"
   elasticsearch:
     name: elasticsearch
     repos: gcr.io/google_containers/

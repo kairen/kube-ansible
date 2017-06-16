@@ -1,21 +1,28 @@
-# kubernetes kubelet config
+# Kubernetes kubelet config
 KUBELET_ADDRESS="--address=0.0.0.0 --port=10250"
 
-# pod infrastructure container
+# Pod infrastructure container
 KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ images.pod_infra.repos }}{{ images.pod_infra.name }}:{{ images.pod_infra.tag }}"
 
-# add your own!
-KUBELET_ARGS="--kubeconfig={{ kubelet_config }} --require-kubeconfig=true --pod-manifest-path=/etc/kubernetes/manifests"
-
-# set log
+# Log level
 KUBE_LOGTOSTDERR="--logtostderr=true --v=0"
 
 # Should this cluster be allowed to run privileged docker containers
 KUBE_ALLOW_PRIV="--allow-privileged=true"
 
+# Kubernetes kubelet network policy for CNI
 {% if network != 'flannel' -%}
 KUBELET_NETWORK_ARGS="--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
 {% endif -%}
 
-# kube dns
+# DNS args
 KUBELET_DNS_ARGS="--cluster-dns={{ dns_ip }} --cluster-domain={{ dns_name }}"
+
+# Other args
+KUBELET_ARGS="--kubeconfig={{ kubelet_config }} \
+              --require-kubeconfig=true \
+              --eviction-max-pod-grace-period=30 \
+              --eviction-pressure-transition-period=5m0s \
+              --pod-manifest-path={{ kube_manifest_dir }} \
+              --image-gc-high-threshold=60 \
+              --image-gc-low-threshold=40"
