@@ -42,8 +42,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
-
-# elasticsearch component
 ---
 apiVersion: v1
 kind: ReplicationController
@@ -93,7 +91,6 @@ spec:
       volumes:
       - name: es-persistent-storage
         emptyDir: {}
-
 ---
 apiVersion: v1
 kind: Service
@@ -114,8 +111,6 @@ spec:
     targetPort: db
   selector:
     k8s-app: elasticsearch-logging
-
-# kibana component
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -151,7 +146,6 @@ spec:
         - containerPort: 5601
           name: ui
           protocol: TCP
-
 ---
 apiVersion: v1
 kind: Service

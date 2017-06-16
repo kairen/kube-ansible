@@ -24,7 +24,7 @@
   register: copy_etcd_ssl
 
 - name: Create Kubernetes certificates
-  when: sslcert_enable and copy_kube_ssl|changed
+  when: copy_kube_ssl|changed
   register: kube_cert
   command: "{{ item }}"
   with_items:

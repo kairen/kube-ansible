@@ -22,7 +22,7 @@ listen stats
 
 frontend api-https
    mode tcp
-   bind :443
+   bind :{{ lb_secure_port }}
    default_backend api-backend
 
 backend api-backend
@@ -31,4 +31,3 @@ backend api-backend
     server  api{{ loop.index }}  {{ host }}:{{ api_secure_port }}  check
 {% if not loop.last -%}{%- endif -%}
 {% endfor %}
-

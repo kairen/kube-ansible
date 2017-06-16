@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.6.3
+kube_version: 1.6.5
 
 # Network implementation('flannel', 'calico')
 network: flannel
@@ -12,14 +12,12 @@ cluster_subnet: 192.160.0
 kubernetes_service_ip: "{{ cluster_subnet }}.1"
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
+api_secure_port: 5443
 
 # Set if you want to access kubernetes cluster via load balancer
 lb_vip_address: 172.16.35.9
-lb_api_url: "https://{{ lb_vip_address }}"
-api_secure_port: 5443
-
-# SSL cert handler, it should be true during ansible first run
-sslcert_enable: true
+lb_secure_port: 6443
+lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
 # Etcd variable
 etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
