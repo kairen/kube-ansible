@@ -79,6 +79,7 @@ function update_vars() {
     MASTER_PREFIX=$(get_vagrant_config "master_prefix")
     NODE_PREFIX=$(get_vagrant_config "node_prefix")
     TOTAL=$((MASTER_COUNT+NODE_COUNT))
+    NETWORK=$(cat ${GROUP_VARS_PATH} | awk '/network:/ { print $2 }')
 
     HOSTS=""
     for ((i=0; i<${TOTAL}; i++)) do

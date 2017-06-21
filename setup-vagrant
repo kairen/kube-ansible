@@ -53,7 +53,12 @@ vagrant_config "system_memory" ${MEMORY}
 vagrant_config "system_vcpus" ${CPU}
 
 update_vars
-role_config "flannel_opts: \"\"" "flannel_opts: --iface=${ETH}" ${FLANNEL_DEFAULT_PATH}
+if [ ${NETWORK} == 'flannel' ]; then
+  role_config "network_opts:.*" "network_opts: --iface=${ETH}" ${GROUP_VARS_PATH}
+elif [ ${NETWORK} == 'calico' ]; then
+  role_config "network_opts:.*" "network_opts: interface=${ETH}" ${GROUP_VARS_PATH}
+fi
+
 role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}
 role_config "node_interface: \"\"" "node_interface: ${ETH}" ${NODE_DEFAULT_PATH}
 role_config "vip_interface:.*" "vip_interface: ${ETH}" ${VIP_DEFAULT_PATH}
