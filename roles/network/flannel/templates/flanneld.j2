@@ -7,7 +7,7 @@ FLANNEL_ETCD_PREFIX="{{ flannel_key }}"
 
 # Flanneld options variable
 {% if etcd_peer_url_scheme == 'https' -%}
-FLANNEL_OPTIONS="--etcd-cafile={{ etcd_ca_file }} --etcd-keyfile={{ etcd_key_file }} --etcd-certfile={{ etcd_cert_file }} {{ flannel_opts | default('') }}"
+FLANNEL_OPTIONS="--etcd-cafile={{ etcd_ca_file }} --etcd-keyfile={{ etcd_key_file }} --etcd-certfile={{ etcd_cert_file }} {{ network_opts | default('') }}"
 {% else %}
-FLANNEL_OPTIONS="{{ flannel_opts | default('') }}"
+FLANNEL_OPTIONS="{{ network_opts | default('') }}"
 {% endif -%}

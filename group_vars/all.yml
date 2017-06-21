@@ -7,6 +7,9 @@ kube_version: 1.6.5
 network: flannel
 pod_network_cidr: "10.244.0.0/16"
 
+# When use vagrant to deploy, you should set to flannel: --iface=enp0s8. calico: interface=enp0s8 or can-reach=8.8.8.8
+network_opts: ""
+
 # Kubernetes cluster network
 cluster_subnet: 192.160.0
 kubernetes_service_ip: "{{ cluster_subnet }}.1"
