@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/kairen/kube-ansible.svg?branch=master)](https://travis-ci.org/kairen/kube-ansible)
 # My Highly Available Kubernetes Ansible
 This is my learning `Ansible`、`Vagrant` and `Kubernetes` repos, Goal is quick deployment and operation for Kubernetes and Ceph.
 

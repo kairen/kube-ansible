@@ -1,11 +1,11 @@
 ---
 sudo: required
-dist: xenial
+dist: trusty
 
 before_install:
   - wget https://releases.hashicorp.com/vagrant/1.9.2/vagrant_1.9.2_x86_64.deb
   - sudo dpkg -i vagrant_1.9.2_x86_64.deb
-  - "echo 'deb http://download.virtualbox.org/virtualbox/debian xenial contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list"
+  - "echo 'deb http://download.virtualbox.org/virtualbox/debian trusty contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list"
   - "wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -"
   - sudo apt-get update
   - sudo apt-get install -y virtualbox-5.1
