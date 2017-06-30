@@ -1,0 +1,23 @@
+---
+sudo: required
+dist: xenial
+
+before_install:
+  - wget https://releases.hashicorp.com/vagrant/1.9.2/vagrant_1.9.2_x86_64.deb
+  - sudo dpkg -i vagrant_1.9.2_x86_64.deb
+  - "echo 'deb http://download.virtualbox.org/virtualbox/debian xenial contrib' >> /etc/apt/sources.list.d/virtualbox.list"
+  - "wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -"
+  - sudo apt-get update
+  - sudo apt-get install -y virtualbox-5.1
+
+script:
+  - "echo y | ./setup-vagrant"
+
+matrix:
+  allow_failures:
+    - before_install: jruby-head
+
+branches:
+  only:
+    - master
+    - dev
