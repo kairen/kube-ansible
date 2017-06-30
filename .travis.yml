@@ -1,14 +1,14 @@
 ---
 sudo: required
-dist: trusty
+dist: xenial
 
 before_install:
   - sudo apt-get update
   - sudo apt-get install -y libice6 libsm6 libxmu6 libxt6
   - wget https://releases.hashicorp.com/vagrant/1.9.2/vagrant_1.9.2_x86_64.deb
   - sudo dpkg -i vagrant_1.9.2_x86_64.deb
-  - wget http://download.virtualbox.org/virtualbox/5.1.22/virtualbox-5.1_5.1.22-115126~Ubuntu~trusty_amd64.deb
-  - sudo dpkg -i virtualbox-5.1_5.1.22-115126~Ubuntu~trusty_amd64.deb
+  - wget http://download.virtualbox.org/virtualbox/5.1.22/virtualbox-5.1_5.1.22-115126~Ubuntu~xenial_amd64.deb
+  - sudo dpkg -i virtualbox-5.1_5.1.22-115126~Ubuntu~xenial_amd64.deb
 
 script:
   - "echo y | ./setup-vagrant"
