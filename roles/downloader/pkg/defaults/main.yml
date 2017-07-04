@@ -9,10 +9,10 @@ pkg_bases:
     version: "{{ kube_version }}"
   etcd:
     url: "https://github.com"
-    version: 3.1.6
+    version: 3.2.1
   docker:
     url: "https://get.docker.com"
-    version: 17.04.0-ce
+    version: 17.05.0-ce
   cni:
     url: "https://github.com"
     version: 0.5.2
