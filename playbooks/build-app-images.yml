@@ -78,20 +78,20 @@
   tags:
     - download-image
   roles:
-    - { role: downloader/image, img: "{{ baseimage }}", push: true }
-    - { role: downloader/image, img: "{{ ubuntu }}", push: true }
-    - { role: downloader/image, img: "{{ centos }}", push: true }
-    - { role: downloader/image, img: "{{ redhat }}", push: true }
-    - { role: downloader/image, img: "{{ rhel7 }}", push: true }
-    - { role: downloader/image, img: "{{ fedora }}", push: true }
-    - { role: downloader/image, img: "{{ busybox }}", push: true }
-    - { role: downloader/image, img: "{{ java }}", push: true }
-    - { role: downloader/image, img: "{{ gcc }}", push: true }
-    - { role: downloader/image, img: "{{ php }}", push: true }
-    - { role: downloader/image, img: "{{ python }}", push: true }
-    - { role: downloader/image, img: "{{ perl }}", push: true }
-    - { role: downloader/image, img: "{{ nginx }}", push: true }
-    - { role: downloader/image, img: "{{ httpd }}", push: true }
-    - { role: downloader/image, img: "{{ mysql }}", push: true }
-    - { role: downloader/image, img: "{{ hello_world }}", push: true }
-    - { role: downloader/image, img: "{{ hadoop }}", push: true }
+    - { role: images, img: "{{ baseimage }}", push: true }
+    - { role: images, img: "{{ ubuntu }}", push: true }
+    - { role: images, img: "{{ centos }}", push: true }
+    - { role: images, img: "{{ redhat }}", push: true }
+    - { role: images, img: "{{ rhel7 }}", push: true }
+    - { role: images, img: "{{ fedora }}", push: true }
+    - { role: images, img: "{{ busybox }}", push: true }
+    - { role: images, img: "{{ java }}", push: true }
+    - { role: images, img: "{{ gcc }}", push: true }
+    - { role: images, img: "{{ php }}", push: true }
+    - { role: images, img: "{{ python }}", push: true }
+    - { role: images, img: "{{ perl }}", push: true }
+    - { role: images, img: "{{ nginx }}", push: true }
+    - { role: images, img: "{{ httpd }}", push: true }
+    - { role: images, img: "{{ mysql }}", push: true }
+    - { role: images, img: "{{ hello_world }}", push: true }
+    - { role: images, img: "{{ hadoop }}", push: true }

@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - { role: downloader/image, img: "{{ images.repos }}" }
+  - { role: images, img: "{{ images.repos }}" }

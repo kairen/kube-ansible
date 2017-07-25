@@ -1,4 +1,4 @@
 ---
 dependencies:
   - { role: common }
-  - { role: downloader/pkg, pkg: "{{ downloads.docker }}" }
+  - { role: packages, pkg: "{{ downloads.docker }}" }

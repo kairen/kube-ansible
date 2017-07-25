@@ -11,7 +11,7 @@
   tags:
     - download-pkg
   roles:
-    - { role: downloader/pkg, pkg: "{{ downloads.etcd }}" }
+    - { role: packages, pkg: "{{ downloads.etcd }}" }
 
 - hosts: test
   become: yes
@@ -24,6 +24,6 @@
   tags:
     - download-image
   roles:
-    - { role: downloader/image, img: "{{ images.haproxy }}" }
-    - { role: downloader/image, img: "{{ images.keepalived }}", archive: true }
-    - { role: downloader/image, img: "{{ ubuntu }}", push: true }
+    - { role: images, img: "{{ images.haproxy }}" }
+    - { role: images, img: "{{ images.keepalived }}", archive: true }
+    - { role: images, img: "{{ ubuntu }}", push: true }

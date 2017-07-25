@@ -1,5 +1,5 @@
 ---
 dependencies:
   - { role: common }
-  - { role: downloader/image, img: "{{ images.haproxy }}" }
-  - { role: downloader/image, img: "{{ images.keepalived }}" }
+  - { role: images, img: "{{ images.haproxy }}" }
+  - { role: images, img: "{{ images.keepalived }}" }

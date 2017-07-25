@@ -9,22 +9,22 @@
   tags:
     - download-image
   roles:
-    - { role: downloader/image, img: "{{ images.pod_infra }}", push: true }
-    - { role: downloader/image, img: "{{ images.apiserver }}", push: true }
-    - { role: downloader/image, img: "{{ images.manager }}", push: true }
-    - { role: downloader/image, img: "{{ images.scheduler }}", push: true }
-    - { role: downloader/image, img: "{{ images.haproxy }}", push: true }
-    - { role: downloader/image, img: "{{ images.keepalived }}", push: true }
-    - { role: downloader/image, img: "{{ images.proxy }}", push: true }
-    - { role: downloader/image, img: "{{ images.dashboard }}", push: true }
-    - { role: downloader/image, img: "{{ images.dns }}", push: true }
-    - { role: downloader/image, img: "{{ images.dnsmasq }}", push: true }
-    - { role: downloader/image, img: "{{ images.healthz }}", push: true }
-    - { role: downloader/image, img: "{{ images.fluentd_es }}", push: true }
-    - { role: downloader/image, img: "{{ images.elasticsearch }}", push: true }
-    - { role: downloader/image, img: "{{ images.kibana }}", push: true }
-    - { role: downloader/image, img: "{{ images.heapster }}", push: true }
-    - { role: downloader/image, img: "{{ images.hp_influx }}", push: true }
-    - { role: downloader/image, img: "{{ images.hp_grafana }}", push: true }
-    - { role: downloader/image, img: "{{ images.calico_node }}", push: true }
-    - { role: downloader/image, img: "{{ images.calico_pollicy }}", push: true }
+    - { role: images, img: "{{ images.pod_infra }}", push: true }
+    - { role: images, img: "{{ images.apiserver }}", push: true }
+    - { role: images, img: "{{ images.manager }}", push: true }
+    - { role: images, img: "{{ images.scheduler }}", push: true }
+    - { role: images, img: "{{ images.haproxy }}", push: true }
+    - { role: images, img: "{{ images.keepalived }}", push: true }
+    - { role: images, img: "{{ images.proxy }}", push: true }
+    - { role: images, img: "{{ images.dashboard }}", push: true }
+    - { role: images, img: "{{ images.dns }}", push: true }
+    - { role: images, img: "{{ images.dnsmasq }}", push: true }
+    - { role: images, img: "{{ images.healthz }}", push: true }
+    - { role: images, img: "{{ images.fluentd_es }}", push: true }
+    - { role: images, img: "{{ images.elasticsearch }}", push: true }
+    - { role: images, img: "{{ images.kibana }}", push: true }
+    - { role: images, img: "{{ images.heapster }}", push: true }
+    - { role: images, img: "{{ images.hp_influx }}", push: true }
+    - { role: images, img: "{{ images.hp_grafana }}", push: true }
+    - { role: images, img: "{{ images.calico_node }}", push: true }
+    - { role: images, img: "{{ images.calico_pollicy }}", push: true }
