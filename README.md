@@ -143,7 +143,7 @@ $ ansible-playbook reset.yml
 
 Tear down node using the follow command:
 ```sh
-$ ansible-playbook playbooks/node/del.yml
+$ ansible-playbook extra-playbooks/node/del.yml
 Which nodes would you like to delete? node2
 
 $ ansible-playbook reset.yml --tags kube -e hosts=node2
