@@ -2,12 +2,12 @@
 # Download component task
 
 - name: Override local repository url
-  when: 'pkg is defined and repos_mode'
+  when: 'pkg is defined and repos_offline'
   set_fact:
     pkg_bases: >
       {{ pkg_bases |
          combine({ pkg.name: {
-             'url': repos_url,
+             'url': repos_offline_url,
              'version': pkg_bases[pkg.name]['version']
          }})
       }}

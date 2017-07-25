@@ -1,0 +1,27 @@
+---
+
+- hosts: builder
+  become: yes
+  gather_facts: no
+  vars:
+    image_tmp: /tmp/images/apps
+  tags:
+    - loadimage
+  roles:
+    - { role: ops/loadimage, img: "{{ images.baseimage }}" }
+    - { role: ops/loadimage, img: "{{ images.ubuntu }}" }
+    - { role: ops/loadimage, img: "{{ images.centos }}" }
+    - { role: ops/loadimage, img: "{{ images.redhat }}" }
+    - { role: ops/loadimage, img: "{{ images.rhel7 }}" }
+    - { role: ops/loadimage, img: "{{ images.fedora }}" }
+    - { role: ops/loadimage, img: "{{ images.busybox }}" }
+    - { role: ops/loadimage, img: "{{ images.java }}" }
+    - { role: ops/loadimage, img: "{{ images.gcc }}" }
+    - { role: ops/loadimage, img: "{{ images.php }}" }
+    - { role: ops/loadimage, img: "{{ images.python }}" }
+    - { role: ops/loadimage, img: "{{ images.perl }}" }
+    - { role: ops/loadimage, img: "{{ images.nginx }}" }
+    - { role: ops/loadimage, img: "{{ images.httpd }}" }
+    - { role: ops/loadimage, img: "{{ images.mysql }}" }
+    - { role: ops/loadimage, img: "{{ images.hello_world }}" }
+    - { role: ops/loadimage, img: "{{ images.hadoop }}" }

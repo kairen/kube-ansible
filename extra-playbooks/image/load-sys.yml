@@ -1,0 +1,29 @@
+---
+
+- hosts: builder
+  become: yes
+  gather_facts: no
+  vars:
+    image_tmp: /tmp/images
+  tags:
+    - loadimage
+  roles:
+    - { role: ops/loadimage, img: "{{ images.pod_infra }}" }
+    - { role: ops/loadimage, img: "{{ images.apiserver }}" }
+    - { role: ops/loadimage, img: "{{ images.manager }}" }
+    - { role: ops/loadimage, img: "{{ images.scheduler }}" }
+    - { role: ops/loadimage, img: "{{ images.haproxy }}" }
+    - { role: ops/loadimage, img: "{{ images.keepalived }}" }
+    - { role: ops/loadimage, img: "{{ images.proxy }}" }
+    - { role: ops/loadimage, img: "{{ images.dashboard }}" }
+    - { role: ops/loadimage, img: "{{ images.dns }}" }
+    - { role: ops/loadimage, img: "{{ images.dnsmasq }}" }
+    - { role: ops/loadimage, img: "{{ images.healthz }}" }
+    - { role: ops/loadimage, img: "{{ images.fluentd_es }}" }
+    - { role: ops/loadimage, img: "{{ images.elasticsearch }}" }
+    - { role: ops/loadimage, img: "{{ images.kibana }}" }
+    - { role: ops/loadimage, img: "{{ images.heapster }}" }
+    - { role: ops/loadimage, img: "{{ images.hp_influx }}" }
+    - { role: ops/loadimage, img: "{{ images.hp_grafana }}" }
+    - { role: ops/loadimage, img: "{{ images.calico_node }}" }
+    - { role: ops/loadimage, img: "{{ images.calico_pollicy }}" }

@@ -1,8 +1,18 @@
 ---
 
+- name: Override registry repos
+  when: 'img is defined'
+  set_fact:
+    repos: "{{ img.repos }}"
+
+- name: Override local registry repos
+  when: 'img is defined and registry_offline'
+  set_fact:
+    repos: "{{ registry_offline_url }}/"
+
 - name: "Check {{ img.name }} image already exists"
   when: img is defined
-  shell: "docker images | grep -o '{{ img.repos }}{{ img.name }}' | wc -l"
+  shell: "docker images | grep -o '{{ repos }}{{ img.name }}' | wc -l"
   run_once: true
   ignore_errors: True
   register: check_image
@@ -10,26 +20,30 @@
 - name: "Pull {{ img.name }} image"
   when: img is defined and check_image.stdout|int <= 0
   shell: |
-    docker pull {{ img.repos }}{{ img.name }}:{{ img.tag }}
+    docker pull {{ repos }}{{ img.name }}:{{ img.tag }}
   register: pull_result
   until: pull_result|succeeded
   retries: 4
+
+- name: Create archive tmp directory
+  when: img is defined and archive|default(false)
+  file: path="{{ image_tmp }}" state=directory
 
 - name: "Archive {{ img.name }} image"
   when:
     - archive|default(false)
     - pull_result|succeeded or check_image.stdout|int > 0
   shell: |
-    docker save {{ img.repos }}{{ img.name }}:{{ img.tag }} \
+    docker save {{ repos }}{{ img.name }}:{{ img.tag }} \
                 > {{ image_tmp }}/{{ img.name }}-image.tar
   register: archive_image
 
-- name: "Tag push {{ img.name }} image"
+- name: "Tag {{ img.name }} image"
   when:
     - push|default(false)
     - pull_result|succeeded or check_image.stdout|int > 0
   shell: |
-    docker tag {{ img.repos }}{{ img.name }}:{{ img.tag }} \
+    docker tag {{ repos }}{{ img.name }}:{{ img.tag }} \
                {{ item }}/{{ img.name }}:{{ img.tag }}
   with_items: "{{ insecure_registrys }}"
   register: tag_image
