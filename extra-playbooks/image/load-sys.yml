@@ -4,7 +4,7 @@
   become: yes
   gather_facts: no
   vars:
-    image_tmp: /tmp/images
+    image_tmp: /tmp/images/sys
   tags:
     - loadimage
   roles:

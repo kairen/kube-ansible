@@ -5,3 +5,4 @@ tmp
 tmp/*
 hosts
 *.ovpn
+inventory

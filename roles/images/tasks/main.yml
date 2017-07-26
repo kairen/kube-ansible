@@ -12,7 +12,7 @@
 
 - name: "Check {{ img.name }} image already exists"
   when: img is defined
-  shell: "docker images | grep -o '{{ repos }}{{ img.name }}' | wc -l"
+  shell: "docker images | awk '{print $1\":\"$2}' | grep -o '{{ repos }}{{ img.name }}:{{ img.tag }}' | wc -l"
   run_once: true
   ignore_errors: True
   register: check_image
@@ -34,8 +34,8 @@
     - archive|default(false)
     - pull_result|succeeded or check_image.stdout|int > 0
   shell: |
-    docker save {{ repos }}{{ img.name }}:{{ img.tag }} \
-                > {{ image_tmp }}/{{ img.name }}-image.tar
+    docker save {{ img.repos }}{{ img.name }}:{{ img.tag }} \
+                > {{ image_tmp }}/{{ img.name }}-{{ img.tag }}-image.tar
   register: archive_image
 
 - name: "Tag {{ img.name }} image"
