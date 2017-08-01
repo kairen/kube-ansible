@@ -138,13 +138,13 @@ $ kubectl get svc,po -o wide
 ## Reset cluster and Tear down node
 Reset all kubernetes cluster installed state:
 ```sh
-$ ansible-playbook playbooks/reset-cluster.yml
+$ ansible-playbook reset.yml
 ```
 
 Tear down node using the follow command:
 ```sh
-$ ansible-playbook playbooks/node/del.yml
+$ ansible-playbook extra-playbooks/node/del.yml
 Which nodes would you like to delete? node2
 
-$ ansible-playbook playbooks/reset-cluster.yml --tags kube -e hosts=node2
+$ ansible-playbook reset.yml --tags kube -e hosts=node2
 ```

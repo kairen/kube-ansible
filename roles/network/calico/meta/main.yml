@@ -1,7 +1,7 @@
 ---
 dependencies:
   - { role: common }
-  - { role: downloader/pkg, pkg: "{{ downloads.cni }}" }
-  - { role: downloader/pkg, pkg: "{{ downloads.calico }}" }
-  - { role: downloader/pkg, pkg: "{{ downloads.calicoctl }}" }
-  - { role: downloader/image, img: "{{ images.calico_node }}" }
+  - { role: packages, pkg: "{{ downloads.cni }}" }
+  - { role: packages, pkg: "{{ downloads.calico }}" }
+  - { role: packages, pkg: "{{ downloads.calicoctl }}" }
+  - { role: images, img: "{{ images.calico_node }}" }

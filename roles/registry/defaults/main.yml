@@ -1,5 +1,8 @@
 ---
 
+registry_port: 5000
+registry_ui_port: 5001
+
 registry_proto: http
 registry_ssl_verify: false
 

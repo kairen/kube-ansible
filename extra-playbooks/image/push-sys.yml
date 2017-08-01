@@ -1,0 +1,29 @@
+---
+
+- hosts: builder
+  become: yes
+  gather_facts: no
+  vars:
+    push: true
+  tags:
+    - pushimage
+  roles:
+    - { role: images, img: "{{ images.pod_infra }}" }
+    - { role: images, img: "{{ images.apiserver }}" }
+    - { role: images, img: "{{ images.manager }}" }
+    - { role: images, img: "{{ images.scheduler }}" }
+    - { role: images, img: "{{ images.haproxy }}" }
+    - { role: images, img: "{{ images.keepalived }}" }
+    - { role: images, img: "{{ images.proxy }}" }
+    - { role: images, img: "{{ images.dashboard }}" }
+    - { role: images, img: "{{ images.dns }}" }
+    - { role: images, img: "{{ images.dnsmasq }}" }
+    - { role: images, img: "{{ images.healthz }}" }
+    - { role: images, img: "{{ images.fluentd_es }}" }
+    - { role: images, img: "{{ images.elasticsearch }}" }
+    - { role: images, img: "{{ images.kibana }}" }
+    - { role: images, img: "{{ images.heapster }}" }
+    - { role: images, img: "{{ images.hp_influx }}" }
+    - { role: images, img: "{{ images.hp_grafana }}" }
+    - { role: images, img: "{{ images.calico_node }}" }
+    - { role: images, img: "{{ images.calico_pollicy }}" }

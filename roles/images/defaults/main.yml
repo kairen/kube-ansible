@@ -94,3 +94,74 @@ images:
     name: pkg-repos
     repos: kairen/
     tag: "0.1.0"
+# OS images
+  baseimage:
+    name: baseimage
+    repos: "phusion/"
+    tag: "0.9.22"
+  ubuntu:
+    name: ubuntu
+    repos: ""
+    tag: "16.04"
+  centos:
+    name: centos
+    repos: ""
+    tag: "7"
+  redhat:
+    name: redhat
+    repos: "hjd48/"
+    tag: "latest"
+  rhel7:
+    name: redhat
+    repos: "aossama/"
+    tag: "rhel7"
+  fedora:
+    name: fedora
+    repos: ""
+    tag: "25"
+  busybox:
+    name: busybox
+    repos: ""
+    tag: "1.26"
+  # Dev images
+  java:
+    name: java
+    repos: ""
+    tag: "7"
+  gcc:
+    name: gcc
+    repos: ""
+    tag: "7"
+  php:
+    name: php
+    repos: ""
+    tag: "7"
+  python:
+    name: python
+    repos: ""
+    tag: "2.7"
+  perl:
+    name: perl
+    repos: ""
+    tag: "5"
+  # Application images
+  nginx:
+    name: nginx
+    repos: ""
+    tag: "1.13"
+  httpd:
+    name: httpd
+    repos: ""
+    tag: "2.4-alpine"
+  mysql:
+    name: mysql
+    repos: ""
+    tag: "8"
+  hello_world:
+    name: hello-world
+    repos: ""
+    tag: latest
+  hadoop:
+    name: hadoop-docker
+    repos: "sequenceiq/"
+    tag: 2.7.1

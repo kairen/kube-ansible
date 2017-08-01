@@ -1,0 +1,14 @@
+---
+
+- name: "Check {{ img.name }} image already exists"
+  when: img is defined
+  shell: "docker images | awk '{print $1\":\"$2}' | grep -o '{{ repos }}{{ img.name }}:{{ img.tag }}' | wc -l"
+  run_once: true
+  ignore_errors: True
+  register: check_image
+
+- name: "Load {{ img.name }} image"
+  when: check_image.stdout|int <= 0
+  shell: |
+    docker load < {{ image_tmp }}/{{ img.name }}-{{ img.tag }}-image.tar
+  register: load_image

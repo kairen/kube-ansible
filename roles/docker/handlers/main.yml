@@ -13,9 +13,9 @@
   register: started_docker
 
 - name: Wait for repository server start
-  when: repos_mode
+  when: repos_offline
   uri:
-    url: "{{ repos_url }}"
+    url: "{{ repos_offline_url }}"
     validate_certs: no
   register: result
   until: result.status == 200 or result.status == 401

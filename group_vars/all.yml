@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.0
+kube_version: 1.7.1
 
 # Network implementation('flannel', 'calico')
 network: flannel
@@ -74,11 +74,11 @@ watch:
     channel: "<Slack channel>"
 
 # Local Docker registry info
+registry_offline: false
 registry_ui: false
-registry_port: 5000
-registry_ui_port: 5001
+registry_offline_url: "172.16.35.9:5000"
 
 # Enable offline pkg repository mode
-repos_mode: false
+repos_offline: false
 repos_port: 4040
-repos_url: "http://172.16.35.9:{{ repos_port }}"
+repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

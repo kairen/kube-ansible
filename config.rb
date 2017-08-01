@@ -3,7 +3,7 @@ $master_count = 1
 $node_count = 2
 
 # If enable 'ceph-cluster', the memory need more than 2048MB.
-$system_memory = 1024
+$system_memory = 2048
 $system_vcpus = 1
 
 $bridge_enable = false
