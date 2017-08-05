@@ -1,24 +1,24 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.1
+kube_version: 1.6.8
 
 # Network implementation('flannel', 'calico')
-network: flannel
+network: calico
 pod_network_cidr: "10.244.0.0/16"
 
 # When use vagrant to deploy, you should set to flannel: --iface=enp0s8. calico: interface=enp0s8 or can-reach=8.8.8.8
 network_opts: ""
 
 # Kubernetes cluster network
-cluster_subnet: 192.160.0
+cluster_subnet: 10.96.0
 kubernetes_service_ip: "{{ cluster_subnet }}.1"
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
 api_secure_port: 5443
 
 # Set if you want to access kubernetes cluster via load balancer
-lb_vip_address: 172.16.35.9
+lb_vip_address: 172.20.3.90
 lb_secure_port: 6443
 lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
@@ -28,7 +28,7 @@ etcd_peer_url_scheme: http # http / https
 
 # A list of insecure registrys you might need to define
 insecure_registrys:
-# - "gcr.io"
+- "172.20.3.230:5000"
 
 # Extra authenticating
 extra_auth:

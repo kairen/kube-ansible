@@ -6,8 +6,8 @@
   roles:
     - { role: storage/ceph, tags: ceph }
 
-- hosts: masters
-  gather_facts: no
-  become: yes
-  roles:
-    - { role: storage/ceph-k8s, tags: ceph-k8s }
+# - hosts: masters
+#   gather_facts: no
+#   become: yes
+#   roles:
+#     - { role: storage/ceph-k8s, tags: ceph-k8s }

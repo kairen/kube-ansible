@@ -1,2 +1,15 @@
-[builder]
+[etcd]
+172.20.3.[91:93] ansible_user=ubuntu
+
+[masters]
+172.20.3.[91:93] ansible_user=ubuntu
+
+[sslhost]
 172.20.3.230
+
+[nodes]
+172.20.3.[94:98] ansible_user=ubuntu
+
+[cluster:children]
+masters
+nodes

@@ -12,7 +12,7 @@ pkg_bases:
     version: 3.2.1
   docker:
     url: "https://get.docker.com"
-    version: 17.05.0-ce
+    version: 1.12.6
   cni:
     url: "https://github.com"
     version: 0.5.2

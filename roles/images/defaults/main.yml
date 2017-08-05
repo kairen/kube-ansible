@@ -13,8 +13,8 @@ images:
     repos: gcr.io/google_containers/
     tag: "v{{ kube_version }}"
   manager: # 'quay.io/attcomdev/kube-controller-manager:v{{ kube_version }}' for ceph storage class
-    name: kube-controller-manager-amd64
-    repos: gcr.io/google_containers/
+    name: kube-controller-manager
+    repos: quay.io/attcomdev/
     tag: "v{{ kube_version }}"
   scheduler:
     name: kube-scheduler-amd64
