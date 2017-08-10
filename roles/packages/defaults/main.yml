@@ -25,6 +25,9 @@ pkg_bases:
   calicoctl:
     url: "https://github.com"
     version: 1.1.3
+  helm:
+    url: "https://kubernetes-helm.storage.googleapis.com"
+    version: 2.5.1
 
 downloads:
   kube:
@@ -77,3 +80,11 @@ downloads:
     dir: /opt/calico
     url: "{{ pkg_bases.calicoctl.url }}/projectcalico/calicoctl/releases/download/v{{ pkg_bases.calicoctl.version }}"
     items: [ calicoctl ]
+  helm:
+    name: helm
+    description: "Kubernetes package manager"
+    dir: /opt/helm
+    url: "{{ pkg_bases.helm.url }}"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    items: [ "helm-v{{ pkg_bases.helm.version }}-linux-amd64.tar.gz" ]

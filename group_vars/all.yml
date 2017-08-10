@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.1
+kube_version: 1.7.3
 
 # Network implementation('flannel', 'calico')
 network: flannel
