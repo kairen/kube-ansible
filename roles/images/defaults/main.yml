@@ -72,7 +72,7 @@ images:
   heapster:
     name: heapster-amd64
     repos: gcr.io/google_containers/
-    tag: "v1.3.0"
+    tag: "v1.4.0"
   hp_influx:
     name: heapster-influxdb-amd64
     repos: gcr.io/google_containers/

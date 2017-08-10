@@ -1,3 +1,4 @@
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -6,21 +7,18 @@ metadata:
   labels:
     k8s-app: heapster
     kubernetes.io/cluster-service: "true"
-    version: v1.3.0
+    addonmanager.kubernetes.io/mode: Reconcile
 spec:
   replicas: 1
   selector:
     matchLabels:
       k8s-app: heapster
-      version: v1.3.0
   template:
     metadata:
       labels:
         k8s-app: heapster
-        version: v1.3.0
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
-        scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
         - name: "{{ images.heapster.name }}"
@@ -44,7 +42,7 @@ metadata:
   namespace: kube-system
   labels:
     kubernetes.io/cluster-service: "true"
-    kubernetes.io/name: "Heapster"
+    kubernetes.io/name: "heapster"
 spec:
   selector:
     k8s-app: heapster
@@ -94,7 +92,7 @@ kind: Service
 metadata:
   labels:
      kubernetes.io/cluster-service: 'true'
-     kubernetes.io/name: 'Grafana'
+     kubernetes.io/name: 'grafana'
      addonmanager.kubernetes.io/mode: Reconcile
   name: monitoring-grafana
   namespace: kube-system
@@ -113,7 +111,7 @@ kind: Service
 metadata:
    labels:
       kubernetes.io/cluster-service: "true"
-      kubernetes.io/name: "InfluxDB"
+      kubernetes.io/name: "influxdb"
       addonmanager.kubernetes.io/mode: Reconcile
    name: monitoring-influxdb
    namespace: kube-system
