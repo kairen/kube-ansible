@@ -2,6 +2,7 @@
 dependencies:
   - { role: common }
   - { role: packages, pkg: "{{ downloads.kube }}" }
+  - { role: packages, pkg: "{{ downloads.helm }}" }
   - { role: images, img: "{{ images.apiserver }}" }
   - { role: images, img: "{{ images.manager }}" }
   - { role: images, img: "{{ images.scheduler }}" }
