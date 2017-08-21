@@ -44,7 +44,7 @@ images:
   dashboard:
     name: kubernetes-dashboard-amd64
     repos: gcr.io/google_containers/
-    tag: "v1.6.1"
+    tag: "v1.6.3"
   dns:
     name: kubedns-amd64
     repos: gcr.io/google_containers/
