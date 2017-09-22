@@ -1,7 +1,9 @@
 ---
 
 - name: Copy kubelet environment config file
-  template: src="kubelet.j2" dest={{ kube_etc_dir }}/kubelet
+  template:
+    src: "kubelet.env.j2"
+    dest: "{{ kube_etc_dir }}/kubelet.env"
 
 - name: Create kubelet directory
   file: path=/var/lib/kubelet state=directory

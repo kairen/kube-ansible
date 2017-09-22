@@ -12,11 +12,6 @@
     dest: "{{ kubeadmin_config }}"
   register: config
 
-- name: Copy kubelet env config file
-  template:
-    src: "kubelet.j2"
-    dest: "{{ kube_etc_dir }}/kubelet"
-
 - name: Copy kubelet account config file
   template:
     src: "kubelet.conf.j2"

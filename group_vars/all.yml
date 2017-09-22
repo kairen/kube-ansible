@@ -48,7 +48,7 @@ extra_auth:
   #   - '0fdd1a8875ec,admin,admin'
 
 # Dashboard addon
-kube_dash: true
+kube_dashboard: true
 
 # DNS service addon
 kube_dns: true

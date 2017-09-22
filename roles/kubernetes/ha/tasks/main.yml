@@ -9,13 +9,13 @@
   file: path={{ kube_manifest_dir }} state=directory
 
 - name: Copy Keepalived yaml config file
-  template: src="keepalived.yml.j2" dest={{ kube_manifest_dir }}/keepalived.yml
+  template: src="keepalived.yml.j2" dest={{ kube_manifest_dir }}/keepalived.manifest
 
 - name: Create HAProxy config directory
   file: path={{ haproxy_dir }} state=directory
 
 - name: Copy HAProxy yml config file
-  template: src="haproxy.yml.j2" dest={{ kube_manifest_dir }}/haproxy.yml
+  template: src="haproxy.yml.j2" dest={{ kube_manifest_dir }}/haproxy.manifest
 
 - name: Copy HAProxy config file
   template: src="haproxy.cfg.j2" dest={{ haproxy_dir }}/haproxy.cfg

@@ -24,12 +24,7 @@
     daemon_reload: yes
     state: restarted
     enabled: yes
-  register: started_kubelet
-
-- name: Wait for apiserver start
-  when: started_kubelet
-  wait_for:
-    host: "127.0.0.1"
-    port: "8080"
-    delay: 1
-    connect_timeout: 10
+  notify:
+    - Wait for apiserver start
+    - Wait for controller start
+    - Wait for schedule start

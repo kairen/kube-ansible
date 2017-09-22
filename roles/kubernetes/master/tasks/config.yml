@@ -8,17 +8,17 @@
 - name: Copy Kubernetes apiserver yml config file
   template:
     src: "kube-apiserver.yml.j2"
-    dest: "{{ kube_manifest_dir }}/kube-apiserver.yml"
+    dest: "{{ kube_manifest_dir }}/apiserver.manifest"
 
 - name: Copy Kubernetes controller-manager yml config file
   template:
     src: "kube-controller-manager.yml.j2"
-    dest: "{{ kube_manifest_dir }}/kube-controller-manager.yml"
+    dest: "{{ kube_manifest_dir }}/controller-manager.manifest"
 
 - name: Copy Kubernetes scheduler yml config file
   template:
     src: "kube-scheduler.yml.j2"
-    dest: "{{ kube_manifest_dir }}/kube-scheduler.yml"
+    dest: "{{ kube_manifest_dir }}/scheduler.manifest"
 
 - name: Copy Kubernetes admin account config file
   template:

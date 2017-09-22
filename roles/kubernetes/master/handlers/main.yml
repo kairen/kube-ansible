@@ -1,0 +1,25 @@
+---
+
+- name: Wait for apiserver start
+  wait_for:
+    host: "127.0.0.1"
+    port: "8080"
+    delay: 1
+    connect_timeout: 10
+    timeout: 100
+
+- name: Wait for controller start
+  wait_for:
+    host: "127.0.0.1"
+    port: "10252"
+    delay: 1
+    connect_timeout: 10
+    timeout: 100
+
+- name: Wait for schedule start
+  wait_for:
+    host: "127.0.0.1"
+    port: "10251"
+    delay: 1
+    connect_timeout: 10
+    timeout: 100

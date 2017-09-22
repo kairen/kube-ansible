@@ -20,8 +20,8 @@
   template: src=kube-logging.yml.j2 dest={{ kube_addon_dir }}/kube-logging.yml
 
 - name: Copy Kubernetes dashboard config file
-  when: kube_dash
-  template: src=kube-dash.yml.j2  dest={{ kube_addon_dir }}/kube-dash.yml
+  when: kube_dashboard
+  template: src=kube-dashboard.yml.j2  dest={{ kube_addon_dir }}/kube-dashboard.yml
 
 - name: Copy Kubernetes watch config file
   when: kube_watch
@@ -37,7 +37,7 @@
 
 - name: Create Kubernetes proxy addon
   when: kube_proxy and check_kube_proxy|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yml"
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -51,7 +51,7 @@
 
 - name: Create Kubernetes dns addon
   when: kube_dns and check_dns|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yml"
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -65,7 +65,7 @@
 
 - name: Create Kubernetes monitoring addon
   when: kube_monitoring and check_monitoring|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yml"
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -79,21 +79,21 @@
 
 - name: Create Kubernetes logging addon
   when: kube_logging and check_logging|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yml"
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
 - name: Check Kubernetes dashboard is working
-  when: kube_dash
+  when: kube_dashboard
   shell: "kubectl get pods --all-namespaces=true | grep kubernetes-dashboard"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
-  register: check_dash
+  register: check_dashboard
   ignore_errors: True
 
 - name: Create Kubernetes dashboard addon
-  when: kube_dash and check_dash|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dash.yml"
+  when: kube_dashboard and check_dashboard|failed
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dashboard.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
@@ -107,6 +107,6 @@
 
 - name: Create Kubernetes watch addon
   when: kube_watch and check_watch|failed
-  shell: "kubectl create --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-watch.yml"
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-watch.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
