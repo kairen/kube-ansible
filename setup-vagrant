@@ -54,9 +54,9 @@ vagrant_config "system_vcpus" ${CPU}
 
 update_vars
 if [ ${NETWORK} == 'flannel' ]; then
-  role_config "network_opts:.*" "network_opts: --iface=${ETH}" ${GROUP_VARS_PATH}
+  role_config "cni_opts:.*" "cni_opts: --iface=${ETH}" ${GROUP_VARS_PATH}
 elif [ ${NETWORK} == 'calico' ]; then
-  role_config "network_opts:.*" "network_opts: interface=${ETH}" ${GROUP_VARS_PATH}
+  role_config "cni_opts:.*" "cni_opts: interface=${ETH}" ${GROUP_VARS_PATH}
 fi
 
 role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}

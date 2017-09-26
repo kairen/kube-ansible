@@ -20,8 +20,18 @@
 - name: Create SSL cert directory
   file: path={{ kube_cert_dir }} state=directory
 
+- name: Copy Etcd certificate from ansible host
+  when: etcd_peer_url_scheme == 'https'
+  copy:
+    src: "{{ cert_dir }}/{{ item }}"
+    dest: "{{ kube_cert_dir }}/{{ item }}"
+  with_items:
+    - "ca.pem"
+    - "etcd.pem"
+    - "etcd-key.pem"
+
 - name: Copy CA certificate from ansible host
-  template:
+  copy:
     src: "{{ cert_dir }}/{{ item }}"
     dest: "{{ kube_cert_dir }}/{{ item }}"
   with_items:

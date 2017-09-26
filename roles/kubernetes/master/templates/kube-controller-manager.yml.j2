@@ -3,6 +3,8 @@ apiVersion: v1
 metadata:
   name: kube-controller-manager
   namespace: kube-system
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
   labels:
     component: kube-controller-manager
     tier: control-plane
@@ -27,12 +29,14 @@ spec:
     - "--master={{ lb_api_url }}"
     - "--cluster-name={{ cluster_name }}"
     - "--kubeconfig={{ kubeadmin_config }}"
-    - "--root-ca-file={{ ca_cert }}"
+    - "--controllers={{ controllers }}"
     - "--allocate-node-cidrs=true"
-    - "--cluster-cidr={{ pod_network_cidr }}"
+    - "--use-service-account-credentials=true"
     - "--service-account-private-key-file={{ sa_key }}"
+    - "--root-ca-file={{ ca_cert }}"
     - "--cluster-signing-cert-file={{ ca_cert }}"
     - "--cluster-signing-key-file={{ ca_key }}"
+    - "--cluster-cidr={{ pod_network_cidr }}"
     resources:
       requests:
         cpu: 200m
@@ -41,10 +45,11 @@ spec:
       readOnly: true
       mountPath: "/etc/kubernetes/"
     livenessProbe:
+      failureThreshold: 8
       httpGet:
+        host: 127.0.0.1
         path: "/healthz"
         port: 10252
-        host: 127.0.0.1
       initialDelaySeconds: 15
       timeoutSeconds: 15
   hostNetwork: true

@@ -3,6 +3,8 @@ apiVersion: v1
 metadata:
   name: kube-apiserver
   namespace: kube-system
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
   labels:
     component: kube-apiserver
     tier: control-plane
@@ -63,6 +65,7 @@ spec:
       readOnly: true
       mountPath: "/etc/kubernetes/"
     livenessProbe:
+      failureThreshold: 8
       httpGet:
         path: "/healthz"
         port: 8080

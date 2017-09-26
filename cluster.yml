@@ -1,5 +1,4 @@
 ---
-# Deploy a kubernetes cluster.
 
 - hosts: sslhost
   gather_facts: no
@@ -18,11 +17,6 @@
   roles:
     - { role: docker, tags: docker }
 
-- hosts: cluster
-  become: yes
-  roles:
-   - { role: network/flannel, when: network == 'flannel', tags: network }
-
 - hosts: masters
   become: yes
   roles:
@@ -34,7 +28,8 @@
   roles:
     - { role: kubernetes/node, tags: node }
 
-- hosts: cluster
+- hosts: masters
+  gather_facts: no
   become: yes
   roles:
-   - { role: network/calico, when: network == 'calico', tags: network }
+    - { role: cni, tags: cni }

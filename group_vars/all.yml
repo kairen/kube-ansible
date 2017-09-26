@@ -7,11 +7,11 @@ kube_version: 1.7.5
 network: flannel
 pod_network_cidr: "10.244.0.0/16"
 
-# When use vagrant to deploy, you should set to flannel: --iface=enp0s8. calico: interface=enp0s8 or can-reach=8.8.8.8
-network_opts: ""
+# flannel: --iface=enp0s8, calico: interface=enp0s8
+cni_opts: ""
 
 # Kubernetes cluster network
-cluster_subnet: 192.160.0
+cluster_subnet: 10.96.0
 kubernetes_service_ip: "{{ cluster_subnet }}.1"
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
@@ -35,6 +35,8 @@ extra_auth:
   basic:
     accounts:
     - 'p@ssw0rd,admin,admin'
+  # rbac:
+  #   rules:
   # abac:
   #   policies:
   #   - '{"user":"admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
@@ -57,9 +59,8 @@ dns_ip: "{{ cluster_subnet }}.10"
 
 # Kubernetes proxy addon
 kube_proxy: true
-kube_proxy_mode: iptables # it should be "iptables",
-                          # but if you want to deploy ceph on kubernetes,
-                          # you must set to "userspace"
+kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
+
 # EFK logging addon
 kube_logging: false
 

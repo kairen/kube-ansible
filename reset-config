@@ -10,7 +10,7 @@ set -eu
 ETH=${1:-"enp0s8"}
 update_vars
 
-role_config "network_opts:.*" "network_opts: \"\"" ${GROUP_VARS_PATH}
+role_config "cni_opts:.*" "cni_opts: \"\"" ${GROUP_VARS_PATH}
 role_config "etcd_interface:.*" "etcd_interface: \"\"" ${ETCD_DEFAULT_PATH}
 role_config "node_interface:.*" "node_interface: \"\"" ${NODE_DEFAULT_PATH}
 role_config "vip_interface:.*" "vip_interface: \"{{ ansible_default_ipv4.interface }}\"" ${VIP_DEFAULT_PATH}
