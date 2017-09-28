@@ -17,9 +17,9 @@
 - name: Load the Flannel network config into Etcd (https)
   when: etcd_peer_url_scheme == 'https'
   shell: |
-    /usr/bin/etcdctl --cert-file={{ etcd_peer_cert_file }} \
-                     --ca-file={{ etcd_peer_ca_file }} \
-                     --key-file={{ etcd_peer_key_file }} \
+    /usr/bin/etcdctl --ca-file={{ etcd_ca_file }} \
+                     --cert-file={{ etcd_cert_file }} \
+                     --key-file={{ etcd_key_file }} \
                      --no-sync \
                      --peers={{ etcd_endpoints }} \
                      set {{ conf_loc }} < {{ kube_network_dir }}/{{ cni.template.config }}

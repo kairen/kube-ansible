@@ -7,7 +7,7 @@
 - name: Create Kubernetes addon directory
   file: path={{ kube_network_dir }} state=directory
 
-- name: Config Flannel
+- name: "Config {{ cni.name }} network"
   when: network == 'flannel'
   include: config-flannel.yml
 

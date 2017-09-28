@@ -5,6 +5,11 @@
     path: "{{ kube_manifest_dir }}"
     state: directory
 
+- name: Create Kubernetes config home directory
+  file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+
 - name: Copy Kubernetes apiserver yml config file
   template:
     src: "kube-apiserver.yml.j2"
@@ -24,6 +29,11 @@
   template:
     src: "admin.conf.j2"
     dest: "{{ kubeadmin_config }}"
+
+- name: Copy Kubernetes admin config to home directory
+  template:
+    src: "admin.conf.j2"
+    dest: "{{ ansible_env.HOME }}/.kube/config"
 
 - name: Copy SSL certificate from ansible host
   copy:
@@ -45,3 +55,12 @@
     state: link
     force: yes
   with_items: [ helm ]
+
+- name: Create Calico ctl symlinks
+  when: network == 'calico'
+  file:
+    src: "{{ downloads.calicoctl.dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+    force: yes
+  with_items: [ calicoctl ]

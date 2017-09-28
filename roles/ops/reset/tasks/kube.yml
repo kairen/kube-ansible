@@ -52,3 +52,7 @@
 - name: Delete flannel.1 interface
   ignore_errors: True
   command: ip link delete flannel.1
+
+- name: Delete cni0 interface
+  ignore_errors: True
+  command: ip link delete cni0

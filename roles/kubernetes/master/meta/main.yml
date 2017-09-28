@@ -4,6 +4,7 @@ dependencies:
   - { role: packages, pkg: "{{ downloads.kube }}" }
   - { role: packages, pkg: "{{ downloads.helm }}" }
   - { role: packages, pkg: "{{ downloads.cni }}" }
+  - { role: packages, pkg: "{{ downloads.calicoctl }}", when: network == 'calico'}
   - { role: images, img: "{{ images.apiserver }}" }
   - { role: images, img: "{{ images.manager }}" }
   - { role: images, img: "{{ images.scheduler }}" }

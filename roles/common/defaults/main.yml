@@ -35,6 +35,3 @@ etcd_data_dir: /var/lib/etcd
 etcd_ca_file: "{{ kube_cert_dir }}/ca.pem"
 etcd_cert_file: "{{ kube_cert_dir }}/etcd.pem"
 etcd_key_file: "{{ kube_cert_dir }}/etcd-key.pem"
-etcd_peer_ca_file: "{{ kube_cert_dir }}/ca.pem"
-etcd_peer_cert_file: "{{ kube_cert_dir }}/etcd.pem"
-etcd_peer_key_file: "{{ kube_cert_dir }}/etcd-key.pem"

@@ -24,7 +24,7 @@ pkg_bases:
     version: 1.8.0
   calicoctl:
     url: "https://github.com"
-    version: 1.1.3
+    version: 1.5.0
   helm:
     url: "https://kubernetes-helm.storage.googleapis.com"
     version: 2.5.1
