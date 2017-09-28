@@ -3,7 +3,7 @@
 # Kubenrtes version, only support 1.4.0+
 kube_version: 1.7.5
 
-# Network implementation('flannel', 'calico', 'canal')
+# Network implementation('flannel', 'calico', 'canal', 'weave')
 network: calico
 pod_network_cidr: "10.244.0.0/16"
 
