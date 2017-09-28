@@ -1,15 +1,12 @@
-# My Highly Available Kubernetes Ansible
-This is my learning `Ansible`、`Vagrant` and `Kubernetes` repos, Goal is quick deployment and operation for Kubernetes and Ceph.
+# Highly Available Kubernetes Ansible Playbooks
+Ansible playbooks for quickly building Kubernetes and Ceph cluster.
 
-TODO List:
-- [x] Vagrant vbox and libvirt.
+Feature list:
+- [x] Vagrant VirtualBox and Libvirt.
 - [x] Kubernetes HA cluster setup(v1.5.0+).
 - [x] Kubernetes addons.
-- [x] Ceph on Kubernetes(v11.2.0+).
+- [x] Ceph on Kubernetes(v10.2.0+).
 - [x] Kubernetes Ceph RBD/FS volume.
-- [ ] Integration with existing CNI, CSI and CRI.
-- [ ] Rolling upgrade component.
-- [ ] Harbor registry.
 
 ## Quick Start
 Following the below steps to create Kubernetes cluster on `CentOS 7.x` and `Ubuntu Server 16.x`.
@@ -31,12 +28,22 @@ Start deploying?(y): y
 $ sudo ./setup-vagrant -p libvirt -i eth1
 ```
 
-## Virtual machine and Bare machine Setup
+## Manually Set Up
 Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
 
 Requirement:
-* Deploy node must be install `Ansible v2.1.0+`.
-* All Master/Node should have password-less access from Deploy node.
+* Deploy node must be install `Ansible v2.3.0+`.
+* All Master/Node should have password-less access from `Deploy` node.
+
+For machine example:
+
+| IP Address      |   Role           |   CPU    |   Memory   |
+|-----------------|------------------|----------|------------|
+| 172.16.35.9     | vip              |    -     |     -      |
+| 172.16.35.13    | master1 + deploy |    2     |     4G     |
+| 172.16.35.10    | node1            |    2     |     4G     |
+| 172.16.35.11    | node2            |    2     |     4G     |
+| 172.16.35.12    | node3            |    2     |     4G     |
 
 Add the system information gathered above into a file called `inventory`. For inventory example:
 ```
@@ -60,7 +67,10 @@ nodes
 ```
 
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
-```
+```yml
+kube_version: 1.7.6
+network: flannel
+
 lb_vip_address: 172.16.35.9
 ```
 
@@ -70,7 +80,7 @@ If everything is ready, just run `cluster.yml` to deploy cluster:
 $ ansible-playbook cluster.yml
 ```
 
-And then run `addons.yml` to create addons(Dashboard, proxy, DNS):
+And then run `addons.yml` to create addons(Dashboard, Proxy, DNS):
 ```sh
 $ ansible-playbook addons.yml
 ```
@@ -87,7 +97,7 @@ $ kubectl label node <node_name> node-type=storage
 ```
 
 ## Verify cluster
-Now, check the service follow as command:
+Now, check the service as follow:
 ```sh
 $ kubectl get po,svc --namespace=kube-system
 
