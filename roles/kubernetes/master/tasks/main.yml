@@ -28,3 +28,7 @@
     - Wait for apiserver start
     - Wait for controller start
     - Wait for schedule start
+    - Create Kubernetes addon directory
+    - Copy Kubernetes proxy config file
+    - Check Kubernetes proxy is working
+    - Create Kubernetes proxy daemonset

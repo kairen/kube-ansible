@@ -22,6 +22,9 @@ lb_vip_address: 172.16.35.9
 lb_secure_port: 6443
 lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
+kube_proxy: true
+kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
+
 # Etcd variable
 etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
 etcd_peer_url_scheme: http # http / https
@@ -56,10 +59,6 @@ kube_dashboard: true
 kube_dns: true
 dns_name: cluster.local # cluster dns name
 dns_ip: "{{ cluster_subnet }}.10"
-
-# Kubernetes proxy addon
-kube_proxy: true
-kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
 
 # EFK logging addon
 kube_logging: false
