@@ -57,7 +57,7 @@
   with_items: [ helm ]
 
 - name: Create Calico ctl symlinks
-  when: network == 'calico'
+  when: network == 'calico' or network == 'canal'
   file:
     src: "{{ downloads.calicoctl.dir }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"

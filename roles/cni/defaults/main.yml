@@ -5,14 +5,20 @@ flannel_key: /atomic.io/network
 conf_loc: "{{ flannel_key }}/config"
 
 flannel:
-  name: Flannel
+  name: flannel
   template:
     ds: flannel.yml
     rbac: flannel-rbac.yml
     config: flannel-network.json
 
 calico:
-  name: Calico
+  name: calico
   template:
     ds: calico.yml
     rbac: calico-rbac.yml
+
+canal:
+  name: canal
+  template:
+    ds: canal.yml
+    rbac: canal-rbac.yml

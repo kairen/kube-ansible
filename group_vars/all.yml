@@ -3,11 +3,11 @@
 # Kubenrtes version, only support 1.4.0+
 kube_version: 1.7.5
 
-# Network implementation('flannel', 'calico')
-network: flannel
+# Network implementation('flannel', 'calico', 'canal')
+network: calico
 pod_network_cidr: "10.244.0.0/16"
 
-# flannel: --iface=enp0s8, calico: interface=enp0s8
+# flannel: --iface=enp0s8, calico: interface=enp0s8, canal: enp0s8
 cni_opts: ""
 
 # Kubernetes cluster network
