@@ -17,10 +17,11 @@ Requirement:
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
-$ ./setup-vagrant -n 3
-Cluster Size: 1 master, 3 node.
-     VM Size: 1 vCPU, 1024 MB
+$ ./setup-vagrant -w 3 -n calico
+Cluster Size: 1 master, 3 worker.
+     VM Size: 1 vCPU, 2048 MB
      VM Info: ubuntu16, virtualbox
+         CNI: calico
 Start deploying?(y): y
 ```
 > Using libvirt provider:

@@ -11,18 +11,20 @@ set -eu
 : ${CPU:="1"}
 : ${MEMORY:="1024"}
 : ${ETH:="enp0s8"}
+: ${CNI_PLUGIN:="calico"}
 : ${PROVIDER:="virtualbox"}
 : ${OS_IMAGE:="ubuntu16"}
 
 function usage() {
   echo -e "Usage : setup-vagrant [options]\n"
-  echo " -b|--boss        Set number of master."
-  echo " -n|--node        Set number of node."
-  echo " -c|--cpu         Set number of cores per vm."
-  echo " -m|--memory      Set memory size per vm."
-  echo " -p|--provider    Set virtual machine provider(virtualbox, libvirt)."
-  echo " -o|--os-image    Set virtual machine operation system(ubuntu16, centos7)."
-  echo " -i|--interface   Set the network bind interface."
+  echo " -b|--boss        Number of master."
+  echo " -w|--worker      Number of worker."
+  echo " -c|--cpu         Number of cores per vm."
+  echo " -m|--memory      Memory size per vm."
+  echo " -p|--provider    Virtual machine provider(virtualbox, libvirt)."
+  echo " -o|--os-image    Virtual machine operation system(ubuntu16, centos7)."
+  echo " -i|--interface   Network bind interface."
+  echo " -n|--network     Container Network plugin."
   exit 1
 }
 
@@ -31,20 +33,22 @@ function usage() {
 while [ ${#} -gt 0 ]; do
   case "${1}" in
       -b|--boss) isnum ${2}; MASTERS=${2}; shift;;
-      -n|--node) isnum ${2}; NODES=${2}; shift;;
+      -w|--worker) isnum ${2}; NODES=${2}; shift;;
       -c|--cpu) isnum ${2}; CPU=${2}; shift;;
       -m|--memory) isnum ${2}; MEMORY=${2}; shift;;
       -i|--interface) ETH=${2}; shift;;
       -o|--os-image) OS_IMAGE=${2}; shift;;
       -p|--provider) PROVIDER=${2}; shift;;
+      -n|--network) CNI_PLUGIN=${2}; shift;;
       *) usage; break;;
   esac
   shift
 done
 
-echo "Cluster Size: ${MASTERS} master, ${NODES} node."
+echo "Cluster Size: ${MASTERS} master, ${NODES} worker."
 echo "     VM Size: ${CPU} vCPU, ${MEMORY} MB"
 echo "     VM Info: ${OS_IMAGE}, ${PROVIDER}"
+echo "         CNI: ${CNI_PLUGIN}"
 read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
 
 vagrant_config "master_count" ${MASTERS}
@@ -52,13 +56,17 @@ vagrant_config "node_count" ${NODES}
 vagrant_config "system_memory" ${MEMORY}
 vagrant_config "system_vcpus" ${CPU}
 
+check_cni ${CNI_PLUGIN}
+role_config "network:.*" "network: ${CNI_PLUGIN}" ${GROUP_VARS_PATH}
 update_vars
-if [ ${NETWORK} == 'flannel' ]; then
+if [ ${CNI_PLUGIN} == 'flannel' ]; then
   role_config "cni_opts:.*" "cni_opts: --iface=${ETH}" ${GROUP_VARS_PATH}
-elif [ ${NETWORK} == 'calico' ]; then
+elif [ ${CNI_PLUGIN} == 'calico' ]; then
   role_config "cni_opts:.*" "cni_opts: interface=${ETH}" ${GROUP_VARS_PATH}
-elif [ ${NETWORK} == 'canal' ]; then
+elif [ ${CNI_PLUGIN} == 'canal' ]; then
   role_config "cni_opts:.*" "cni_opts: ${ETH}" ${GROUP_VARS_PATH}
+elif [ ${CNI_PLUGIN} == 'weave' ]; then
+  role_config "cni_opts:.*" "cni_opts: \"\"" ${GROUP_VARS_PATH}
 fi
 
 role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}

@@ -86,3 +86,17 @@ function update_vars() {
       HOSTS="${HOSTS} ${SUBNET}.$((${NET_COUNT}+${i}))"
     done
 }
+
+function check_cni() {
+  local cni=${1}
+  local isExist=false
+  for n in "calico" "flannel" "canal" "weave"; do
+    if [ ${cni} == ${n} ]; then
+      isExist=true
+    fi
+  done
+  if [ ${isExist} == "false" ]; then
+    echo "ERROR: the \"${cni}\" is not support."
+    exit 1;
+  fi
+}

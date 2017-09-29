@@ -15,7 +15,7 @@ if [ ${HOST_NAME} == "master1" ]; then
       sudo yum install -y git ansible sshpass python-netaddr openssl-devel
     ;;
     "Ubuntu")
-      sudo sed -i 's/us.archive.ubuntu.com/tw.archive.ubuntu.com/g' /etc/apt/sources.list
+      sudo sed -i 's/archive.ubuntu.com/tw.archive.ubuntu.com/g' /etc/apt/sources.list
       sudo apt-add-repository -y ppa:ansible/ansible
       sudo apt-get update && sudo apt-get install -y ansible git sshpass python-netaddr libssl-dev
     ;;

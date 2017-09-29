@@ -10,6 +10,7 @@ set -eu
 ETH=${1:-"enp0s8"}
 update_vars
 
+role_config "network:.*" "network: calico" ${GROUP_VARS_PATH}
 role_config "cni_opts:.*" "cni_opts: \"\"" ${GROUP_VARS_PATH}
 role_config "etcd_interface:.*" "etcd_interface: \"\"" ${ETCD_DEFAULT_PATH}
 role_config "node_interface:.*" "node_interface: \"\"" ${NODE_DEFAULT_PATH}
