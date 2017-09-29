@@ -1,9 +1,3 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: kube-proxy
-  namespace: kube-system
----
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -45,7 +39,6 @@ spec:
       dnsPolicy: ClusterFirst
       hostNetwork: true
       restartPolicy: Always
-      serviceAccount: kube-proxy
       serviceAccountName: kube-proxy
       terminationGracePeriodSeconds: 30
       volumes:

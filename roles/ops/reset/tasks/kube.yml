@@ -45,14 +45,16 @@
     - "{{ downloads.calicoctl.dir }}"
     - "{{ cni_etc_dir }}"
 
-- name: Delete docker0 interface
+- name: Delete interfaces for Kubernetes
   ignore_errors: True
-  command: ip link delete docker0
+  shell: "ip link delete {{ item }}"
+  with_items:
+    - "docker0"
+    - "flannel.1"
+    - "weave"
+    - "cni0"
+    - "tunl0"
 
-- name: Delete flannel.1 interface
+- name: IP-in-IP tunnel mod delete
+  shell: "modprobe -r ipip"
   ignore_errors: True
-  command: ip link delete flannel.1
-
-- name: Delete cni0 interface
-  ignore_errors: True
-  command: ip link delete cni0

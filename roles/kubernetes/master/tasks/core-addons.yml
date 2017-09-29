@@ -1,37 +1,35 @@
 ---
 
-- name: Wait for apiserver start
-  wait_for:
-    host: "127.0.0.1"
-    port: "8080"
-    delay: 1
-    connect_timeout: 10
-    timeout: 100
-
-- name: Wait for controller start
-  wait_for:
-    host: "127.0.0.1"
-    port: "10252"
-    delay: 1
-    connect_timeout: 10
-    timeout: 100
-
-- name: Wait for schedule start
-  wait_for:
-    host: "127.0.0.1"
-    port: "10251"
-    delay: 1
-    connect_timeout: 10
-    timeout: 100
-
 - name: Create Kubernetes addon directory
   file: path={{ kube_addon_dir }} state=directory
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 
-- name: Copy Kubernetes proxy config file
+- name: Copy Kubernetes proxy yaml file
   when: kube_proxy
   template: src=kube-proxy.yml.j2 dest={{ kube_addon_dir }}/kube-proxy.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: Copy Kubernetes proxy sa yaml file
+  when: kube_proxy
+  template: src=kube-proxy-sa.yml.j2 dest={{ kube_addon_dir }}/kube-proxy-sa.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: Check Kubernetes proxy service account already exists
+  when: kube_proxy
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get serviceaccounts --all-namespaces=true | grep kube-proxy
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_kube_proxy_sa
+  ignore_errors: True
+
+- name: Create Kubernetes proxy service account
+  when: kube_proxy and check_kube_proxy_sa|failed
+  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy-sa.yml"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
 

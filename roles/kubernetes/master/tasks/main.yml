@@ -24,11 +24,19 @@
     daemon_reload: yes
     state: restarted
     enabled: yes
-  notify:
-    - Wait for apiserver start
-    - Wait for controller start
-    - Wait for schedule start
-    - Create Kubernetes addon directory
-    - Copy Kubernetes proxy config file
-    - Check Kubernetes proxy is working
-    - Create Kubernetes proxy daemonset
+
+- name: Wait for core component start
+  wait_for:
+    host: "127.0.0.1"
+    port: "8080"
+    delay: 1
+    connect_timeout: 10
+    timeout: 100
+  with_items:
+    - "8080"
+    - "{{ api_secure_port }}"
+    - "10252"
+    - "10251"
+
+- name: Install core addons into Kubernetes
+  include: core-addons.yml

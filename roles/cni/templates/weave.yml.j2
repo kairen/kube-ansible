@@ -30,6 +30,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: IPALLOC_RANGE
+              value: "{{ pod_network_cidr }}"
           imagePullPolicy: Always
           livenessProbe:
             httpGet:

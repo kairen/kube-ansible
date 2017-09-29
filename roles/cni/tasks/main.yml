@@ -31,7 +31,7 @@
 - name: "Create {{ cni.name }} cluster role"
   when: check_role|failed and extra_auth.rbac is defined
   shell: |
-    kubectl create -f {{ kube_network_dir }}/{{ cni.template.rbac }}
+    kubectl apply -f {{ kube_network_dir }}/{{ cni.template.rbac }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: create_role
@@ -48,6 +48,6 @@
 - name: "Create {{ cni.name }} network daemonset"
   when: check_net|failed
   shell: |
-    kubectl create -f {{ kube_network_dir }}/{{ cni.template.ds }}
+    kubectl apply -f {{ kube_network_dir }}/{{ cni.template.ds }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
