@@ -19,15 +19,15 @@ spec:
     - name: VIRTUAL_IP
       value: {{ lb_vip_address }}
     - name: VIRTUAL_MASK
-      value: "{{ virtual_mask }}"
+      value: "{{ keepalived_virtual_mask }}"
     - name: CHECK_IP
-      value: "{{ check_ip }}"
+      value: "{{ keepalived_check_ip }}"
     - name: CHECK_PORT
-      value: "{{ check_port }}"
+      value: "{{ keepalived_check_port }}"
     - name: VRID
-      value: "{{ virtual_id }}"
+      value: "{{ keepalived_virtual_id }}"
     - name: INTERFACE
-      value: {{ vip_interface }}
+      value: {{ keepalived_vip_interface }}
     resources:
       requests:
         cpu: 100m

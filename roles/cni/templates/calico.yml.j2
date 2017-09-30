@@ -104,11 +104,11 @@ spec:
             value: "false"
           - name: FELIX_LOGSEVERITYSCREEN
             value: "info"
-          {% if cni_opts != '' -%}
+          {% if cni_iface != '' -%}
           - name: IP_AUTODETECTION_METHOD
-            value: "{{ cni_opts }}"
+            value: "{{ cni_iface }}"
           - name: IP6_AUTODETECTION_METHOD
-            value: "{{ cni_opts }}"
+            value: "{{ cni_iface }}"
           {% endif -%}
           - name: IP
             value: ""

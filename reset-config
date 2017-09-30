@@ -11,10 +11,10 @@ ETH=${1:-"enp0s8"}
 update_vars
 
 role_config "network:.*" "network: calico" ${GROUP_VARS_PATH}
-role_config "cni_opts:.*" "cni_opts: \"\"" ${GROUP_VARS_PATH}
+role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
 role_config "etcd_interface:.*" "etcd_interface: \"\"" ${ETCD_DEFAULT_PATH}
 role_config "node_interface:.*" "node_interface: \"\"" ${NODE_DEFAULT_PATH}
-role_config "vip_interface:.*" "vip_interface: \"{{ ansible_default_ipv4.interface }}\"" ${VIP_DEFAULT_PATH}
+role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: \"{{ ansible_default_ipv4.interface }}\"" ${GROUP_VARS_PATH}
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 role_config "HOSTS=\".*\"" "HOSTS=\"${SUBNET}.10 ${SUBNET}.11 ${SUBNET}.12\"" ${INITIAL_SCRIPT_PATH}
 role_config "${MASTER_PREFIX}[0-9]*" "master1" ${INITIAL_SCRIPT_PATH}

@@ -1,12 +1,11 @@
-# Keepalived variables
-vip_interface: "{{ ansible_default_ipv4.interface }}"
-virtual_mask: 24
-check_ip: any
-check_port: 2379
-virtual_id: 51
+---
 
-# HAProxy variables
-haproxy_dir: /etc/haproxy
+# Keepalived configuration
+keepalived_check_ip: any
+keepalived_check_port: 2379
+keepalived_virtual_id: 51
+
+# HAProxy configuration
 haproxy_monitor_port: 9090
-admin_user: admin
-admin_password: admin123
+haproxy_admin_user: admin
+haproxy_admin_password: admin123

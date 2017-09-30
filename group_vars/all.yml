@@ -3,12 +3,12 @@
 # Kubenrtes version, only support 1.4.0+
 kube_version: 1.7.5
 
-# Network implementation('flannel', 'calico', 'canal', 'weave')
+# Network plugin implementation('flannel', 'calico', 'canal', 'weave')
 network: calico
 pod_network_cidr: "10.244.0.0/16"
 
-# flannel: --iface=enp0s8, calico: interface=enp0s8, canal: enp0s8
-cni_opts: ""
+# flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8)
+cni_iface: ""
 
 # Kubernetes cluster network
 cluster_subnet: 10.96.0
@@ -21,6 +21,13 @@ api_secure_port: 5443
 lb_vip_address: 172.16.35.9
 lb_secure_port: 6443
 lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
+
+# Highly Available configuration
+haproxy: true
+
+keepalived: true
+keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
+keepalived_virtual_mask: 24
 
 kube_proxy: true
 kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
@@ -64,7 +71,7 @@ dns_ip: "{{ cluster_subnet }}.10"
 kube_logging: false
 
 # Grafana + Infuxdb monitoring addon
-kube_monitoring: false
+kube_monitoring: true
 
 # Watch event addon
 kube_watch: false

@@ -17,7 +17,7 @@ listen stats
     mode http
     balance
     stats uri /haproxy_stats
-    stats auth {{ admin_user }}:{{ admin_password }}
+    stats auth {{ haproxy_admin_user }}:{{ haproxy_admin_password }}
     stats admin if TRUE
 
 frontend api-https

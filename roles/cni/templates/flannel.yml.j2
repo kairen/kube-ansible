@@ -72,7 +72,7 @@ spec:
         - "--etcd-keyfile={{ etcd_key_file }}"
         - "--etcd-certfile={{ etcd_cert_file }}"
         {% endif -%}
-        - "{{ cni_opts }}"
+        - "{{ cni_iface }}"
         securityContext:
           privileged: true
         env:

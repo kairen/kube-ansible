@@ -10,7 +10,7 @@ metadata:
   name: canal-config
   namespace: kube-system
 data:
-  canal_iface: "{{ cni_opts }}"
+  canal_iface: "{{ cni_iface }}"
   masquerade: "true"
   cni_network_config: |-
     {

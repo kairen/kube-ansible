@@ -30,8 +30,12 @@
 - name: Create Kubernetes proxy service account
   when: kube_proxy and check_kube_proxy_sa|failed
   shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy-sa.yml"
+  register: sa_result
+  until: sa_result.rc == 0
+  retries: 3
+  delay: 3
   delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
+  ignore_errors: True
 
 - name: Check Kubernetes proxy is working
   when: kube_proxy
@@ -44,5 +48,9 @@
 - name: Create Kubernetes proxy daemonset
   when: kube_proxy and check_kube_proxy|failed
   shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-proxy.yml"
+  register: ds_result
+  until: ds_result.rc == 0
+  retries: 3
+  delay: 3
   delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
+  ignore_errors: True

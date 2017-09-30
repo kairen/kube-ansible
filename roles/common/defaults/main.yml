@@ -6,7 +6,7 @@ system_env_dir: /etc/sysconfig
 dropin_dir: /usr/lib/systemd/system
 ceph_config_dir: /etc/ceph
 
-# Kubernetes component
+# Kubernetes component dir path
 cert_dir: /opt/cert/pki
 kube_etc_dir: /etc/kubernetes
 kube_manifest_dir: "{{ kube_etc_dir }}/manifests"
@@ -17,7 +17,7 @@ kubelet_config: "{{ kube_etc_dir }}/kubelet.conf"
 kubeadmin_config: "{{ kube_etc_dir }}/admin.conf"
 cni_etc_dir: "/etc/cni/net.d"
 
-# TSL certificate
+# TSL certificate dir path
 sa_key: "{{ kube_cert_dir }}/apiserver-key.pem"
 ca_cert: "{{ kube_cert_dir }}/ca.pem"
 ca_key: "{{ kube_cert_dir }}/ca-key.pem"
@@ -27,11 +27,12 @@ admin_cert: "{{ kube_cert_dir }}/admin.pem"
 node_cert: "{{ kube_cert_dir }}/node.pem"
 node_key: "{{ kube_cert_dir }}/node-key.pem"
 
-# Etcd config
+# Etcd config dir path
 etcd_conf_dir: /etc/etcd
 etcd_data_dir: /var/lib/etcd
-
-# Etcd certificate
 etcd_ca_file: "{{ kube_cert_dir }}/ca.pem"
 etcd_cert_file: "{{ kube_cert_dir }}/etcd.pem"
 etcd_key_file: "{{ kube_cert_dir }}/etcd-key.pem"
+
+# HAProxy dir path
+haproxy_dir: /etc/haproxy

@@ -60,18 +60,18 @@ check_cni ${CNI_PLUGIN}
 role_config "network:.*" "network: ${CNI_PLUGIN}" ${GROUP_VARS_PATH}
 update_vars
 if [ ${CNI_PLUGIN} == 'flannel' ]; then
-  role_config "cni_opts:.*" "cni_opts: --iface=${ETH}" ${GROUP_VARS_PATH}
+  role_config "cni_iface:.*" "cni_iface: --iface=${ETH}" ${GROUP_VARS_PATH}
 elif [ ${CNI_PLUGIN} == 'calico' ]; then
-  role_config "cni_opts:.*" "cni_opts: interface=${ETH}" ${GROUP_VARS_PATH}
+  role_config "cni_iface:.*" "cni_iface: interface=${ETH}" ${GROUP_VARS_PATH}
 elif [ ${CNI_PLUGIN} == 'canal' ]; then
-  role_config "cni_opts:.*" "cni_opts: ${ETH}" ${GROUP_VARS_PATH}
+  role_config "cni_iface:.*" "cni_iface: ${ETH}" ${GROUP_VARS_PATH}
 elif [ ${CNI_PLUGIN} == 'weave' ]; then
-  role_config "cni_opts:.*" "cni_opts: \"\"" ${GROUP_VARS_PATH}
+  role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
 fi
 
 role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}
 role_config "node_interface: \"\"" "node_interface: ${ETH}" ${NODE_DEFAULT_PATH}
-role_config "vip_interface:.*" "vip_interface: ${ETH}" ${VIP_DEFAULT_PATH}
+role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: ${ETH}" ${GROUP_VARS_PATH}
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 role_config "HOSTS=\".*\"" "HOSTS=\"${HOSTS}\"" ${INITIAL_SCRIPT_PATH}
 role_config "${MASTER_PREFIX}[0-9]*" "${MASTER_PREFIX}${MASTER_COUNT}" ${INITIAL_SCRIPT_PATH}

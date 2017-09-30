@@ -8,6 +8,8 @@ Feature list:
 - [x] Ceph on Kubernetes(v10.2.0+).
 - [x] Kubernetes Ceph RBD/FS volume.
 
+[![asciicast](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai.png)](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai?speed=2)
+
 ## Quick Start
 Following the below steps to create Kubernetes cluster on `CentOS 7.x` and `Ubuntu Server 16.x`.
 
