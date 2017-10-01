@@ -1,94 +1,39 @@
 ---
 
 - name: Create Kubernetes addon directory
-  file: path={{ kube_addon_dir }} state=directory
+  file: path="{{ kube_addon_dir }}/{{ addon.name }}" state=directory
 
-- name: Copy Kubernetes dns config file
-  when: kube_dns
-  template: src=kube-dns.yml.j2 dest={{ kube_addon_dir }}/kube-dns.yml
+- name: "Copy {{ addon.name }} yml files"
+  template:
+    src: "{{ addon.name }}/{{ item.yaml }}.j2"
+    dest: "{{ kube_addon_dir }}/{{ addon.name }}/{{ item.yaml }}"
+  with_items: "{{ addon['files'] }}"
 
-- name: Copy kKubernetes monitoring config file
-  when: kube_monitoring
-  template: src=kube-monitoring.yml.j2 dest={{ kube_addon_dir }}/kube-monitoring.yml
-
-- name: Copy Kubernetes logging config file
-  when: kube_logging
-  template: src=kube-logging.yml.j2 dest={{ kube_addon_dir }}/kube-logging.yml
-
-- name: Copy Kubernetes dashboard config file
+- name: Create Kubernetes dashboard certificate
   when: kube_dashboard
-  template: src=kube-dashboard.yml.j2  dest={{ kube_addon_dir }}/kube-dashboard.yml
+  include: config-dashboard.yml
 
-- name: Copy Kubernetes watch config file
-  when: kube_watch
-  template: src=kube-watch.yml.j2  dest={{ kube_addon_dir }}/kube-watch.yml
-
-- name: Check Kubernetes dns is working
-  when: kube_dns
-  shell: "kubectl get pods --all-namespaces=true | grep kube-dns"
+- name: "Check {{ addon.name }} resource already exists"
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get {{ item.resource }} -n kube-system  | grep {{ item.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
-  register: check_dns
-  ignore_errors: True
+  register: check_res
+  ignore_errors: true
+  with_items: "{{ addon['files'] }}"
 
-- name: Create Kubernetes dns addon
-  when: kube_dns and check_dns|failed
-  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dns.yml"
+- name: "Create {{ addon.name }} resources"
+  when: item.failed
+  vars:
+    file: "{{ item.item }}"
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            apply -f {{ kube_addon_dir }}/{{ addon.name }}/{{ file.yaml }}
   delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-
-- name: Check Kubernetes monitoring is working
-  when: kube_monitoring
-  shell: "kubectl get pods --all-namespaces=true | grep heapster"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-  register: check_monitoring
-  ignore_errors: True
-
-- name: Create Kubernetes monitoring addon
-  when: kube_monitoring and check_monitoring|failed
-  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-monitoring.yml"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-
-- name: Check Kubernetes logging is working
-  when: kube_logging
-  shell: "kubectl get pods --all-namespaces=true | grep kibana-logging"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-  register: check_logging
-  ignore_errors: True
-
-- name: Create Kubernetes logging addon
-  when: kube_logging and check_logging|failed
-  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-logging.yml"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-
-- name: Check Kubernetes dashboard is working
-  when: kube_dashboard
-  shell: "kubectl get pods --all-namespaces=true | grep kubernetes-dashboard"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-  register: check_dashboard
-  ignore_errors: True
-
-- name: Create Kubernetes dashboard addon
-  when: kube_dashboard and check_dashboard|failed
-  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-dashboard.yml"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-
-- name: Check Kubernetes watch is working
-  when: kube_watch
-  shell: "kubectl get pods --all-namespaces=true | grep kubewatch"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
-  register: check_watch
-  ignore_errors: True
-
-- name: Create Kubernetes watch addon
-  when: kube_watch and check_watch|failed
-  shell: "kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ kube_addon_dir }}/kube-watch.yml"
-  delegate_to: "{{ groups['masters'][0] }}"
-  run_once: true
+  register: create_result
+  until: create_result.rc == 0
+  retries: 5
+  delay: 2
+  ignore_errors: true
+  with_items: "{{ check_res['results'] }}"

@@ -87,6 +87,7 @@ And then run `addons.yml` to create addons(Dashboard, Proxy, DNS):
 ```sh
 $ ansible-playbook addons.yml
 ```
+> Login [Dashboard](https://172.16.35.9:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
 
 ### Deploy Ceph cluster on Kubernetes
 If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-k8s.yml`:

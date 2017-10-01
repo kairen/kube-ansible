@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+  name: kubernetes-dashboard
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: kubernetes-dashboard
+  template:
+    metadata:
+      labels:
+        k8s-app: kubernetes-dashboard
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      serviceAccountName: kubernetes-dashboard-sa
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      initContainers:
+      - name: kubernetes-dashboard-init
+        image: gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.0
+        volumeMounts:
+        - name: kubernetes-dashboard-certs
+          mountPath: /certs
+      containers:
+      - name: kubernetes-dashboard-amd64
+        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.0
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        args:
+          - --tls-key-file=/certs/dashboard.key
+          - --tls-cert-file=/certs/dashboard.crt
+        volumeMounts:
+        - name: kubernetes-dashboard-certs
+          mountPath: /certs
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /
+            port: 8443
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+      volumes:
+      - name: kubernetes-dashboard-certs
+        secret:
+          secretName: kubernetes-dashboard-certs
