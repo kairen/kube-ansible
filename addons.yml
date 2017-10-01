@@ -5,4 +5,8 @@
   gather_facts: yes
   become: yes
   roles:
-   - { role: addon, tags: addon }
+   - { role: addon, when: kube_dashboard,  addon: "{{ addons.dashboard }}",  tags: dashboard }
+   - { role: addon, when: kube_dns,        addon: "{{ addons.dns }}",        tags: dns }
+   - { role: addon, when: kube_logging,    addon: "{{ addons.logging }}",    tags: logging }
+   - { role: addon, when: kube_monitoring, addon: "{{ addons.monitoring }}", tags: monitoring }
+   - { role: addon, when: kube_watch,      addon: "{{ addons.watch }}",      tags: watch }

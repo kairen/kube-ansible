@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.5
+kube_version: 1.7.7
 
 # Network plugin implementation('flannel', 'calico', 'canal', 'weave')
 network: calico
@@ -75,10 +75,17 @@ kube_monitoring: true
 
 # Watch event addon
 kube_watch: false
-watch:
+watch_vars:
   slack:
     token: "<Slack legacy token>"
     channel: "<Slack channel>"
+  resources:
+    dp: false
+    rc: false
+    rs: false
+    ds: false
+    svc: true
+    pod: true
 
 # Local Docker registry info
 registry_offline: false

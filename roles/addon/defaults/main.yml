@@ -1,25 +1,92 @@
 ---
 
-# Kubernetes dns
-dns_replicas: 1
-
-# Kubernetes logging
-logging_ip: "{{ lb_vip_address }}"
-kibana_port: 5601
-elasticsearch_port: 9200
-
-# Kubernetes monitoring
-monitoring_ip: "{{ lb_vip_address }}"
-heapster_ip: "{{ cluster_subnet }}.11"
-heapster_port: 80
-grafana_port: 100
-influx_port: 8086
-
-# Kubernetes watch
-resources:
-  deploy: false
-  rc: false
-  rs: false
-  ds: false
-  svc: true
-  pod: true
+addons:
+  # General-purpose web UI for Kubernetes clusters.
+  dashboard:
+    name: kube-dashboard
+    files:
+    - resource: serviceaccounts
+      name: kubernetes-dashboard-sa
+      yaml: dashboard-sa.yml
+    - resource: secrets
+      name: kubernetes-dashboard-certs
+      yaml: dashboard-secret.yml
+    - resource: services
+      name: kubernetes-dashboard
+      yaml: dashboard-svc.yml
+    - resource: deployments
+      name: kubernetes-dashboard
+      yaml: dashboard-dp.yml
+  # Pods in cluster can use the DNS Service’s IP to resolve DNS names.
+  dns:
+    name: kube-dns
+    files:
+    - resource: serviceaccounts
+      name: kube-dns-sa
+      yaml: dns-sa.yml
+    - resource: services
+      name: kube-dns
+      yaml: dns-svc.yml
+    - resource: deployments
+      name: kube-dns
+      yaml: dns-dp.yml
+  # This add-on consists of a combination of Elasticsearch, Fluentd and Kibana.
+  logging:
+    name: kube-logging
+    files:
+    - resource: serviceaccounts
+      name: fluentd-es-sa
+      yaml: fluentd-es-sa.yml
+    - resource: configmaps
+      name: fluentd-es-config
+      yaml: fluentd-es-configmap.yml
+    - resource: daemonsets
+      name: fluentd-es
+      yaml: fluentd-es-ds.yml
+    - resource: services
+      name: kibana-logging
+      yaml: kibana-logging-svc.yml
+    - resource: deployments
+      name: kibana-logging
+      yaml: kibana-logging-dp.yml
+    - resource: serviceaccounts
+      name: elasticsearch-logging-sa
+      yaml: es-logging-sa.yml
+    - resource: services
+      name: elasticsearch-logging
+      yaml: es-logging-svc.yml
+    - resource: statefulsets
+      name: elasticsearch-logging
+      yaml: es-logging-ss.yml
+  # Heapster enables monitoring and performance analysis in Kubernetes Clusters.
+  monitoring:
+    name: kube-monitoring
+    files:
+    - resource: serviceaccounts
+      name: heapster-sa
+      yaml: heapster-sa.yml
+    - resource: services
+      name: heapster
+      yaml: heapster-svc.yml
+    - resource: deployments
+      name: heapster
+      yaml: heapster-dp.yml
+    - resource: services
+      name: monitoring-grafana
+      yaml: grafana-svc.yml
+    - resource: services
+      name: monitoring-influxdb
+      yaml: influxdb-svc.yml
+    - resource: deployments
+      name: influxdb-grafana
+      yaml: influxdb-grafana-dp.yml
+  # Watch k8s events and trigger Handlers
+  watch:
+    name: kube-watch
+    files:
+    - resource: configmaps
+      name: kube-watch-config
+      yaml: watch-configmap.yml
+    - resource: deployments
+      name: kube-watch
+      yaml: watch-dp.yml
