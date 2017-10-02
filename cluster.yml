@@ -22,6 +22,8 @@
   roles:
     - { role: kubernetes/ha, tags: ha }
     - { role: kubernetes/master, tags: master }
+    - { role: addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
+    - { role: addon, when: kube_dns, addon: "{{ addons.dns }}", tags: kube-dns }
 
 - hosts: nodes
   become: yes

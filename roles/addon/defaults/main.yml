@@ -90,3 +90,12 @@ addons:
     - resource: deployments
       name: kube-watch
       yaml: watch-dp.yml
+  proxy:
+    name: kube-proxy
+    files:
+     - resource: serviceaccounts
+       name: kube-proxy-sa
+       yaml: kube-proxy-sa.yml
+     - resource: daemonsets
+       name: kube-proxy
+       yaml: kube-proxy-ds.yml

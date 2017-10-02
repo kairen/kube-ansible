@@ -35,7 +35,7 @@ spec:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
       containers:
-        - image: gcr.io/google_containers/heapster-amd64:v1.4.0
+        - image: gcr.io/google_containers/heapster-amd64:v1.5.0-beta.0
           name: heapster
           livenessProbe:
             httpGet:
@@ -48,7 +48,7 @@ spec:
             - /heapster
             - --source=kubernetes.summary_api:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: gcr.io/google_containers/heapster-amd64:v1.4.0
+        - image: gcr.io/google_containers/heapster-amd64:v1.5.0-beta.0
           name: eventer
           command:
             - /eventer

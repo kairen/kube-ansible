@@ -35,7 +35,7 @@ $ sudo ./setup-vagrant -p libvirt -i eth1
 Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
 
 Requirement:
-* Deploy node must be install `Ansible v2.3.0+`.
+* Deploy node must be install `Ansible v2.4.0+`.
 * All Master/Node should have password-less access from `Deploy` node.
 
 For machine example:
@@ -87,7 +87,12 @@ And then run `addons.yml` to create addons(Dashboard, Proxy, DNS):
 ```sh
 $ ansible-playbook addons.yml
 ```
-> Login [Dashboard](https://172.16.35.9:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
+
+Login addons dashboard:
+* [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
+* [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)。
+* [Monitoring](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)。
+
 
 ### Deploy Ceph cluster on Kubernetes
 If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-k8s.yml`:

@@ -9,7 +9,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   serviceName: elasticsearch-logging
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       k8s-app: elasticsearch-logging
@@ -31,7 +31,7 @@ spec:
         image: gcr.io/google-containers/elasticsearch:v5.5.1-1
         resources:
           limits:
-            cpu: 1000m
+            cpu: 500m
           requests:
             cpu: 100m
         ports:

@@ -4,25 +4,29 @@ metadata:
   name: kube-proxy
   labels:
     k8s-app: kube-proxy
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
   namespace: kube-system
 spec:
   selector:
     matchLabels:
       k8s-app: kube-proxy
+  templateGeneration: 1
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
         k8s-app: kube-proxy
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-      - effect: NoSchedule
-        key: node.cloudprovider.kubernetes.io/uninitialized
-        value: "true"
+      serviceAccountName: kube-proxy-sa
       containers:
-      - name: "{{ images.proxy.name }}"
-        image: "{{ images.proxy.repos }}{{ images.proxy.name }}:{{ images.proxy.tag }}"
+      - name: kube-proxy-amd64
+        image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
         command:
         - "/usr/local/bin/kube-proxy"
         - "--kubeconfig=/run/admin.conf"
@@ -39,7 +43,6 @@ spec:
       dnsPolicy: ClusterFirst
       hostNetwork: true
       restartPolicy: Always
-      serviceAccountName: kube-proxy
       terminationGracePeriodSeconds: 30
       volumes:
       - name: kubeconfig
@@ -48,8 +51,3 @@ spec:
       - name: pki
         hostPath:
           path: {{ kube_etc_dir }}
-  templateGeneration: 1
-  updateStrategy:
-    rollingUpdate:
-      maxUnavailable: 1
-    type: RollingUpdate
