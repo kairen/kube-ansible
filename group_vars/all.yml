@@ -29,6 +29,11 @@ keepalived: true
 keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
 keepalived_virtual_mask: 24
 
+# Core addons (Strongly recommend)
+kube_dns: true
+dns_name: cluster.local # cluster dns name
+dns_ip: "{{ cluster_subnet }}.10"
+
 kube_proxy: true
 kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
 
@@ -59,22 +64,11 @@ extra_auth:
   #   values:
   #   - '0fdd1a8875ec,admin,admin'
 
-# Dashboard addon
+# Extra addons
 kube_dashboard: true
-
-# DNS service addon
-kube_dns: true
-dns_name: cluster.local # cluster dns name
-dns_ip: "{{ cluster_subnet }}.10"
-
-# EFK logging addon
-kube_logging: false
-
-# Grafana + Infuxdb monitoring addon
-kube_monitoring: true
-
-# Watch event addon
-kube_watch: false
+kube_logging: false # EFK stack for Kubernetes
+kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
+kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:
   slack:
     token: "<Slack legacy token>"

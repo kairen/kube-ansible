@@ -2,16 +2,19 @@
 
 - name: Create Kubernetes addon directory
   file: path="{{ kube_addon_dir }}/{{ addon.name }}" state=directory
+  delegate_to: "{{ groups['masters'][0] }}"
 
 - name: "Copy {{ addon.name }} yml files"
   template:
     src: "{{ addon.name }}/{{ item.yaml }}.j2"
     dest: "{{ kube_addon_dir }}/{{ addon.name }}/{{ item.yaml }}"
+  delegate_to: "{{ groups['masters'][0] }}"
   with_items: "{{ addon['files'] }}"
 
 - name: Create Kubernetes dashboard certificate
   when: kube_dashboard
   include: config-dashboard.yml
+  delegate_to: "{{ groups['masters'][0] }}"
 
 - name: "Check {{ addon.name }} resource already exists"
   shell: |

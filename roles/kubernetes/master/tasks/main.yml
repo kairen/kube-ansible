@@ -37,6 +37,3 @@
     - "{{ api_secure_port }}"
     - "10252"
     - "10251"
-
-- name: Install core addons into Kubernetes
-  include: core-addons.yml
