@@ -11,9 +11,14 @@
   delegate_to: "{{ groups['masters'][0] }}"
   with_items: "{{ addon['files'] }}"
 
-- name: Create Kubernetes dashboard certificate
+- name: Config Kubernetes dashboard
   when: kube_dashboard
   include: config-dashboard.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: Config HAProxy ingress 
+  when: ingress and ingress_type == 'haproxy'
+  include: config-haproxy-ing.yml
   delegate_to: "{{ groups['masters'][0] }}"
 
 - name: "Check {{ addon.name }} resource already exists"

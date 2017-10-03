@@ -17,6 +17,7 @@ kubelet_config: "{{ kube_etc_dir }}/kubelet.conf"
 kubeadmin_config: "{{ kube_etc_dir }}/admin.conf"
 cni_etc_dir: "/etc/cni/net.d"
 kube_dashboard_cert_dir: "{{ cert_dir }}/dashboard-certs"
+haproxy_ingress_cert_dir: "{{ cert_dir }}/haproxy-ingress-certs"
 
 # TSL certificate dir path
 sa_key: "{{ kube_cert_dir }}/apiserver-key.pem"

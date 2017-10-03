@@ -1,0 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-ingress-service
+  labels:
+    k8s-app: nginx-ingress-lb
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+  namespace: kube-system
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - "{{ lb_vip_address }}"
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+    - protocol: TCP
+      port: 443
+      name: https
+  selector:
+    k8s-app: nginx-ingress-lb
