@@ -65,9 +65,14 @@ extra_auth:
   #   - '0fdd1a8875ec,admin,admin'
 
 # Extra addons
-kube_dashboard: true
+kube_dashboard: true # Kubenetes dasobhard console.
 kube_logging: false # EFK stack for Kubernetes
 kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
+
+# Ingress controller
+ingress: true
+ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
+
 kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:
   slack:

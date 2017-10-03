@@ -1,0 +1,35 @@
+---
+
+- name: Create HAProxy ingress certificates directory
+  file: path={{ haproxy_ingress_cert_dir }} state=directory
+
+- name: Check HAProxy ingress certificates already exists
+  stat: path="{{ haproxy_ingress_cert_dir }}/tls.crt"
+  register: check_cert
+
+- name: Create HAProxy ingress certificates
+  when: not check_cert.stat.exists
+  command: "{{ item }}"
+  with_items:
+    - "openssl req -x509 -newkey rsa:2048 -nodes -days 365 -keyout {{ haproxy_ingress_cert_dir }}/tls.key -out {{ haproxy_ingress_cert_dir }}/tls.crt -subj '/CN=localhost'"
+
+- name: Check HAProxy ingress secret already exists
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get secret -n kube-system | grep tls-secret
+  run_once: true
+  register: check_secret
+  ignore_errors: True
+
+- name: Create HAProxy ingress secret
+  when: check_secret|failed
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            create secret tls tls-secret \
+            --cert={{ haproxy_ingress_cert_dir }}/tls.crt \
+            --key={{ haproxy_ingress_cert_dir }}/tls.key -n kube-system
+  register: secret_result
+  until: secret_result.rc == 0
+  retries: 5
+  delay: 3
+  ignore_errors: True

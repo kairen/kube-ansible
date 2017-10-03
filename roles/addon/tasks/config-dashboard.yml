@@ -1,15 +1,15 @@
 ---
 
-- name: Create Kubernetes addon directory
+- name: Create dashboard certificates directory
   file: path={{ kube_dashboard_cert_dir }} state=directory
 
-- name: Check Kubernetes dashboard certificate directory already exists
+- name: Check dashboard certificates already exists
   stat: path="{{ kube_dashboard_cert_dir }}/dashboard.crt"
-  register: check_dashboard_cert
+  register: check_cert
 
-- name: Create Kubernetes dashboard certificates
-  when: not check_dashboard_cert.stat.exists
-  register: kube_dashboard_cert
+- name: Create dashboard certificates
+  when: not check_cert.stat.exists
+  register: create_cert
   command: "{{ item }}"
   with_items:
     - "openssl genrsa -des3 -passout pass:x -out {{ kube_dashboard_cert_dir }}/dashboard.pass.key 2048"
@@ -17,28 +17,27 @@
     - "openssl req -new -key {{ kube_dashboard_cert_dir }}/dashboard.key -out {{ kube_dashboard_cert_dir }}/dashboard.csr -subj '/CN=kube-dashboard'"
     - "openssl x509 -req -sha256 -days 365 -in {{ kube_dashboard_cert_dir }}/dashboard.csr -signkey {{ kube_dashboard_cert_dir }}/dashboard.key -out {{ kube_dashboard_cert_dir }}/dashboard.crt"
 
-- name: Delete Kubernetes dashboard pass key
-  when: not check_dashboard_cert.stat.exists
+- name: Delete dashboard pass key
+  when: create_cert|succeeded
   file: path="{{ kube_dashboard_cert_dir }}/dashboard.pass.key" state=absent
   ignore_errors: True
 
-- name: Check Kubernetes dashboard secret already exists
-  when: kube_dashboard
-  shell: "kubectl get secret -n kube-system | grep kubernetes-dashboard-certs"
-  delegate_to: "{{ groups['masters'][0] }}"
+- name: Check dashboard secret already exists
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get secrets -n kube-system | grep kubernetes-dashboard-certs
   run_once: true
-  register: check_dashboard_secret
+  register: check_secret
   ignore_errors: True
 
 - name: Create Kubernetes dashboard secret
-  when: kube_dashboard and check_dashboard_secret|failed
+  when: check_secret|failed
   shell: |
     kubectl create --kubeconfig={{ kubeadmin_config }} \
                   secret generic kubernetes-dashboard-certs \
                   --from-file={{ kube_dashboard_cert_dir }} -n kube-system
-  delegate_to: "{{ groups['masters'][0] }}"
-  register: dash_secret_result
-  until: dash_secret_result.rc == 0
+  register: secret_result
+  until: secret_result.rc == 0
   retries: 5
   delay: 3
   ignore_errors: True

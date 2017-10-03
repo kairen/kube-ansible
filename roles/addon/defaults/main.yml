@@ -90,12 +90,56 @@ addons:
     - resource: deployments
       name: kube-watch
       yaml: watch-dp.yml
+  # Expose Kubernetes service via kube-proxy.
   proxy:
     name: kube-proxy
     files:
-     - resource: serviceaccounts
-       name: kube-proxy-sa
-       yaml: kube-proxy-sa.yml
-     - resource: daemonsets
-       name: kube-proxy
-       yaml: kube-proxy-ds.yml
+    - resource: serviceaccounts
+      name: kube-proxy-sa
+      yaml: kube-proxy-sa.yml
+    - resource: daemonsets
+      name: kube-proxy
+      yaml: kube-proxy-ds.yml
+  default_backend:
+    name: default-backend
+    files:
+    - resource: services
+      name: default-http-backend
+      yaml: default-backend-svc.yml
+    - resource: deployments
+      name: default-http-backend
+      yaml: default-backend-dp.yml
+  ingress:
+    haproxy:
+      name: haproxy-ingress
+      files:
+      - resource: secrets
+        name: tls-secret
+        yaml: haproxy-ingress-secret.yml
+      - resource: services
+        name: haproxy-ingress-service
+        yaml: haproxy-ingress-svc.yml
+      - resource: daemonsets
+        name: haproxy-ingress-lb
+        yaml: haproxy-ingress-ds.yml
+    nginx:
+      name: nginx-ingress
+      files:
+      - resource: services
+        name: nginx-ingress-service
+        yaml: nginx-ingress-svc.yml
+      - resource: daemonsets
+        name: nginx-ingress-lb
+        yaml: nginx-ingress-ds.yml
+    traefik:
+      name: traefik-ingress
+      files:
+      - resource: serviceaccounts
+        name: traefik-ingress-lb-sa
+        yaml: traefik-sa.yml
+      - resource: services
+        name: traefik-ingress-service
+        yaml: traefik-svc.yml
+      - resource: daemonsets
+        name: traefik-ingress-lb
+        yaml: traefik-ds.yml
