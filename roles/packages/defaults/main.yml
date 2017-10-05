@@ -16,12 +16,6 @@ pkg_bases:
   cni:
     url: "https://github.com"
     version: 0.5.2
-  flannel:
-    url: "https://github.com"
-    version: 0.8.0
-  calico:
-    url: "https://github.com"
-    version: 1.8.0
   calicoctl:
     url: "https://github.com"
     version: 1.5.0
@@ -60,20 +54,6 @@ downloads:
     items: [ "cni-amd64-v{{ pkg_bases.cni.version }}.tgz" ]
     unarchive:
       extra_opt: "['--strip-components=0']"
-  flannel:
-    name: flannel
-    description: "Flannel network plugin"
-    dir: /opt/flannel
-    url: "{{ pkg_bases.flannel.url }}/coreos/flannel/releases/download/v{{ pkg_bases.flannel.version }}"
-    items: [ "flannel-v{{ pkg_bases.flannel.version }}-linux-amd64.tar.gz" ]
-    unarchive:
-      extra_opt: "['--strip-components=0']"
-  calico:
-    name: calico
-    description: "Calico network plugin"
-    dir: /opt/cni/bin
-    url: "{{ pkg_bases.calico.url }}/projectcalico/cni-plugin/releases/download/v{{ pkg_bases.calico.version }}"
-    items: [ calico, calico-ipam ]
   calicoctl:
     name: calicoctl
     description: "Calicoctl network plugin"
