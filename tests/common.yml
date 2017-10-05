@@ -1,7 +1,0 @@
----
-
-- hosts: test
-  become: yes
-  gather_facts: no
-  roles:
-    - { role: common }
