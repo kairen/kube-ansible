@@ -44,6 +44,8 @@
     - "{{ downloads.cni.dir }}"
     - "{{ downloads.calicoctl.dir }}"
     - "{{ cni_etc_dir }}"
+    - "{{ ansible_env.HOME }}/.kube"
+    - "{{ ansible_env.HOME }}/.helm"
 
 - name: Delete interfaces for Kubernetes
   ignore_errors: True
