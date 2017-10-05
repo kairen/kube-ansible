@@ -35,6 +35,12 @@
     src: "admin.conf.j2"
     dest: "{{ ansible_env.HOME }}/.kube/config"
 
+- name: Copy helmrc file
+  when: helm_init
+  copy:
+    src: helmrc
+    dest: "{{ ansible_env.HOME }}"
+
 - name: Copy SSL certificate from ansible host
   copy:
     src: "{{ cert_dir }}"

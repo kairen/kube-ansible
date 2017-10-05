@@ -73,6 +73,9 @@ kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
 ingress: true
 ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
 
+# Helm auto initialize
+helm_init: true
+
 kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:
   slack:
