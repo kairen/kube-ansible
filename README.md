@@ -31,6 +31,11 @@ Start deploying?(y): y
 $ sudo ./setup-vagrant -p libvirt -i eth1
 ```
 
+Login addon's dashboard:
+* [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
+* [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)。
+* [Monitoring](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)。
+
 ## Manually Set Up
 Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
 
@@ -87,12 +92,6 @@ And then run `addons.yml` to create addons(Dashboard, Proxy, DNS):
 ```sh
 $ ansible-playbook addons.yml
 ```
-
-Login addons dashboard:
-* [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
-* [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)。
-* [Monitoring](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)。
-
 
 ### Deploy Ceph cluster on Kubernetes
 If you want to deploy a Ceph cluster on to a Kubernetes, just run `ceph-k8s.yml`:
