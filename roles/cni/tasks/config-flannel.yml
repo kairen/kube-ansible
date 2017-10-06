@@ -1,7 +1,9 @@
 ---
 
 - name: "Copy {{ cni.name }} network config"
-  template: src="{{ cni.template.config }}.j2" dest={{ kube_network_dir }}/{{ cni.template.config }}
+  template:
+    src: "{{ cni.name }}/{{ cni.template.config }}.j2"
+    dest: "{{ kube_network_dir }}/{{ cni.template.config }}"
   run_once: true
   delegate_to: "{{ groups['etcd'][0] }}"
 
