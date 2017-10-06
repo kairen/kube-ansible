@@ -1,9 +1,12 @@
-image: "samdoran/gitlab-ci-test-el6"
+image: "ansible/ansible"
 
 before_script:
   - ansible --version
-  - printf '[defaults]\nroles_path=../' > ansible.cfg
 
-test:
+stages:
+  - build
+
+build:
+  stage: build
   script:
     - echo 'Success'
