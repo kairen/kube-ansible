@@ -35,6 +35,11 @@
     src: "admin.conf.j2"
     dest: "{{ ansible_env.HOME }}/.kube/config"
 
+- name: Create Kubernetes pki directory
+  file:
+    path: "{{ kube_etc_dir }}/pki/"
+    state: directory
+
 - name: Copy helmrc file
   when: helm_init
   copy:
@@ -43,8 +48,20 @@
 
 - name: Copy SSL certificate from ansible host
   copy:
-    src: "{{ cert_dir }}"
-    dest: "{{ kube_etc_dir }}"
+    src: "{{ cert_dir }}/{{ item }}"
+    dest: "{{ kube_etc_dir }}/pki/{{ item }}"
+    remote_src: yes
+  with_items:
+    - admin.csr
+    - admin-key.pem
+    - admin.pem
+    - apiserver.csr
+    - apiserver-key.pem
+    - apiserver.pem
+    - ca-key.pem
+    - ca.pem
+    - ca.srl
+    - openssl.conf
 
 - name: Create Kubernetes component symlinks
   file:
