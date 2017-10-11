@@ -1,0 +1,8 @@
+---
+
+- hosts: test
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: packages, pkg: "{{ downloads.etcd }}" }
+    - { role: packages, pkg: "{{ downloads.etcd }}", create_link: true }

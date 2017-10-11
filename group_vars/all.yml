@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.7
+kube_version: 1.7.8
 
 # Network plugin implementation('flannel', 'calico', 'canal', 'weave')
 network: calico
@@ -72,6 +72,9 @@ kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
 # Ingress controller
 ingress: true
 ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
+
+# Helm auto initialize
+helm_init: true
 
 kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:

@@ -13,10 +13,10 @@
 
 - name: "Copy {{ cni.name }} RBAC yml file"
   when: extra_auth.rbac is defined
-  template: src="{{ cni.template.rbac }}.j2" dest={{ kube_network_dir }}/{{ cni.template.rbac }}
+  template: src="{{ cni.name }}/{{ cni.template.rbac }}.j2" dest={{ kube_network_dir }}/{{ cni.template.rbac }}
 
 - name: "Copy {{ cni.name }} yml file"
-  template: src="{{ cni.template.ds }}.j2" dest={{ kube_network_dir }}/{{ cni.template.ds }}
+  template: src="{{ cni.name }}/{{ cni.template.ds }}.j2" dest={{ kube_network_dir }}/{{ cni.template.ds }}
 
 - name: "Check {{ cni.name }} cluster role already exists"
   when: extra_auth.rbac is defined

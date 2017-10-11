@@ -40,6 +40,12 @@
     path: "{{ kube_etc_dir }}/pki/"
     state: directory
 
+- name: Copy helmrc file
+  when: helm_init
+  copy:
+    src: helmrc
+    dest: "{{ ansible_env.HOME }}"
+
 - name: Copy SSL certificate from ansible host
   copy:
     src: "{{ cert_dir }}/{{ item }}"

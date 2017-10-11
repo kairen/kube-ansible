@@ -24,7 +24,7 @@ canal:
     rbac: canal-rbac.yml
 
 weave:
-  name: weave-net
+  name: weave
   template:
     ds: weave.yml
     rbac: weave-rbac.yml
