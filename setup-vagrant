@@ -65,7 +65,7 @@ elif [ ${CNI_PLUGIN} == 'calico' ]; then
   role_config "cni_iface:.*" "cni_iface: interface=${ETH}" ${GROUP_VARS_PATH}
 elif [ ${CNI_PLUGIN} == 'canal' ]; then
   role_config "cni_iface:.*" "cni_iface: ${ETH}" ${GROUP_VARS_PATH}
-elif [ ${CNI_PLUGIN} == 'weave' ]; then
+elif [[ ${CNI_PLUGIN} == 'weave' || ${CNI_PLUGIN} == 'router' ]]; then
   role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
 fi
 
