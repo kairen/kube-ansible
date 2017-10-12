@@ -28,3 +28,9 @@ weave:
   template:
     ds: weave.yml
     rbac: weave-rbac.yml
+
+router:
+  name: kube-router
+  template:
+    ds: kube-router.yml
+    rbac: kube-router-rbac.yml

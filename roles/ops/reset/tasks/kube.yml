@@ -56,6 +56,7 @@
     - "weave"
     - "cni0"
     - "tunl0"
+    - "kube-bridge"
 
 - name: IP-in-IP tunnel mod delete
   shell: "modprobe -r ipip"

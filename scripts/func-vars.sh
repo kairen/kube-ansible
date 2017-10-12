@@ -91,7 +91,7 @@ function update_vars() {
 function check_cni() {
   local cni=${1}
   local isExist=false
-  for n in "calico" "flannel" "canal" "weave"; do
+  for n in "calico" "flannel" "canal" "weave" "router"; do
     if [ ${cni} == ${n} ]; then
       isExist=true
     fi
