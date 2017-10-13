@@ -74,7 +74,7 @@ ingress: true
 ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
 
 # Helm auto initialize
-helm_init: true
+helm_init: false
 
 kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:

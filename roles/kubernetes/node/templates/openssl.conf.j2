@@ -7,5 +7,5 @@ basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 [alt_names]
-IP.1={{ node_ip_address }}
-DNS.1={{ ansible_fqdn }}
+IP.1={{ ansible_host }}
+DNS.1={{ ansible_hostname }}

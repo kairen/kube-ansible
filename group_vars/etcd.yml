@@ -1,5 +1,4 @@
 ---
-# Etcd common vars
 
 etcd_client_port: 2379
 etcd_peer_port: 2380
