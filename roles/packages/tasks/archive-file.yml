@@ -1,0 +1,25 @@
+---
+
+- name: "Check {{ pkg.description }} archive already exists"
+  when: pkg is defined
+  stat: path="{{ download_tmp }}/{{ item.file }}"
+  with_items: "{{ pkg['items'] }}"
+  register: pkg_check
+
+- name: "Downloading {{ pkg.description }} archives"
+  when: 'pkg is defined and not item.stat.exists'
+  get_url:
+    url: "{{ pkg.url }}/{{ item.item.file }}"
+    dest: "{{ download_tmp }}"
+    validate_certs: False
+  with_items: "{{ pkg_check.results }}"
+  register: pkg_download
+
+- name: "Extract {{ pkg.description }} file"
+  when: pkg is defined
+  unarchive:
+    src: "{{ download_tmp }}/{{ item.file }}"
+    dest: "{{ pkg.dir }}"
+    copy: no
+    extra_opts: "{{ pkg.unarchive.extra_opt }}"
+  with_items: "{{ pkg['items'] }}"
