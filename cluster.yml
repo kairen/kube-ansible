@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   roles:
-    - { role: sslcert, tags: sslcert }
+    - { role: cert, tags: sslcert }
 
 - hosts: etcd
   become: yes

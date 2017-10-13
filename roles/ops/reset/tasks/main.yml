@@ -2,7 +2,7 @@
 
 - name: Reset SSL cert
   when: sslcert|default(false)
-  include: sslcert.yml
+  include: cert.yml
 
 - name: Reset Kubernetes  cluster
   when: kube|default(false)

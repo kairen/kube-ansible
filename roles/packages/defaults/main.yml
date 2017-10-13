@@ -22,6 +22,9 @@ pkg_bases:
   helm:
     url: "https://kubernetes-helm.storage.googleapis.com"
     version: 2.6.2
+  cfssl:
+    url: "https://pkg.cfssl.org"
+    version: 1.2
 
 downloads:
   kube:
@@ -68,3 +71,9 @@ downloads:
     unarchive:
       extra_opt: "['--strip-components=1']"
     items: [ "helm-v{{ pkg_bases.helm.version }}-linux-amd64.tar.gz" ]
+  cfssl:
+    name: cfssl
+    description: "Cloudflare's PKI and TLS toolkit"
+    dir: /opt/cfssl
+    url: "{{ pkg_bases.cfssl.url }}/R{{ pkg_bases.cfssl.version }}"
+    items: [ cfssl_linux-amd64, cfssljson_linux-amd64 ]
