@@ -1,4 +1,4 @@
 ---
 dependencies:
     - { role: common }
-    - { role: packages, pkg: "{{ sigil }}" }
+    - { role: packages, pkg: "{{ downloads.sigil }}" }

@@ -4,29 +4,44 @@
 - name: Override local repository url
   when: 'pkg is defined and repos_offline'
   set_fact:
-    pkg_bases: >
-      {{ pkg_bases |
+    bases: >
+      {{ bases |
          combine({ pkg.name: {
              'url': repos_offline_url,
-             'version': pkg_bases[pkg.name]['version']
+             'version': bases[pkg.name]['version']
          }})
       }}
 
 - name: Create download binaries tmp directory
-  when: pkg is defined
+  when: 'pkg is defined and not "unarchive" in pkg'
   file: path="{{ download_tmp }}" state=directory
 
-- name: "Check {{ pkg.description }} already exists"
-  when: pkg is defined
-  stat: path="{{ download_tmp }}/{{ item }}"
+- name: "Check {{ pkg.description }} archive already exists"
+  when: 'pkg is defined and "unarchive" in pkg'
+  stat: path="{{ download_tmp }}/{{ item.file }}"
   with_items: "{{ pkg['items'] }}"
   register: pkg_check
 
-- name: "Downloading {{ pkg.description }}"
-  when: pkg is defined and not item.stat.exists
+- name: "Check {{ pkg.description }} binary already exists"
+  when: pkg is defined
+  stat: path="{{ download_tmp }}/{{ item.file }}-{{ bases[''+ pkg.name].version }}"
+  with_items: "{{ pkg['items'] }}"
+  register: pkg_check
+
+- name: "Downloading {{ pkg.description }} archives"
+  when: 'pkg is defined and not item.stat.exists and "unarchive" in pkg'
   get_url:
-    url: "{{ pkg.url }}/{{ item.item }}"
+    url: "{{ pkg.url }}/{{ item.item.file }}"
     dest: "{{ download_tmp }}"
+    validate_certs: False
+  with_items: "{{ pkg_check.results }}"
+  register: pkg_download
+
+- name: "Downloading {{ pkg.description }} binaries"
+  when: 'pkg is defined and not item.stat.exists and not "unarchive" in pkg'
+  get_url:
+    url: "{{ pkg.url }}/{{ item.item.file }}"
+    dest: "{{ download_tmp }}/{{ item.item.file }}-{{ bases[''+ pkg.name].version }}"
     validate_certs: False
   with_items: "{{ pkg_check.results }}"
   register: pkg_download
@@ -38,7 +53,7 @@
 - name: "Extract {{ pkg.description }} file"
   when: 'pkg is defined and "unarchive" in pkg'
   unarchive:
-    src: "{{ download_tmp }}/{{ item }}"
+    src: "{{ download_tmp }}/{{ item.file }}"
     dest: "{{ pkg.dir }}"
     copy: no
     extra_opts: "{{ pkg.unarchive.extra_opt }}"
@@ -47,10 +62,20 @@
 - name: "Copy {{ pkg.description }} file to release directory"
   when: 'pkg is defined and "unarchive" not in pkg'
   copy:
-    src: "{{ download_tmp }}/{{ item }}"
-    dest: "{{ pkg.dir }}/"
+    src: "{{ download_tmp }}/{{ item.file }}-{{ bases[''+ pkg.name].version }}"
+    dest: "{{ pkg.dir }}/{{ item.symlink }}"
     owner: root
     group: root
     mode: 0755
     remote_src: True
+  with_items: "{{ pkg['items'] }}"
+  register: pkg_copy
+
+- name: "Symlinks {{ pkg.description }} component"
+  when: 'pkg is defined and pkg_copy|succeeded and "symlink" in item'
+  file:
+    src: "{{ pkg.dir }}/{{ item.symlink }}"
+    dest: "{{ bin_dir }}/{{ item.symlink }}"
+    state: link
+    force: yes
   with_items: "{{ pkg['items'] }}"
