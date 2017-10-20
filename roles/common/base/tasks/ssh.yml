@@ -1,0 +1,63 @@
+---
+- name: openssh server installed
+  apt:
+    pkg: "openssh-server"
+    state: present
+
+- name: openssh run directory ready
+  file:
+    path: "/var/run/sshd"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "2755"
+
+- name: sshd is configured the good way
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^{{ item.key }} "
+    line: "{{ item.key }} {{ item.value }}"
+    insertafter: "{{ item.key }} "
+    state: present
+    backup: yes
+    validate: "/usr/sbin/sshd -T -f %s"
+  with_items:
+    - { key: "ListenAddress",   value: "0.0.0.0" }
+    - { key: "Protocol",        value: "2" }
+    # - { key: "DebianBanner",    value: "no" }
+    - { key: "PrintLastLog",    value: "yes" }
+    - { key: "SyslogFacility",  value: "AUTH" }
+    - { key: "LogLevel",        value: "INFO" }
+    - { key: "LoginGraceTime",  value: "60" }
+    - { key: "StrictModes",     value: "yes" }
+    - { key: "TCPKeepAlive",    value: "yes" }
+    - { key: "Compression ",     value: "yes" }
+    - { key: "IgnoreRhosts",    value: "yes" }
+    - { key: "PermitRootLogin",     value: "yes" }
+    - { key: "RSAAuthentication",   value: "no" }
+    - { key: "ClientAliveInterval", value: "120" }
+    - { key: "ClientAliveCountMax", value: "600" }
+    - { key: "PubkeyAuthentication",  value: "yes" }
+    - { key: "AuthorizedKeysFile",    value: "%h/.ssh/authorized_keys" }
+    - { key: "RhostsRSAAuthentication", value: "no" }
+    - { key: "HostbasedAuthentication", value: "no" }
+    - { key: "PermitEmptyPasswords",    value: "no" }
+    - { key: "PasswordAuthentication",  value: "no" }
+    - { key: "GSSAPIAuthentication",    value: "no" }
+    - { key: "ChallengeResponseAuthentication", value: "no" }
+  notify:
+    - restart sshd service
+
+- name: disable check local mail after login
+  lineinfile:
+    dest: "/etc/pam.d/sshd"
+    backrefs: yes
+    state: present
+    regexp: "^session    optional     pam_mail.so standard noenv"
+    line: "#session    optional     pam_mail.so standard noenv \\# [1]"
+
+- name: sshd is up and running
+  service:
+    name: "ssh"
+    state: started
+    enabled: yes

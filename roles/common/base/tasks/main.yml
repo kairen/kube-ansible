@@ -1,0 +1,77 @@
+---
+- name: common alias
+  copy:
+    dest: "/etc/profile.d/ll.sh"
+    content: "alias ll=\"ls --color -aul\"\n"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: /bin/sh is /bin/bash
+  file:
+    src: "/bin/bash"
+    dest: "/bin/sh"
+    state: link
+
+# - name: backports repositories are actives
+#   apt_repository:
+#     repo: "{{ item }}"
+#     state: present
+#     update_cache: yes
+#   with_items:
+#     - "deb http://cloudfront.debian.net/debian {{ ansible_distribution_release }}-backports main"
+#     - "deb-src http://cloudfront.debian.net/debian {{ ansible_distribution_release }}-backports main"
+
+- include_tasks: update.yml
+
+- name: common packages are installed
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - "rsync"
+    - "mosh"
+    - "sudo"
+    - "curl"
+    - "locales"
+    - "git"
+    - "subversion"
+    - "whois"
+    - "wget"
+    - "strace"
+    - "sysstat"
+    - "iotop"
+    - "iperf"
+    - "lsof"
+    - "dnsutils"
+    - "ngrep"
+    - "htop"
+    - "netcat"
+    - "multitail"
+    - "tmux"
+    - "tree"
+    - "ncdu"
+    - "net-tools"
+    - "procps"
+    - "vim"
+    - "jq"
+    - "htop"
+    - "rsyslog"
+    - "logrotate"
+    - "unattended-upgrades"
+    - "build-essential"
+    - "zlib1g-dev"
+    - "zlib1g"
+    - "libcurl4-openssl-dev"
+
+- include_tasks: ntp.yml
+- include_tasks: ssh.yml
+# - include_tasks: logs.yml
+- include_tasks: dns.yml
+
+# - name: activate modprobe
+#   command: modprobe dm_thin_pool
+# - name: activate dm_thin_pool
+#   command: "echo dm_thin_pool >> /etc/modules"
+
+- meta: flush_handlers

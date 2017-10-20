@@ -1,0 +1,3 @@
+---
+local_cert_dir: "{{ playbook_dir }}/../tmp/{{ sweady_env }}/pki"
+cert_dir: /opt/cert/pki

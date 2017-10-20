@@ -1,0 +1,9 @@
+---
+- name: Create SSL certificate directory
+  file: path={{ cert_dir }} state=directory
+
+- name: Upload certificate
+  copy:
+    src: "{{ local_cert_dir }}/"
+    dest: "{{ cert_dir }}"
+    directory_mode: yes

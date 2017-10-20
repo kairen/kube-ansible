@@ -1,0 +1,28 @@
+---
+- name: configuring rsyslog
+  lineinfile:
+    dest: "/etc/rsyslog.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - regexp: '.*\$ActionFileDefaultTemplate'
+      line: '# $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat'
+    - regexp: '.*\$SystemLogRateLimitInterval'
+      line: '$SystemLogRateLimitInterval 1'
+    - regexp: '.*\$SystemLogRateLimitBurst'
+      line: '$SystemLogRateLimitBurst 10000'
+    - regexp: '.*RSYSLOG_ForwardFormat'
+      line: '*.* @@logstash;RSYSLOG_ForwardFormat'
+
+- name: adding hourly cron to logrotate rsyslog
+  cron:
+    name: "check dirs"
+    special_time: "hourly"
+    user: "root"
+    cron_file: "logrotate"
+    job: ". /etc/profile && logrotate -f /etc/logrotate.d/rsyslog"
+
+- name: Send log to Graylog
+  template:
+    src: "10-graylog.conf.j2"
+    dest: "/etc/rsyslog.d/10-graylog.conf"

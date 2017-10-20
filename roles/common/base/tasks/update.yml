@@ -1,0 +1,20 @@
+---
+- name: "Clean DPKG"
+  command: dpkg --configure -a
+  ignore_errors: yes
+
+- name: "Autoremove unused packages"
+  become: true
+  command: apt -y autoremove
+  register: autoremove_output
+  changed_when: "'0 upgraded' not in autoremove_output.stdout"
+
+- name: "Update cache"
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "Update all packages to the latest version"
+  become: true
+  apt:
+    upgrade: dist
