@@ -14,7 +14,7 @@
 - hosts: masters
   become: yes
   roles:
-    - { role: etcd, tags: etcd }
+    - { role: kubernetes/etcd, tags: etcd }
     - { role: kubernetes/ha, tags: ha }
     - { role: kubernetes/master, tags: master }
     - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
