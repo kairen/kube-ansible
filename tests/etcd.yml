@@ -3,7 +3,7 @@
 - hosts: test
   become: yes
   roles:
-    - { role: etcd, tags: etcd }
+    - { role: kubernetes/etcd, tags: etcd }
 
 - hosts: test
   become: yes
