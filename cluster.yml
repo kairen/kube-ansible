@@ -1,4 +1,11 @@
 ---
+- hosts: global
+  gather_facts: no
+  become: yes
+  tasks:
+    - raw: ln -s /usr/bin/python3 /usr/bin/python
+      ignore_errors: yes
+
 - hosts: all
   gather_facts: no
   become: no
@@ -23,8 +30,8 @@
     - { role: kubernetes/addon, addon: "{{ addons.dashboard }}", tags: dashboard, when: kube_dashboard }
     - { role: kubernetes/addon, addon: "{{ addons.logging }}", tags: logging, when: kube_logging }
     - { role: kubernetes/addon, addon: "{{ addons.monitoring }}", tags: monitoring, when: kube_monitoring }
-    # - { role: kubernetes/addon, addon: "{{ addons.default_backend }}", tags: default_backend, when: ingress and (ingress_type == 'haproxy' or ingress_type == 'nginx') }
-    # - { role: kubernetes/addon, addon: "{{ addons.ingress[ingress_type] }}", tags: ingress, when: ingress }
+    - { role: kubernetes/addon, addon: "{{ addons.default_backend }}", tags: default_backend, when: ingress and (ingress_type == 'haproxy' or ingress_type == 'nginx') }
+    - { role: kubernetes/addon, addon: "{{ addons.ingress[ingress_type] }}", tags: ingress, when: ingress }
     # - { role: kubernetes/addon, addon: "{{ addons.watch }}", tags: watch, when: kube_watch }
 
 - hosts: nodes

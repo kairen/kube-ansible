@@ -1,10 +1,10 @@
 ---
 
 - name: Create and copy generator config file
-  include: generator.yml
+  import_tasks: generator.yml
 
 - name: Deploy ceph components on Kubernetes
-  include: components.yml
+  import_tasks: components.yml
 
 # - name: Label all storage nodes
 #   shell: "kubectl label nodes node-type=storage"

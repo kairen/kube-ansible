@@ -19,7 +19,7 @@
 
 - name: "Config {{ cni.name }} network"
   when: network == 'flannel'
-  include: config-flannel.yml
+  import_tasks: config-flannel.yml
 
 - name: "Copy {{ cni.name }} RBAC yml file"
   when: extra_auth.rbac is defined

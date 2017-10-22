@@ -1,10 +1,10 @@
 ---
 
 - name: Configure Docker container engine
-  include: config.yml
+  import_tasks: config.yml
 
 - name: Init Docker systemd service
-  include: systemd.yml
+  import_tasks: systemd.yml
 
 - name: Enable and start Docker socket
   when: change_socket|succeeded

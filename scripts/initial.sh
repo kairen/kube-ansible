@@ -45,9 +45,6 @@ if [ ${HOST_NAME} == "master1" ]; then
     while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
     WAIT_MES="No resources found."
     while [ "$(kubectl get node 2>&1)" == "${WAIT_MES}" ]; do sleep 1; done
-
-    echo "Deploying addons ..."
-    sudo ansible-playbook -i inventory addons.yml
   fi
 else
   sudo cp /vagrant/hosts /etc/

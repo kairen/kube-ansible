@@ -22,11 +22,11 @@
 
 - name: Include download archive file
   when: 'pkg is defined and "unarchive" in pkg'
-  include: archive-file.yml
+  import_tasks: archive-file.yml
 
 - name: Include download binary file
   when: 'pkg is defined and not "unarchive" in pkg'
-  include: binary-file.yml
+  import_tasks: binary-file.yml
 
 - name: "Symlinks {{ pkg.description }} component"
   when: 'pkg is defined and pkg_copy|succeeded and "symlink" in item'

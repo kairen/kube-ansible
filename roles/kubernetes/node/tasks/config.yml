@@ -34,6 +34,7 @@
   copy:
     src: "{{ cert_dir }}/{{ item }}"
     dest: "{{ kube_cert_dir }}/{{ item }}"
+    remote_src: yes
   with_items:
     - "ca-key.pem"
     - "ca.pem"

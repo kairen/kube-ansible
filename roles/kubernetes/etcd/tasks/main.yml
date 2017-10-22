@@ -1,10 +1,10 @@
 ---
 
 - name: Configure Etcd key/value store
-  include: config.yml
+  import_tasks: config.yml
 
 - name: Init Etcd systemd service
-  include: systemd.yml
+  import_tasks: systemd.yml
 
 - name: Enable and restart Etcd
   systemd:
