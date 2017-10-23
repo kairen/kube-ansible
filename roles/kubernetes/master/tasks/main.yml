@@ -9,14 +9,14 @@
   service: name=kubelet enabled=yes state=stopped
 
 - name: Configure Kubernetes component
-  include: config.yml
+  import_tasks: config.yml
 
 - name: Add Kubernetes extra authentication
   when: extra_auth is defined
-  include: auth.yml
+  import_tasks: auth.yml
 
 - name: Init kubelet systemd service
-  include: systemd.yml
+  import_tasks: systemd.yml
 
 - name: Enable and restart kubelet engine
   systemd:

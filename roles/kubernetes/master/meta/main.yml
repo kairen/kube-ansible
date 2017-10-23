@@ -1,11 +1,10 @@
 ---
 dependencies:
-  - { role: common }
-  - { role: packages, pkg: "{{ downloads.kube }}" }
-  - { role: packages, pkg: "{{ downloads.helm }}" }
-  - { role: packages, pkg: "{{ downloads.cni }}" }
-  - { role: packages, pkg: "{{ downloads.calicoctl }}", when: network == 'calico' or network == 'canal'}
-  - { role: images, img: "{{ images.apiserver }}" }
-  - { role: images, img: "{{ images.manager }}" }
-  - { role: images, img: "{{ images.scheduler }}" }
-  - { role: images, img: "{{ images.pod_infra }}" }
+  - { role: common/packages, pkg: "{{ downloads.kube }}" }
+  - { role: common/packages, pkg: "{{ downloads.helm }}" }
+  - { role: common/packages, pkg: "{{ downloads.cni }}" }
+  - { role: common/packages, pkg: "{{ downloads.calicoctl }}", when: network == 'calico' or network == 'canal'}
+  - { role: common/images, img: "{{ images.apiserver }}" }
+  - { role: common/images, img: "{{ images.manager }}" }
+  - { role: common/images, img: "{{ images.scheduler }}" }
+  - { role: common/images, img: "{{ images.pod_infra }}" }

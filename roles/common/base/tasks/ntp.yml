@@ -1,0 +1,32 @@
+---
+- name: ntpdate is absent
+  apt:
+    pkg: "ntpdate"
+    state: absent
+    purge: yes
+
+- name: ntp is present
+  apt:
+    pkg: "ntp"
+    state: present
+
+- name: ntp configuration
+  template:
+    src: "ntp.conf.j2"
+    dest: "/etc/ntp.conf"
+    backup: yes
+  notify: restart ntp
+
+- name: remove dhcp-ntp files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/dhcp/dhclient-exit-hooks.d/ntp"
+  notify: restart ntp
+
+- name: ntp service is up
+  service:
+    name: ntp
+    state: started
+    enabled: yes

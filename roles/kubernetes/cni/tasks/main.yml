@@ -1,0 +1,65 @@
+---
+
+- name: Write system variables for Kubernetes
+  copy:
+    content: |
+      net.bridge.bridge-nf-call-ip6tables=1
+      net.bridge.bridge-nf-call-iptables=1
+    dest: /etc/sysctl.d/k8s.conf
+
+- name: Enable system variables for Kubernetes
+  shell: "sysctl -p /etc/sysctl.d/k8s.conf"
+
+- name: "Set fact {{ network }} cni variable"
+  set_fact:
+    cni: "{{ vars[network] }}"
+
+- name: Create Kubernetes addon directory
+  file: path={{ kube_network_dir }} state=directory
+
+- name: "Config {{ cni.name }} network"
+  when: network == 'flannel'
+  import_tasks: config-flannel.yml
+
+- name: "Copy {{ cni.name }} RBAC yml file"
+  when: extra_auth.rbac is defined
+  template: src="{{ cni.name }}/{{ cni.template.rbac }}.j2" dest={{ kube_network_dir }}/{{ cni.template.rbac }}
+
+- name: "Copy {{ cni.name }} yml file"
+  template: src="{{ cni.name }}/{{ cni.template.ds }}.j2" dest={{ kube_network_dir }}/{{ cni.template.ds }}
+
+- name: "Check {{ cni.name }} cluster role already exists"
+  when: extra_auth.rbac is defined
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get clusterrole | grep {{ cni.name }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_role
+  ignore_errors: true
+
+- name: "Create {{ cni.name }} cluster role"
+  when: check_role|failed and extra_auth.rbac is defined
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            apply -f {{ kube_network_dir }}/{{ cni.template.rbac }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_role
+
+- name: "Check {{ cni.name }} daemonset is working"
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            get ds --all-namespaces | grep {{ cni.name }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_net
+  ignore_errors: true
+
+- name: "Create {{ cni.name }} network daemonset"
+  when: check_net|failed
+  shell: |
+    kubectl --kubeconfig={{ kubeadmin_config }} \
+            apply -f {{ kube_network_dir }}/{{ cni.template.ds }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true

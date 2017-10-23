@@ -60,5 +60,5 @@
     - apiserver.pem
     - ca-key.pem
     - ca.pem
-    - ca.srl
+    # - ca.srl
     - openssl.conf

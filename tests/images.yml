@@ -9,6 +9,6 @@
       repos: ""
       tag: "16.04"
   roles:
-    - { role: images, img: "{{ images.haproxy }}" }
-    - { role: images, img: "{{ images.keepalived }}", archive: true }
-    - { role: images, img: "{{ ubuntu }}", push: true }
+    - { role: common/images, img: "{{ images.haproxy }}" }
+    - { role: common/images, img: "{{ images.keepalived }}", archive: true }
+    - { role: common/images, img: "{{ ubuntu }}", push: true }

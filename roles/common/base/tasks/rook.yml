@@ -1,0 +1,17 @@
+---
+- name: "Install require"
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ceph-common
+    - ceph-fs-common
+
+- name: "Install rbd"
+  get_url:
+    url: https://raw.githubusercontent.com/ceph/ceph-docker/master/examples/kubernetes-coreos/rbd
+    dest: /bin/rbd
+    mode: 0775
+
+- name: "Start rbd"
+  command: "rbd"

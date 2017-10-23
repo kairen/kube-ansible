@@ -1,0 +1,11 @@
+{% for upstream_server in common_ntp_upstream_servers %}
+server {{ upstream_server }} iburst
+{% endfor %}
+
+discard average 3 minimum 2
+restrict -4 default kod nomodify notrap nopeer noquery limited
+restrict -6 default kod nomodify notrap nopeer noquery limited
+
+restrict 127.0.0.1
+
+driftfile  /var/lib/ntp/ntp.drift

@@ -1,0 +1,7 @@
+---
+- include_tasks: inc/_local.yml
+  when: inventory_hostname in groups['localhost']
+
+- include_tasks: inc/_upload.yml
+  when: inventory_hostname in groups['cluster']
+  become: yes

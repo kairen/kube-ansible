@@ -1,0 +1,3 @@
+---
+local_cert_dir: "{{ playbook_dir }}/pki/{{ kube_env }}/"
+cert_dir: /opt/cert/pki

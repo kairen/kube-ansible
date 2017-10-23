@@ -1,0 +1,6 @@
+---
+- name: Remove resolvconf on Debian system
+  apt: pkg=resolvconf state=absent
+
+- name: Ensure dns servers are configured in /etc/resolv.conf
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf

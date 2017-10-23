@@ -2,13 +2,14 @@
 
 # Kubenrtes version, only support 1.4.0+
 kube_version: 1.7.8
+kube_env: pprod
 
 # Network plugin implementation('flannel', 'calico', 'canal', 'weave', 'router')
-network: calico
+network: weave
 pod_network_cidr: "10.244.0.0/16"
 
 # flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8)
-cni_iface: ""
+cni_iface: "interface=ens3"
 
 # Kubernetes cluster network
 cluster_subnet: 10.96.0
@@ -24,7 +25,7 @@ lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
 # Highly Available configuration
 haproxy: true
-
+ceph: true
 keepalived: true
 keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
 keepalived_virtual_mask: 24
@@ -66,15 +67,15 @@ extra_auth:
 
 # Extra addons
 kube_dashboard: true # Kubenetes dasobhard console.
-kube_logging: false # EFK stack for Kubernetes
+kube_logging: true # EFK stack for Kubernetes
 kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
 
 # Ingress controller
 ingress: true
-ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
+ingress_type: traefik # 'nginx', 'haproxy', 'traefik'
 
 # Helm auto initialize
-helm_init: false
+helm_init: true
 
 kube_watch: false # Watch Kubernetes events to notify Slack channel.
 watch_vars:
@@ -98,3 +99,44 @@ registry_offline_url: "172.16.35.9:5000"
 repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"
+
+# All variables
+
+# System dir path
+systemd_dir: /lib/systemd/system
+system_env_dir: /etc/sysconfig
+dropin_dir: /usr/lib/systemd/system
+ceph_config_dir: /etc/ceph
+
+# Kubernetes component dir path
+cert_dir: /opt/cert/pki
+kube_etc_dir: /etc/kubernetes
+kube_manifest_dir: "{{ kube_etc_dir }}/manifests"
+kube_cert_dir: "{{ kube_etc_dir }}/pki"
+kube_addon_dir: "{{ kube_etc_dir }}/addon"
+kube_network_dir: "{{ kube_etc_dir }}/network"
+kubelet_config: "{{ kube_etc_dir }}/kubelet.conf"
+kubeadmin_config: "{{ kube_etc_dir }}/admin.conf"
+cni_etc_dir: "/etc/cni/net.d"
+kube_dashboard_cert_dir: "{{ cert_dir }}/dashboard-certs"
+haproxy_ingress_cert_dir: "{{ cert_dir }}/haproxy-ingress-certs"
+
+# TSL certificate dir path
+sa_key: "{{ kube_cert_dir }}/apiserver-key.pem"
+ca_cert: "{{ kube_cert_dir }}/ca.pem"
+ca_key: "{{ kube_cert_dir }}/ca-key.pem"
+api_cert: "{{ kube_cert_dir }}/apiserver.pem"
+admin_key: "{{ kube_cert_dir }}/admin-key.pem"
+admin_cert: "{{ kube_cert_dir }}/admin.pem"
+node_cert: "{{ kube_cert_dir }}/node.pem"
+node_key: "{{ kube_cert_dir }}/node-key.pem"
+
+# Etcd config dir path
+etcd_conf_dir: /etc/etcd
+etcd_data_dir: /var/lib/etcd
+etcd_ca_file: "{{ kube_cert_dir }}/ca.pem"
+etcd_cert_file: "{{ kube_cert_dir }}/etcd.pem"
+etcd_key_file: "{{ kube_cert_dir }}/etcd-key.pem"
+
+# HAProxy dir path
+haproxy_dir: /etc/haproxy

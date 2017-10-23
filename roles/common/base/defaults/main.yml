@@ -1,0 +1,13 @@
+---
+common_lang: 'en'
+common_locales:
+  - 'en_US.UTF-8'
+common_tzdata_area: 'Europe'
+common_tzdata_zone: 'Paris'
+
+common_ntp_upstream_servers:
+  - 0.europe.pool.ntp.org
+  - 1.europe.pool.ntp.org
+  - 2.europe.pool.ntp.org
+  - 3.europe.pool.ntp.org
+dns_nameservers: ['8.8.8.8', '8.8.4.4']
