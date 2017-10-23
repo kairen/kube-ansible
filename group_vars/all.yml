@@ -25,7 +25,7 @@ lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
 # Highly Available configuration
 haproxy: true
-
+ceph: true
 keepalived: true
 keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
 keepalived_virtual_mask: 24

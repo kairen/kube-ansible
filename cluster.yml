@@ -17,6 +17,7 @@
   roles:
     - { role: common/base, tags: base }
     - { role: common/docker, tags: docker }
+    - { role: kubernetes/storage/ceph, tags: ceph, when: ceph == 'true' }
 
 - hosts: masters
   become: yes
@@ -27,6 +28,7 @@
     - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
     - { role: kubernetes/addon, when: kube_dns, addon: "{{ addons.dns }}", tags: kube-dns }
     - { role: kubernetes/cni, tags: cni }
+    - { role: kubernetes/storage/ceph-k8s, tags: ceph-k8s, when: ceph == 'true' }
     - { role: kubernetes/addon, addon: "{{ addons.dashboard }}", tags: dashboard, when: kube_dashboard }
     - { role: kubernetes/addon, addon: "{{ addons.logging }}", tags: logging, when: kube_logging }
     - { role: kubernetes/addon, addon: "{{ addons.monitoring }}", tags: monitoring, when: kube_monitoring }
