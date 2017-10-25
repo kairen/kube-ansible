@@ -1,0 +1,72 @@
+stages:
+  - linter-check
+  - deploy-virtualbox
+  - deploy-libvirt
+  - deploy-openstack
+
+yaml-lint-check:
+  stage: linter-check
+  before_script:
+    - pip install -U pip
+    - pip install -U ansible-lint ansible
+  script:
+    - ansible-lint cluster.yml
+    - ansible-lint addons.yml
+    - ansible-lint reset.yml
+    - ansible-lint ceph-k8s.yml
+  only: [/^pr-.*$/]
+  tags:
+    - shell
+    - vagrant
+  allow_failure: true
+
+calico-vbox-ubuntu:
+  stage: deploy-virtualbox
+  script:
+    - ./reset-config
+    - ./setup-vagrant -m 2048 -n calico -f true
+    - vagrant destroy -f
+  only: [/^pr-.*$/]
+  tags:
+    - shell
+    - vagrant
+
+flannel-vbox-ubuntu:
+  stage: deploy-virtualbox
+  script:
+    - ./reset-config
+    - ./setup-vagrant -m 2048 -n flannel -f true
+    - vagrant destroy -f
+  only: [/^pr-.*$/]
+  tags:
+    - shell
+    - vagrant
+
+flannel-openstack-ubuntu:
+  stage: deploy-openstack
+  before_script:
+    - sudo apt-get update && sudo apt-get install -y software-properties-common git
+    - sudo apt-add-repository -y ppa:ansible/ansible
+    - sudo apt-get update && sudo apt-get install -y ansible
+  variables:
+    GROUP_VARS_PATH: "./group_vars/all.yml"
+    INVENTORY_PATH: "/home/gitlab-runner/inventory"
+    CNI_IFACE: "ens3"
+    CNI_PLUGIN: "flannel"
+  script:
+    - ./reset-config
+    - 'cp ${INVENTORY_PATH} ./'
+    - 'perl -i -pe "s/172.16.35.9/192.168.22.12/g" ${GROUP_VARS_PATH}'
+    - 'perl -i -pe "s/cni_iface:.*/cni_iface: ${CNI_IFACE}/g" ${GROUP_VARS_PATH}'
+    - 'perl -i -pe "s/network:.*/network: ${CNI_PLUGIN}/g" ${GROUP_VARS_PATH}'
+    - 'perl -i -pe "s/keepalived:.*/keepalived: false/g" ${GROUP_VARS_PATH}'
+    - ansible-playbook reset.yml
+    - ansible-playbook cluster.yml
+    - ansible-playbook addons.yml
+    - kubectl get node
+    - kubectl -n kube-system get po
+    - kubectl -n kube-system get svc
+  only: [/^pr-.*$/]
+  tags:
+    - shell
+    - openstack
