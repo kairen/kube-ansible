@@ -4,6 +4,9 @@ stages:
   - deploy-libvirt
   - deploy-openstack
 
+before_script:
+  - 'sudo rm -rf ~/VirtualBox\ VMs/*'
+
 yaml-lint-check:
   stage: linter-check
   before_script:
