@@ -7,59 +7,39 @@ stages:
 before_script:
   - 'sudo rm -rf ~/VirtualBox\ VMs/*'
 
-yaml-lint-check:
+# linter check template
+.linter_template: &linter_template
   stage: linter-check
   before_script:
-    - pip install -U pip
-    - pip install -U ansible-lint ansible
+    - sudo pip install -U pip
+    - sudo pip install -U ansible-lint
   script:
-    - ansible-lint cluster.yml
-    - ansible-lint addons.yml
-    - ansible-lint reset.yml
-    - ansible-lint ceph-k8s.yml
+    - 'ansible-lint ${FILE}'
   only: [/^pr-.*$/]
-  tags:
-    - shell
-    - vagrant
   allow_failure: true
+  tags:
+    - shell
 
-calico-vbox-ubuntu:
+# virtualbox template
+.vbox_template: &vbox_template
   stage: deploy-virtualbox
   script:
     - ./reset-config
-    - ./setup-vagrant -m 2048 -n calico -f true
+    - './setup-vagrant -m 2048 -n ${CNI_PLUGIN} -f true'
     - vagrant destroy -f
   only: [/^pr-.*$/]
   tags:
     - shell
     - vagrant
 
-flannel-vbox-ubuntu:
-  stage: deploy-virtualbox
-  script:
-    - ./reset-config
-    - ./setup-vagrant -m 2048 -n flannel -f true
-    - vagrant destroy -f
-  only: [/^pr-.*$/]
-  tags:
-    - shell
-    - vagrant
-
-flannel-openstack-ubuntu:
+# openstack template
+.os_template: &os_template
   stage: deploy-openstack
-  before_script:
-    - sudo apt-get update && sudo apt-get install -y software-properties-common git
-    - sudo apt-add-repository -y ppa:ansible/ansible
-    - sudo apt-get update && sudo apt-get install -y ansible
-  variables:
-    GROUP_VARS_PATH: "./group_vars/all.yml"
-    INVENTORY_PATH: "/home/gitlab-runner/inventory"
-    CNI_IFACE: "ens3"
-    CNI_PLUGIN: "flannel"
   script:
     - ./reset-config
     - 'cp ${INVENTORY_PATH} ./'
-    - 'perl -i -pe "s/172.16.35.9/192.168.22.12/g" ${GROUP_VARS_PATH}'
+    - export MASTER_IP=$(ip route get 8.8.8.8 | awk '{print $NF; exit}')
+    - 'perl -i -pe "s/172.16.35.9/${MASTER_IP}/g" ${GROUP_VARS_PATH}'
     - 'perl -i -pe "s/cni_iface:.*/cni_iface: ${CNI_IFACE}/g" ${GROUP_VARS_PATH}'
     - 'perl -i -pe "s/network:.*/network: ${CNI_PLUGIN}/g" ${GROUP_VARS_PATH}'
     - 'perl -i -pe "s/keepalived:.*/keepalived: false/g" ${GROUP_VARS_PATH}'
@@ -70,6 +50,68 @@ flannel-openstack-ubuntu:
     - kubectl -n kube-system get po
     - kubectl -n kube-system get svc
   only: [/^pr-.*$/]
+
+# linter check
+linter-cluster-yaml:
+  variables:
+    FILE: cluster.yml
+  <<: *linter_template
+
+linter-addons-yaml:
+  variables:
+    FILE: addons.yml
+  <<: *linter_template
+
+linter-reset-yaml:
+  variables:
+    FILE: reset.yml
+  <<: *linter_template
+
+linter-eph-k8s-yaml:
+  variables:
+    FILE: ceph-k8s.yml
+  <<: *linter_template
+
+# deploy vbox
+vbox-ubuntu-calico:
+  variables:
+    CNI_PLUGIN: flannel
+  <<: *vbox_template
+
+vbox-ubuntu-flannel:
+  when: manual
+  variables:
+    CNI_PLUGIN: flannel
+  <<: *vbox_template
+
+# deploy openstack
+openstack-ubuntu-flannel:
+  before_script:
+    - sudo apt-get update && sudo apt-get install -y software-properties-common git
+    - sudo apt-add-repository -y ppa:ansible/ansible
+    - sudo apt-get update && sudo apt-get install -y ansible
+  variables:
+    GROUP_VARS_PATH: "./group_vars/all.yml"
+    INVENTORY_PATH: "/home/gitlab-runner/inventory"
+    CNI_IFACE: "ens3"
+    CNI_PLUGIN: "flannel"
+  <<: *os_template
   tags:
     - shell
+    - ubuntu
+    - openstack
+
+openstack-centos-flannel:
+  before_script:
+    - sudo yum install -y epel-release git
+    - sudo yum install -y ansible
+  variables:
+    GROUP_VARS_PATH: "./group_vars/all.yml"
+    INVENTORY_PATH: "/home/gitlab-runner/inventory"
+    CNI_IFACE: "eth0"
+    CNI_PLUGIN: "flannel"
+  <<: *os_template
+  tags:
+    - shell
+    - centos
     - openstack
