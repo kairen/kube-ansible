@@ -1,7 +1,7 @@
 ---
 
-# Kubenrtes version, only support 1.4.0+
-kube_version: 1.7.8
+# Kubenrtes version, only support 1.7.0+
+kube_version: 1.7.9
 
 # Network plugin implementation('flannel', 'calico', 'canal', 'weave', 'router')
 network: calico
