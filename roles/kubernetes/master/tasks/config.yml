@@ -48,17 +48,5 @@
 
 - name: Copy SSL certificate from ansible host
   copy:
-    src: "{{ cert_dir }}/{{ item }}"
-    dest: "{{ kube_etc_dir }}/pki/{{ item }}"
-    remote_src: yes
-  with_items:
-    - admin.csr
-    - admin-key.pem
-    - admin.pem
-    - apiserver.csr
-    - apiserver-key.pem
-    - apiserver.pem
-    - ca-key.pem
-    - ca.pem
-    - ca.srl
-    - openssl.conf
+    src: "{{ cert_dir }}"
+    dest: "{{ kube_etc_dir }}"
