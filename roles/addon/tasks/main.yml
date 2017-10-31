@@ -12,12 +12,12 @@
   with_items: "{{ addon['files'] }}"
 
 - name: Config Kubernetes dashboard
-  when: kube_dashboard
+  when: kube_dashboard and addon.name == 'kube-dashboard'
   include: config-dashboard.yml
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: Config HAProxy ingress 
-  when: ingress and ingress_type == 'haproxy'
+- name: Config HAProxy ingress
+  when: ingress and ingress_type == 'haproxy' and addon.name == 'haproxy-ingress'
   include: config-haproxy-ing.yml
   delegate_to: "{{ groups['masters'][0] }}"
 
