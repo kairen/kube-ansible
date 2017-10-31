@@ -31,7 +31,7 @@
 - name: "Check {{ cni.name }} cluster role already exists"
   when: extra_auth.rbac is defined
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
             get clusterrole | grep {{ cni.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -41,7 +41,7 @@
 - name: "Create {{ cni.name }} cluster role"
   when: check_role|failed and extra_auth.rbac is defined
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
             apply -f {{ kube_network_dir }}/{{ cni.template.rbac }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -49,7 +49,7 @@
 
 - name: "Check {{ cni.name }} daemonset is working"
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
             get ds --all-namespaces | grep {{ cni.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -59,7 +59,7 @@
 - name: "Create {{ cni.name }} network daemonset"
   when: check_net|failed
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
             apply -f {{ kube_network_dir }}/{{ cni.template.ds }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
