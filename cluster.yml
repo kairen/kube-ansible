@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   roles:
-    - { role: sslcert, tags: sslcert }
+    - { role: cert, tags: sslcert }
 
 - hosts: etcd
   become: yes
@@ -24,14 +24,9 @@
     - { role: kubernetes/master, tags: master }
     - { role: addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
     - { role: addon, when: kube_dns, addon: "{{ addons.dns }}", tags: kube-dns }
+    - { role: cni, tags: cni }
 
 - hosts: nodes
   become: yes
   roles:
     - { role: kubernetes/node, tags: node }
-
-- hosts: masters
-  gather_facts: no
-  become: yes
-  roles:
-    - { role: cni, tags: cni }

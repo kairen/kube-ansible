@@ -15,7 +15,7 @@
 
 - name: Check HAProxy ingress secret already exists
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl --kubeconfig={{ kubeadmin_config }} \
             get secret -n kube-system | grep tls-secret
   run_once: true
   register: check_secret
@@ -24,7 +24,7 @@
 - name: Create HAProxy ingress secret
   when: check_secret|failed
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl --kubeconfig={{ kubeadmin_config }} \
             create secret tls tls-secret \
             --cert={{ haproxy_ingress_cert_dir }}/tls.crt \
             --key={{ haproxy_ingress_cert_dir }}/tls.key -n kube-system

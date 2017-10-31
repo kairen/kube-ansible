@@ -9,8 +9,8 @@
   file: path=/var/lib/kubelet state=directory
 
 - name: Copy kubelet systemd service file
-  copy:
-    src: kubelet.service
+  template:
+    src: "kubelet.service.j2"
     dest: "{{ systemd_dir }}/kubelet.service"
     owner: root
     group: root

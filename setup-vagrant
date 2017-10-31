@@ -14,6 +14,7 @@ set -eu
 : ${CNI_PLUGIN:="calico"}
 : ${PROVIDER:="virtualbox"}
 : ${OS_IMAGE:="ubuntu16"}
+: ${FORCE:="false"}
 
 function usage() {
   echo -e "Usage : setup-vagrant [options]\n"
@@ -25,6 +26,7 @@ function usage() {
   echo " -o|--os-image    Virtual machine operation system(ubuntu16, centos7)."
   echo " -i|--interface   Network bind interface."
   echo " -n|--network     Container Network plugin."
+  echo " -f|--force       Force deployment."
   exit 1
 }
 
@@ -40,6 +42,7 @@ while [ ${#} -gt 0 ]; do
       -o|--os-image) OS_IMAGE=${2}; shift;;
       -p|--provider) PROVIDER=${2}; shift;;
       -n|--network) CNI_PLUGIN=${2}; shift;;
+      -f|--force) FORCE=${2}; shift;;
       *) usage; break;;
   esac
   shift
@@ -49,7 +52,9 @@ echo "Cluster Size: ${MASTERS} master, ${NODES} worker."
 echo "     VM Size: ${CPU} vCPU, ${MEMORY} MB"
 echo "     VM Info: ${OS_IMAGE}, ${PROVIDER}"
 echo "         CNI: ${CNI_PLUGIN}"
-read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
+if [ ${FORCE} == "false" ]; then
+  read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
+fi
 
 vagrant_config "master_count" ${MASTERS}
 vagrant_config "node_count" ${NODES}
@@ -69,8 +74,7 @@ elif [[ ${CNI_PLUGIN} == 'weave' || ${CNI_PLUGIN} == 'router' ]]; then
   role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
 fi
 
-role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_DEFAULT_PATH}
-role_config "node_interface: \"\"" "node_interface: ${ETH}" ${NODE_DEFAULT_PATH}
+role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_GROUP_VARS_PATH}
 role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: ${ETH}" ${GROUP_VARS_PATH}
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 role_config "HOSTS=\".*\"" "HOSTS=\"${HOSTS}\"" ${INITIAL_SCRIPT_PATH}

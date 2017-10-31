@@ -1,12 +1,5 @@
 ---
 
-- name: Create sigil component symlinks
-  file:
-    src: "{{ sigil.dir }}/{{ sigil.name }}"
-    dest: "/usr/bin/{{ sigil.name }}"
-    state: link
-    force: yes
-
 - name: Create and copy generator config file
   include: generator.yml
 

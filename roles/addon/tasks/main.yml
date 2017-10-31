@@ -12,18 +12,18 @@
   with_items: "{{ addon['files'] }}"
 
 - name: Config Kubernetes dashboard
-  when: kube_dashboard
+  when: kube_dashboard and addon.name == 'kube-dashboard'
   include: config-dashboard.yml
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: Config HAProxy ingress 
-  when: ingress and ingress_type == 'haproxy'
+- name: Config HAProxy ingress
+  when: ingress and ingress_type == 'haproxy' and addon.name == 'haproxy-ingress'
   include: config-haproxy-ing.yml
   delegate_to: "{{ groups['masters'][0] }}"
 
 - name: "Check {{ addon.name }} resource already exists"
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl --kubeconfig={{ kubeadmin_config }} \
             get {{ item.resource }} -n kube-system  | grep {{ item.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -36,7 +36,7 @@
   vars:
     file: "{{ item.item }}"
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl --kubeconfig={{ kubeadmin_config }} \
             apply -f {{ kube_addon_dir }}/{{ addon.name }}/{{ file.yaml }}
   delegate_to: "{{ groups['masters'][0] }}"
   register: create_result

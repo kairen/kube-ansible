@@ -2,8 +2,9 @@
 # Download binary package from source
 
 download_tmp: /tmp
+bin_dir: /usr/local/bin
 
-pkg_bases:
+bases:
   kube:
     url: "https://storage.googleapis.com"
     version: "{{ kube_version }}"
@@ -22,49 +23,79 @@ pkg_bases:
   helm:
     url: "https://kubernetes-helm.storage.googleapis.com"
     version: 2.6.2
+  cfssl:
+    url: "https://pkg.cfssl.org"
+    version: 1.2
+  sigil:
+    url: "https://github.com"
+    version: 0.4.0
 
 downloads:
   kube:
     name: kube
     description: "Kubernetes"
     dir: /opt/kube
-    url: "{{ pkg_bases.kube.url }}/kubernetes-release/release/v{{ pkg_bases.kube.version }}/bin/linux/amd64"
-    items: [ kubelet, kubectl ]
+    url: "{{ bases.kube.url }}/kubernetes-release/release/v{{ bases.kube.version }}/bin/linux/amd64"
+    items:
+      - { file: 'kubelet', symlink: 'kubelet' }
+      - { file: 'kubectl', symlink: 'kubectl' }
   etcd:
     name: etcd
     description: "Etcd key/value store"
     dir: /opt/etcd
-    url: "{{ pkg_bases.etcd.url }}/coreos/etcd/releases/download/v{{ pkg_bases.etcd.version }}"
+    url: "{{ bases.etcd.url }}/coreos/etcd/releases/download/v{{ bases.etcd.version }}"
     unarchive:
       extra_opt: "['--strip-components=1']"
-    items: [ "etcd-v{{ pkg_bases.etcd.version }}-linux-amd64.tar.gz" ]
+    items:
+      - { file: "etcd-v{{ bases.etcd.version }}-linux-amd64.tar.gz" }
   docker:
     name: docker
     description: "Docker engine"
     dir: /opt/docker
-    url: "{{ pkg_bases.docker.url }}/builds/Linux/x86_64"
+    url: "{{ bases.docker.url }}/builds/Linux/x86_64"
     unarchive:
       extra_opt: "['--strip-components=1']"
-    items: [ "docker-{{ pkg_bases.docker.version }}.tgz" ]
+    items:
+      - { file: "docker-{{ bases.docker.version }}.tgz" }
   cni:
     name: cni
     description: "Container network interface"
     dir: /opt/cni/bin
-    url: "{{ pkg_bases.cni.url }}/containernetworking/cni/releases/download/v{{ pkg_bases.cni.version }}"
-    items: [ "cni-amd64-v{{ pkg_bases.cni.version }}.tgz" ]
+    url: "{{ bases.cni.url }}/containernetworking/cni/releases/download/v{{ bases.cni.version }}"
     unarchive:
       extra_opt: "['--strip-components=0']"
+    items:
+      - { file: "cni-amd64-v{{ bases.cni.version }}.tgz" }
   calicoctl:
     name: calicoctl
     description: "Calicoctl network plugin"
     dir: /opt/calico
-    url: "{{ pkg_bases.calicoctl.url }}/projectcalico/calicoctl/releases/download/v{{ pkg_bases.calicoctl.version }}"
-    items: [ calicoctl ]
+    url: "{{ bases.calicoctl.url }}/projectcalico/calicoctl/releases/download/v{{ bases.calicoctl.version }}"
+    items:
+      - { file: 'calicoctl', symlink: 'calicoctl' }
   helm:
     name: helm
     description: "Kubernetes package manager"
     dir: /opt/helm
-    url: "{{ pkg_bases.helm.url }}"
+    url: "{{ bases.helm.url }}"
     unarchive:
       extra_opt: "['--strip-components=1']"
-    items: [ "helm-v{{ pkg_bases.helm.version }}-linux-amd64.tar.gz" ]
+    items:
+      - { file: "helm-v{{ bases.helm.version }}-linux-amd64.tar.gz", symlink: helm  }
+  cfssl:
+    name: cfssl
+    description: "Cloudflare's PKI and TLS toolkit"
+    dir: /opt/cfssl
+    url: "{{ bases.cfssl.url }}/R{{ bases.cfssl.version }}"
+    items:
+      - { file: 'cfssl_linux-amd64', symlink: 'cfssl' }
+      - { file: 'cfssljson_linux-amd64', symlink: 'cfssljson' }
+  sigil:
+    name: sigil
+    description: "Sigil tool"
+    dir: /opt/sigil
+    url: "{{ bases.sigil.url }}/gliderlabs/sigil/releases/download/v{{ bases.sigil.version }}/"
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+    items:
+      - { file: "sigil_{{ bases.sigil.version }}_Linux_x86_64.tgz", symlink: 'sigil' }

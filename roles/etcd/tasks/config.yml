@@ -18,7 +18,7 @@
 - name: Create Etcd symlinks
   file:
     src: "{{ downloads.etcd.dir }}/{{ item }}"
-    dest: "/usr/bin/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item }}"
     state: link
     force: yes
   with_items: [ etcd, etcdctl ]

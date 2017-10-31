@@ -24,7 +24,7 @@
 
 - name: Check dashboard secret already exists
   shell: |
-    kubectl --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl --kubeconfig={{ kubeadmin_config }} \
             get secrets -n kube-system | grep kubernetes-dashboard-certs
   run_once: true
   register: check_secret
@@ -33,7 +33,7 @@
 - name: Create Kubernetes dashboard secret
   when: check_secret|failed
   shell: |
-    kubectl create --kubeconfig={{ kubeadmin_config }} \
+    /usr/local/bin/kubectl create --kubeconfig={{ kubeadmin_config }} \
                   secret generic kubernetes-dashboard-certs \
                   --from-file={{ kube_dashboard_cert_dir }} -n kube-system
   register: secret_result

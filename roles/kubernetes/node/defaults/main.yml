@@ -1,5 +1,0 @@
----
-    
-node_interface: ""
-node_ip_address: "{% if node_interface != '' %}{{ hostvars[inventory_hostname]['ansible_' + node_interface].ipv4.address }}
-{%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"

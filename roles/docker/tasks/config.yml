@@ -19,7 +19,7 @@
 - name: Create Docker component symlinks
   file:
     src: "{{ downloads.docker.dir }}/{{ item }}"
-    dest: "/usr/bin/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item }}"
     state: link
     force: yes
   with_items: "{{ docker_bins.stdout_lines|list }}"
