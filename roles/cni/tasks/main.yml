@@ -15,23 +15,21 @@
     cni: "{{ vars[network] }}"
 
 - name: Create Kubernetes addon directory
-  file: path={{ kube_network_dir }} state=directory
+  file: path={{ kubernetes.dir.network }} state=directory
 
 - name: "Config {{ cni.name }} network"
   when: network == 'flannel'
-  include: config-flannel.yml
+  include_tasks: config-flannel.yml
 
 - name: "Copy {{ cni.name }} RBAC yml file"
-  when: extra_auth.rbac is defined
-  template: src="{{ cni.name }}/{{ cni.template.rbac }}.j2" dest={{ kube_network_dir }}/{{ cni.template.rbac }}
+  template: src="{{ cni.name }}/{{ cni.template.rbac }}.j2" dest={{ kubernetes.dir.network }}/{{ cni.template.rbac }}
 
 - name: "Copy {{ cni.name }} yml file"
-  template: src="{{ cni.name }}/{{ cni.template.ds }}.j2" dest={{ kube_network_dir }}/{{ cni.template.ds }}
+  template: src="{{ cni.name }}/{{ cni.template.ds }}.j2" dest={{ kubernetes.dir.network }}/{{ cni.template.ds }}
 
 - name: "Check {{ cni.name }} cluster role already exists"
-  when: extra_auth.rbac is defined
   shell: |
-    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
             get clusterrole | grep {{ cni.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -39,17 +37,17 @@
   ignore_errors: true
 
 - name: "Create {{ cni.name }} cluster role"
-  when: check_role|failed and extra_auth.rbac is defined
+  when: check_role|failed
   shell: |
-    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
-            apply -f {{ kube_network_dir }}/{{ cni.template.rbac }}
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+            apply -f {{ kubernetes.dir.network }}/{{ cni.template.rbac }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
   register: create_role
 
 - name: "Check {{ cni.name }} daemonset is working"
   shell: |
-    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
             get ds --all-namespaces | grep {{ cni.name }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -59,7 +57,7 @@
 - name: "Create {{ cni.name }} network daemonset"
   when: check_net|failed
   shell: |
-    {{ bin_dir }}/kubectl --kubeconfig={{ kubeadmin_config }} \
-            apply -f {{ kube_network_dir }}/{{ cni.template.ds }}
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+            apply -f {{ kubernetes.dir.network }}/{{ cni.template.ds }}
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

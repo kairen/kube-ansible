@@ -1,0 +1,13 @@
+---
+
+- name: Recreate docker0 interface
+  command: ip link delete docker0
+  ignore_errors: True
+
+- name: Enable and restart Docker engine
+  systemd:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  register: started_docker

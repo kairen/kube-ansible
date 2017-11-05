@@ -3,15 +3,15 @@ Description=Etcd Service
 After=network.target
 
 [Service]
-EnvironmentFile=-{{ etcd_conf_dir }}/etcd.conf
+EnvironmentFile=-{{ etcd.dir.etc }}/etcd.conf
 Type=notify
 User=etcd
 PermissionsStartOnly=true
-ExecStart={{ bin_dir }}/etcd
-Restart=on-failure
+ExecStart={{ dir.bin }}/etcd
+Restart={{ systemd.restart }}
 RestartSec=10
 LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
-Alias=etcd2.service
+Alias=etcd3.service

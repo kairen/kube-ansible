@@ -1,0 +1,19 @@
+---
+
+- name: Add Docker systemd service
+  include_tasks: config-systemd.yml
+
+- name: Add Docker registrys
+  include_tasks: config-registry.yml
+
+- name: Enable and start Docker socket
+  when: change_system_service|succeeded
+  systemd:
+    name: docker.socket
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  register: docker_socket_started
+  notify:
+    - Recreate docker0 interface
+    - Enable and restart Docker engine

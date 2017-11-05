@@ -6,3 +6,5 @@ tmp/*
 hosts
 *.ovpn
 inventory
+.keys/
+.venv/

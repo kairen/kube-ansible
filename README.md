@@ -3,7 +3,7 @@ Ansible playbooks for quickly building Kubernetes and Ceph cluster.
 
 Feature list:
 - [x] Vagrant VirtualBox and Libvirt.
-- [x] Kubernetes HA cluster setup(v1.5.0+).
+- [x] Kubernetes HA cluster setup(v1.7.0+).
 - [x] Kubernetes addons.
 - [x] Ceph on Kubernetes(v10.2.0+).
 - [x] Kubernetes Ceph RBD/FS volume.
@@ -55,13 +55,10 @@ For machine example:
 
 Add the system information gathered above into a file called `inventory`. For inventory example:
 ```
-[etcd]
+[etcds]
 172.16.35.13
 
 [masters]
-172.16.35.13
-
-[sslhost]
 172.16.35.13
 
 [nodes]
@@ -69,16 +66,15 @@ Add the system information gathered above into a file called `inventory`. For in
 172.16.35.11
 172.16.35.12
 
-[cluster:children]
+[kube-cluster:children]
 masters
 nodes
 ```
 
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
 ```yml
-kube_version: 1.7.6
-network: flannel
-
+kube_version: 1.8.1
+network: calico
 lb_vip_address: 172.16.35.9
 ```
 

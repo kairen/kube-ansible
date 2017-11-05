@@ -5,9 +5,9 @@
   gather_facts: yes
   become: yes
   roles:
-  - { role: addon, addon: "{{ addons.dashboard }}", tags: dashboard, when: kube_dashboard }
-  - { role: addon, addon: "{{ addons.logging }}", tags: logging, when: kube_logging }
-  - { role: addon, addon: "{{ addons.monitoring }}", tags: monitoring, when: kube_monitoring }
-  - { role: addon, addon: "{{ addons.default_backend }}", tags: default_backend, when: ingress and (ingress_type == 'haproxy' or ingress_type == 'nginx') }
-  - { role: addon, addon: "{{ addons.ingress[ingress_type] }}", tags: ingress, when: ingress }
-  - { role: addon, addon: "{{ addons.watch }}", tags: watch, when: kube_watch }
+  - { role: kubernetes/addon, addon: "{{ addons.dashboard }}", tags: dashboard, when: kube_dashboard }
+  - { role: kubernetes/addon, addon: "{{ addons.logging }}", tags: logging, when: kube_logging }
+  - { role: kubernetes/addon, addon: "{{ addons.monitoring }}", tags: monitoring, when: kube_monitoring }
+  - { role: kubernetes/addon, addon: "{{ addons.default_backend }}", tags: default_backend, when: ingress and (ingress_type == 'haproxy' or ingress_type == 'nginx') }
+  - { role: kubernetes/addon, addon: "{{ addons.ingress[ingress_type] }}", tags: ingress, when: ingress }
+  - { role: kubernetes/addon, addon: "{{ addons.watch }}", tags: watch, when: kube_watch }

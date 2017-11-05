@@ -1,0 +1,61 @@
+---
+
+- name: Stop all component systemd service
+  systemd: name={{ item }} state=stopped enabled=no
+  with_items:
+    - kubelet.service
+    - docker.service
+    - docker.socket
+  ignore_errors: True
+  register: stop_component
+
+- name: Delete all systemd service file
+  file: path="{{ systemd.dir.service }}/{{ item }}" state=absent
+  with_items:
+    - kubelet.service
+    - docker.service
+    - docker.socket
+  ignore_errors: True
+
+- name: Find all kubelet mount volume
+  when: stop_component
+  shell: "df | grep -o '/var/lib/kubelet.*'"
+  ignore_errors: True
+  register: mounts
+
+- name: Unmounted all kubelet volume
+  when: mounts
+  mount: name={{ item }} state=unmounted
+  with_items: "{{ mounts.stdout_lines|list }}"
+  ignore_errors: True
+
+- name: Delete all component data directory
+  when: stop_component
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ kubernetes.dir.etc }}"
+    - "{{ kubernetes.dir.cni }}"
+    - "{{ kubernetes.dir.cni_bin }}"
+    - "{{ ansible_env.HOME }}/.kube"
+    - "{{ ansible_env.HOME }}/.helm"
+    - "{{ downloads.docker.dir }}"
+    - "{{ downloads.kubelet.dir }}"
+    - "{{ docker.dir.data }}"
+  ignore_errors: True
+
+- name: Delete interfaces for Kubernetes
+  when: stop_component
+  command: "ip link delete {{ item }}"
+  with_items:
+    - "docker0"
+    - "flannel.1"
+    - "weave"
+    - "cni0"
+    - "tunl0"
+    - "kube-bridge"
+  ignore_errors: True
+
+- name: IP-in-IP tunnel mod delete
+  when: stop_component
+  command: "modprobe -r ipip"
+  ignore_errors: True

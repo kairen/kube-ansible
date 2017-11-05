@@ -27,7 +27,7 @@ data:
             "type": "k8s"
         },
         "kubernetes": {
-            "kubeconfig": "{{ kubeadmin_config }}"
+            "kubeconfig": "{{ kubernetes.config.admin }}"
         }
     }
 
@@ -89,7 +89,7 @@ spec:
             - name: K8S_API_ENDPOINT
               value: "{{ lb_api_url }}"
             - name: KUBECONFIG
-              value: "{{ kubeadmin_config }}"
+              value: "{{ kubernetes.config.admin }}"
             - name: NODENAME
               valueFrom:
                 fieldRef:
@@ -136,7 +136,7 @@ spec:
           - "--ip-masq"
           - "--kube-subnet-mgr"
           - "--kube-api-url={{ lb_api_url }}"
-          - "--kubeconfig-file={{ kubeadmin_config }}"
+          - "--kubeconfig-file={{ kubernetes.config.admin }}"
           securityContext:
             privileged: true
           env:

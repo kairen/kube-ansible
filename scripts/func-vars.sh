@@ -7,7 +7,7 @@
 GROUP_VARS_PATH="./group_vars/all.yml"
 MASTERS_GROUP_VARS_PATH="./group_vars/masters.yml"
 FLANNEL_DEFAULT_PATH="./roles/network/flannel/defaults/main.yml"
-ETCD_GROUP_VARS_PATH="./group_vars/etcd.yml"
+ETCD_GROUP_VARS_PATH="./group_vars/all.yml"
 NODE_DEFAULT_PATH="./roles/kubernetes/node/defaults/main.yml"
 VIP_DEFAULT_PATH="./roles/kubernetes/ha/defaults/main.yml"
 INITIAL_SCRIPT_PATH="./scripts/initial.sh"
@@ -33,11 +33,11 @@ function set_inventory() {
   local masters="${SUBNET}.[$((${NET_COUNT}+${NODE_COUNT})):$((${NET_COUNT}+${TOTAL}-1))]"
   local master="${SUBNET}.$((${NET_COUNT}+${NODE_COUNT}+${MASTER_COUNT}-1))"
   rm -f inventory
-  for group in "etcd" "masters" "sslhost" "nodes" "cluster:children"; do
+  for group in "etcds" "masters" "nodes" "kube-cluster:children"; do
     echo "[${group}]" >> inventory
     if [ ${group} == "nodes" ]; then
       echo -e "${nodes}\n" >> inventory
-    elif [ ${group} == "cluster:children" ]; then
+    elif [ ${group} == "kube-cluster:children" ]; then
       echo -e "masters\nnodes" >> inventory
     else
       echo -e "${masters}\n" >> inventory

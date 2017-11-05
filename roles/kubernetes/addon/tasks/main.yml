@@ -1,0 +1,47 @@
+---
+
+- name: Create Kubernetes addon directory
+  file: path="{{ kubernetes.dir.addon }}/{{ addon.name }}" state=directory
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: "Copy {{ addon.name }} yml files"
+  template:
+    src: "{{ addon.name }}/{{ item.yaml }}.j2"
+    dest: "{{ kubernetes.dir.addon }}/{{ addon.name }}/{{ item.yaml }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  with_items: "{{ addon['files'] }}"
+
+- name: Config Kubernetes dashboard
+  when: kube_dashboard and addon.name == 'kube-dashboard'
+  include_tasks: config-dashboard.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: Config HAProxy ingress
+  when: ingress and ingress_type == 'haproxy' and addon.name == 'haproxy-ingress'
+  include_tasks: config-haproxy-ing.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+
+- name: "Check {{ addon.name }} resource already exists"
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+            get {{ item.resource }} -n kube-system  | grep {{ item.name }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_res
+  ignore_errors: true
+  with_items: "{{ addon['files'] }}"
+
+- name: "Create {{ addon.name }} resources"
+  when: item.failed
+  vars:
+    file: "{{ item.item }}"
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+            apply -f {{ kubernetes.dir.addon }}/{{ addon.name }}/{{ file.yaml }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  register: create_result
+  until: create_result.rc == 0
+  retries: 5
+  delay: 2
+  ignore_errors: true
+  with_items: "{{ check_res['results'] }}"

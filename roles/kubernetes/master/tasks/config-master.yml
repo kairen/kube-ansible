@@ -1,0 +1,53 @@
+---
+
+- name: Create Kubernetes etc directory
+  file: path={{ kubernetes.dir.etc }} state=directory
+
+- name: Create Kubernetes manifest directory
+  file:
+    path: "{{ kubernetes.dir.manifest }}"
+    state: directory
+
+- name: Create Kubernetes config home directory
+  file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+
+- name: Copy Kubernetes core componet manifest yaml files
+  template:
+    src: "yaml/{{ item }}.j2"
+    dest: "{{ kubernetes.dir.manifest }}/{{ item }}"
+  with_items:
+    - apiserver.yml
+    - manager.yml
+    - scheduler.yml
+  register: copy_core_yaml
+
+- name: Generate encryption secret key
+  when: copy_core_yaml
+  shell: "head -c 32 /dev/urandom | base64"
+  register: gen_secret
+
+- name: Set secret key from gen_secret var
+  when: gen_secret
+  set_fact:
+    secret_key: "{{ gen_secret.stdout }}"
+
+- name: Copy Kubernetes feature gate yaml files
+  template:
+    src: "yaml/{{ item.file }}.j2"
+    dest: "{{ item.path }}"
+  with_items:
+    - { file: audit-policy.yml, path: "{{ kubernetes.polices.audit }}" }
+    - { file: encryption.yml, path: "{{ kubernetes.polices.encryption }}" }
+
+- name: Copy Kubernetes admin config into home directory
+  template:
+    src: "{{ kubernetes.config.admin }}"
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+
+- name: Copy helmrc file
+  when: helm_init
+  template:
+    src: helmrc.j2
+    dest: "{{ ansible_env.HOME }}"

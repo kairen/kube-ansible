@@ -1,6 +1,6 @@
 ---
 dependencies:
-  - { role: common }
-  - { role: packages, pkg: "{{ downloads.kube }}" }
-  - { role: packages, pkg: "{{ downloads.cni }}" }
-  - { role: images, img: "{{ images.pod_infra }}" }
+  - { role: commons/os-check }
+  - { role: commons/packages, pkg: "{{ downloads.kubelet }}" }
+  - { role: commons/packages, pkg: "{{ downloads.cni }}" }
+  - { role: commons/container-images, img: "{{ images.pod_infra }}" }

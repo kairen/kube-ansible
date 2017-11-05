@@ -1,11 +1,11 @@
 ---
 
-# Kubenrtes version, only support 1.7.0+
-kube_version: 1.7.9
+# Kubenrtes version, only support 1.8.0+
+kube_version: 1.8.2
 
 # Network plugin implementation('flannel', 'calico', 'canal', 'weave', 'router')
 network: calico
-pod_network_cidr: "10.244.0.0/16"
+pod_network_cidr: 10.244.0.0/16
 
 # flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8)
 cni_iface: ""
@@ -27,7 +27,6 @@ haproxy: true
 
 keepalived: true
 keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
-keepalived_virtual_mask: 24
 
 # Core addons (Strongly recommend)
 kube_dns: true
@@ -38,31 +37,26 @@ kube_proxy: true
 kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
 
 # Etcd variable
+etcd_initial_token: etcd-k8s-cluster
 etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
-etcd_peer_url_scheme: http # http / https
+etcd_iface: ""
 
 # A list of insecure registrys you might need to define
 insecure_registrys:
+# - "172.16.35.9:5000"
+
+add_registry:
 # - "gcr.io"
 
-# Extra authenticating
+# Kubernetes authenticating
+bootstrap_token: b96cee11d16de85256d63efd2e18e7d8
 extra_auth:
   basic:
     accounts:
     - 'p@ssw0rd,admin,admin'
-  # rbac:
-  #   rules:
-  # abac:
-  #   policies:
-  #   - '{"user":"admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kube-admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kube-node", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"scheduler", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}'
   # token:
   #   values:
-  #   - '0fdd1a8875ec,admin,admin'
+  #   - "0fdd1a8875ec,admin,admin"
 
 # Extra addons
 kube_dashboard: true # Kubenetes dasobhard console.

@@ -74,7 +74,7 @@ elif [[ ${CNI_PLUGIN} == 'weave' || ${CNI_PLUGIN} == 'router' ]]; then
   role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
 fi
 
-role_config "etcd_interface: \"\"" "etcd_interface: ${ETH}" ${ETCD_GROUP_VARS_PATH}
+role_config "etcd_iface: \"\"" "etcd_iface: ${ETH}" ${ETCD_GROUP_VARS_PATH}
 role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: ${ETH}" ${GROUP_VARS_PATH}
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 role_config "HOSTS=\".*\"" "HOSTS=\"${HOSTS}\"" ${INITIAL_SCRIPT_PATH}

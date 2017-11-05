@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kube-proxy
+  labels:
+    k8s-app: kube-proxy
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: kube-proxy
+  templateGeneration: 1
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-proxy
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      serviceAccountName: kube-proxy
+      containers:
+      - name: kube-proxy-amd64
+        image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
+        command:
+        - kube-proxy
+        - --v=0
+        - --logtostderr=true
+        - --kubeconfig=/run/kube-proxy.conf
+        - --cluster-cidr={{ pod_network_cidr }}
+        - --proxy-mode={{ kube_proxy_mode }}
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/run/dbus
+          name: dbus
+        - mountPath: /run/kube-proxy.conf
+          name: kubeconfig
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/run/dbus
+          type: DirectoryOrCreate
+        name: dbus
+      - hostPath:
+          path: /etc/kubernetes/kube-proxy.conf
+          type: FileOrCreate
+        name: kubeconfig

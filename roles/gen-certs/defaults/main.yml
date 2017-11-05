@@ -1,0 +1,16 @@
+---
+
+etcd_hosts: "{{ etcd_domain_name }},{% for node in groups['etcds'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
+master_hosts: "{{ lb_vip_address }},{% for node in groups['masters'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
+apiserver_hosts: "{{ kubernetes_service_ip }},{{ master_hosts }},127.0.0.1,kubernetes.default"
+ca_config: "{{ dir.gen_ssl }}/ca-config.json"
+key:
+  algo: rsa
+  size: 2048
+info:
+  country: TW
+  state: Taipei
+  locality: "Taipei city"
+  org_uit: Kubernetes-ansible
+  expiry: 87600h
+  profile: kubernetes

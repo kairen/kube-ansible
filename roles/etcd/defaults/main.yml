@@ -1,0 +1,17 @@
+---
+
+etcd_group: etcds
+etcd_client_port: 2379
+etcd_peer_port: 2380
+etcd_ip_addr: "{% if etcd_iface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_iface].ipv4.address }}
+{%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
+etcd_listen_peer_urls: "https://0.0.0.0:{{ etcd_peer_port }}"
+etcd_advertise_client_urls: "https://{{ etcd_ip_addr }}:{{ etcd_client_port }}"
+etcd_listen_client_urls: "https://0.0.0.0:{{ etcd_client_port }}"
+etcd_initial_cluster_state: new
+etcd_initial_advertise_peer_urls: "https://{{ etcd_ip_addr }}:{{ etcd_peer_port }}"
+etcd_keys:
+  - 'etcd-ca.pem'
+  - 'etcd-ca-key.pem'
+  - 'etcd.pem'
+  - 'etcd-key.pem'

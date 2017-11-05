@@ -1,0 +1,12 @@
+---
+
+- name: Copy extra basic auth config file
+  when: extra_auth.basic is defined
+  template:
+    src: "auths/user.csv.j2"
+    dest: "{{ kubernetes.polices.user }}"
+
+- name: Copy extra token auth config file
+  template:
+    src: "auths/token.csv.j2"
+    dest: "{{ kubernetes.polices.token }}"

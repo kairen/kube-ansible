@@ -1,22 +1,22 @@
 ---
 
 - name: Check kubelet service already exists
-  stat: path="{{ systemd_dir }}/kubelet.service"
+  stat: path="{{ systemd.dir.service }}/kubelet.service"
   register: check_kubelet_service
 
 - name: Stop kubelet systemd service to upgrade
   when: check_kubelet_service.stat.exists
   service: name=kubelet enabled=yes state=stopped
 
-- name: Configure Kubernetes component
-  include: config.yml
-
 - name: Add Kubernetes extra authentication
-  when: extra_auth is defined
-  include: auth.yml
+  when: extra_auth is defined or bootstrap_token is defined
+  include_tasks: config-auth.yml
 
-- name: Init kubelet systemd service
-  include: systemd.yml
+- name: Configure Kubernetes master component
+  include_tasks: config-master.yml
+
+- name: Add kubelet systemd service
+  include_tasks: config-systemd.yml
 
 - name: Enable and restart kubelet engine
   systemd:
@@ -24,25 +24,10 @@
     daemon_reload: yes
     state: restarted
     enabled: yes
-
-- name: Wait for core component start
-  wait_for:
-    host: "127.0.0.1"
-    port: "8080"
-    delay: 1
-    connect_timeout: 10
-    timeout: 100
-  with_items:
-    - "8080"
-    - "{{ api_secure_port }}"
-    - "10252"
-    - "10251"
-
-- name: Helm initialization
-  when: helm_init
-  shell: "helm init"
-  register: init_result
-  until: init_result.rc == 0
-  retries: 5
-  delay: 2
-  ignore_errors: true
+  notify:
+    - Wait for core component start
+    - Helm server initialization
+    - Copy kube-apiserver to kubelet rbac yaml
+    - Create kube-apiserver to kubelet rbac
+    - Check bootstrap clusterrole binding already exists
+    - Create bootstrap clusterrole binding

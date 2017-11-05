@@ -1,0 +1,3 @@
+dependencies:
+    - { role: commons/packages, pkg: "{{ downloads.cfssl }}" }
+    - { role: commons/packages, pkg: "{{ downloads.cfssljson }}" }
