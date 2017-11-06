@@ -1,14 +1,11 @@
 ---
 
 etcd_endpoints: "{% for node in groups['etcds'] %}https://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
-flannel_key: /atomic.io/network
-conf_loc: "{{ flannel_key }}/config"
 flannel:
   name: flannel
   template:
     ds: flannel.yml
     rbac: flannel-rbac.yml
-    config: flannel-network.json
 calico:
   name: calico
   template:

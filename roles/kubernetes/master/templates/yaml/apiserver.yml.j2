@@ -21,6 +21,7 @@ spec:
       - --bind-address=0.0.0.0
       - --secure-port={{ api_secure_port }}
       - --insecure-port=0
+      - --advertise-address={{ lb_vip_address }}
       - --service-cluster-ip-range={{ service_ip_range }}
       - --service-node-port-range={{ service_node_port_range }}
       - --etcd-servers={{ etcd_servers }}

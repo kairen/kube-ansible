@@ -34,5 +34,5 @@
   roles:
     - { role: kubernetes/approve-certs, tags: approve-certs }
     - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
-    - { role: kubernetes/addon, when: kube_dns, addon: "{{ addons.dns }}", tags: kube-dns }
+    - { role: kubernetes/addon, when: kube_dns,   addon: "{{ addons.dns }}",   tags: kube-dns }
     - { role: cni, tags: cni }

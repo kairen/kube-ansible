@@ -78,6 +78,3 @@ docker:
 ceph:
   dir:
     etc: /etc/ceph
-haproxy:
-  dir:
-    etc: /etc/haproxy

@@ -13,7 +13,7 @@
 - name: "Check {{ img.name }} image already exists"
   when: img is defined
   shell: |
-    {{ dir.bin }}/docker images | awk '{print $1\":\"$2}' | grep -o '{{ repos }}{{ img.name }}:{{ img.tag }}'
+    {{ dir.bin }}/docker images | awk '{print $1":"$2}' | grep -o '{{ repos }}{{ img.name }}:{{ img.tag }}'
   run_once: true
   ignore_errors: True
   register: check_image

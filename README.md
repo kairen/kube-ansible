@@ -1,19 +1,21 @@
-# Highly Available Kubernetes Ansible Playbooks
-Ansible playbooks for quickly building Kubernetes and Ceph cluster.
-
-Feature list:
-- [x] Vagrant VirtualBox and Libvirt.
-- [x] Kubernetes HA cluster setup(v1.7.0+).
-- [x] Kubernetes addons.
-- [x] Ceph on Kubernetes(v10.2.0+).
-- [x] Kubernetes Ceph RBD/FS volume.
+# Ansible playbooks to build Kubernetes
+A ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
 [![asciicast](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai.png)](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai?speed=2)
 
-## Quick Start
-Following the below steps to create Kubernetes cluster on `CentOS 7.x` and `Ubuntu Server 16.x`.
+Feature list:
+- [x] Support build virtual cluster using vagrant.
+- [x] Kubernetes v1.7.0+.
+- [x] Kubernetes common addons.
+- [x] Build HA using keepalived and haproxy.
+- [x] Ingress controller.
+- [x] Ceph on Kubernetes(v10.2.0+).
+- [ ] Offline installation mode.
 
-Requirement:
+## Quick Start
+In this section you will deploy a cluster using vagrant.
+
+Prerequisites:
 * [Vagrant](https://www.vagrantup.com/downloads.html) >= 1.7.0
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.0
 
@@ -31,16 +33,17 @@ Start deploying?(y): y
 $ sudo ./setup-vagrant -p libvirt -i eth1
 ```
 
-Login addon's dashboard:
-* [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)。
-* [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)。
-* [Monitoring](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)。
+Login the addon's dashboard:
+- [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+- [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)
+- [Monitor](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)
 
-## Manually Set Up
-Easy to create a Highly Available Kubernetes cluster using Ansible playbook.  
+## Manual deployment
+In this section you will manually deploy a cluster on your machines.
 
-Requirement:
-* Deploy node must be install `Ansible v2.4.0+`.
+Prerequisites:
+* *Ansible version*: v2.4 (or newer)
+* *Linux distributions*: Ubuntu 16/CentOS 7.
 * All Master/Node should have password-less access from `Deploy` node.
 
 For machine example:
@@ -48,23 +51,20 @@ For machine example:
 | IP Address      |   Role           |   CPU    |   Memory   |
 |-----------------|------------------|----------|------------|
 | 172.16.35.9     | vip              |    -     |     -      |
-| 172.16.35.13    | master1 + deploy |    2     |     4G     |
-| 172.16.35.10    | node1            |    2     |     4G     |
-| 172.16.35.11    | node2            |    2     |     4G     |
-| 172.16.35.12    | node3            |    2     |     4G     |
+| 172.16.35.12    | master1          |    4     |     8G     |
+| 172.16.35.10    | node1            |    4     |     8G     |
+| 172.16.35.11    | node2            |    4     |     8G     |
 
-Add the system information gathered above into a file called `inventory`. For inventory example:
+Add the machine info gathered above into a file called `inventory`. For inventory example:
 ```
 [etcds]
-172.16.35.13
+172.16.35.12
 
 [masters]
-172.16.35.13
+172.16.35.12
 
 [nodes]
-172.16.35.10
-172.16.35.11
-172.16.35.12
+172.16.35.[10:11]
 
 [kube-cluster:children]
 masters
@@ -73,7 +73,7 @@ nodes
 
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
 ```yml
-kube_version: 1.8.1
+kube_version: 1.8.2
 network: calico
 lb_vip_address: 172.16.35.9
 ```
@@ -84,7 +84,7 @@ If everything is ready, just run `cluster.yml` to deploy cluster:
 $ ansible-playbook cluster.yml
 ```
 
-And then run `addons.yml` to create addons(Dashboard, Proxy, DNS):
+And then run `addons.yml` to create addons:
 ```sh
 $ ansible-playbook addons.yml
 ```
@@ -98,6 +98,12 @@ $ ansible-playbook ceph-k8s.yml
 When Ceph cluster is fully running, you must label your storage nodes in order to run osd pods on them:
 ```sh
 $ kubectl label node <node_name> node-type=storage
+```
+
+### Reset cluster
+You can reset cluster with the `reset.yml` playbook:
+```sh
+$ ansible-playbook reset.yml
 ```
 
 ## Verify cluster
@@ -135,30 +141,4 @@ cluster bafca3e9-b361-464c-b8fa-04bf60b3189f
   pgmap v1813: 80 pgs, 3 pools, 2148 bytes data, 20 objects
         32751 MB used, 83338 MB / 113 GB avail
               80 active+clean
-```
-
-## Run a simple application for Nginx
-First, get example submodules that need to be checked out with:
-```sh
-$ git submodule update --init --recursive
-```
-
-Run a simple nginx application:
-```sh
-$ kubectl create -f examples/nginx/
-$ kubectl get svc,po -o wide
-```
-
-## Reset cluster and Tear down node
-Reset all kubernetes cluster installed state:
-```sh
-$ ansible-playbook reset.yml
-```
-
-Tear down node using the follow command:
-```sh
-$ ansible-playbook extra-playbooks/node/del.yml
-Which nodes would you like to delete? node2
-
-$ ansible-playbook reset.yml --tags kube -e hosts=node2
 ```

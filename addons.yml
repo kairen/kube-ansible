@@ -2,12 +2,9 @@
 # Require the cluster is fully operation and running
 
 - hosts: masters
-  gather_facts: yes
   become: yes
   roles:
-  - { role: kubernetes/addon, addon: "{{ addons.dashboard }}", tags: dashboard, when: kube_dashboard }
-  - { role: kubernetes/addon, addon: "{{ addons.logging }}", tags: logging, when: kube_logging }
-  - { role: kubernetes/addon, addon: "{{ addons.monitoring }}", tags: monitoring, when: kube_monitoring }
-  - { role: kubernetes/addon, addon: "{{ addons.default_backend }}", tags: default_backend, when: ingress and (ingress_type == 'haproxy' or ingress_type == 'nginx') }
-  - { role: kubernetes/addon, addon: "{{ addons.ingress[ingress_type] }}", tags: ingress, when: ingress }
-  - { role: kubernetes/addon, addon: "{{ addons.watch }}", tags: watch, when: kube_watch }
+  - { role: kubernetes/addon, tags: dashboard,  when: kube_dashboard,  addon: "{{ addons.dashboard }}" }
+  - { role: kubernetes/addon, tags: logging,    when: kube_logging,    addon: "{{ addons.logging }}" }
+  - { role: kubernetes/addon, tags: monitoring, when: kube_monitoring, addon: "{{ addons.monitoring }}" }
+  - { role: kubernetes/addon, tags: ingress,    when: ingress,         addon: "{{ addons.ingress[ingress_type] }}" }

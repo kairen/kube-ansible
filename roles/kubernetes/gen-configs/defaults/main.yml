@@ -47,8 +47,6 @@ node_keys:
   node:
     - 'ca.pem'
     - 'ca-key.pem'
-    - 'kube-proxy.pem'
-    - 'kube-proxy-key.pem'
   master:
     - 'ca.pem'
     - 'ca-key.pem'

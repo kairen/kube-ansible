@@ -40,7 +40,8 @@
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ downloads.docker.dir }}"
     - "{{ downloads.kubelet.dir }}"
-    - "{{ docker.dir.data }}"
+    - "{{ docker.dir.data }}/containers"
+    - "{{ docker.dir.data }}/vfs/dir"
   ignore_errors: True
 
 - name: Delete interfaces for Kubernetes
@@ -55,7 +56,12 @@
     - "kube-bridge"
   ignore_errors: True
 
-- name: IP-in-IP tunnel mod delete
+- name: Delete IP-in-IP tunnel
   when: stop_component
   command: "modprobe -r ipip"
+  ignore_errors: True
+
+- name: Delete blackhole route rule
+  when: stop_component
+  shell: "ip route del $(ip route | awk '/blackhole/ {print $2}')"
   ignore_errors: True

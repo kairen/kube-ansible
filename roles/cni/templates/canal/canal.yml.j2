@@ -1,9 +1,3 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: canal
-  namespace: kube-system
----
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -15,22 +9,33 @@ data:
   cni_network_config: |-
     {
         "name": "k8s-pod-network",
-        "type": "calico",
-        "log_level": "info",
-        "datastore_type": "kubernetes",
-        "nodename": "__KUBERNETES_NODE_NAME__",
-        "ipam": {
-            "type": "host-local",
-            "subnet": "usePodCidr"
-        },
-        "policy": {
-            "type": "k8s"
-        },
-        "kubernetes": {
-            "kubeconfig": "{{ kubernetes.config.admin }}"
-        }
+        "cniVersion": "0.3.0",
+        "plugins": [
+            {
+                "type": "calico",
+                "log_level": "info",
+                "datastore_type": "kubernetes",
+                "nodename": "__KUBERNETES_NODE_NAME__",
+                "ipam": {
+                    "type": "host-local",
+                    "subnet": "usePodCidr"
+                },
+                "policy": {
+                    "type": "k8s",
+                    "k8s_auth_token": "__SERVICEACCOUNT_TOKEN__"
+                },
+                "kubernetes": {
+                    "k8s_api_root": "https://__KUBERNETES_SERVICE_HOST__:__KUBERNETES_SERVICE_PORT__",
+                    "kubeconfig": "__KUBECONFIG_FILEPATH__"
+                }
+            },
+            {
+                "type": "portmap",
+                "capabilities": {"portMappings": true},
+                "snat": true
+            }
+        ]
     }
-
   net-conf.json: |
     {
       "Network": "{{ pod_network_cidr }}",
@@ -45,15 +50,15 @@ metadata:
   name: canal
   namespace: kube-system
   labels:
-    k8s-app: canal
+    cni: canal
 spec:
   selector:
     matchLabels:
-      k8s-app: canal
+      cni: canal
   template:
     metadata:
       labels:
-        k8s-app: canal
+        cni: canal
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
@@ -66,41 +71,51 @@ spec:
           operator: "Exists"
       containers:
         - name: calico-node
-          image: quay.io/calico/node:v2.4.1
+          image: quay.io/calico/node:v2.6.2
           env:
             - name: DATASTORE_TYPE
               value: "kubernetes"
             - name: FELIX_LOGSEVERITYSYS
               value: "info"
-            - name: FELIX_IPTABLESREFRESHINTERVAL
-              value: "60"
-            - name: FELIX_IPV6SUPPORT
-              value: "false"
             - name: CALICO_NETWORKING_BACKEND
               value: "none"
             - name: CLUSTER_TYPE
               value: "k8s,canal"
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
+            - name: FELIX_IPTABLESREFRESHINTERVAL
+              value: "60"
+            - name: FELIX_IPV6SUPPORT
+              value: "false"
             - name: WAIT_FOR_DATASTORE
               value: "true"
             - name: IP
               value: ""
-            - name: K8S_API_ENDPOINT
-              value: "{{ lb_api_url }}"
-            - name: KUBECONFIG
-              value: "{{ kubernetes.config.admin }}"
             - name: NODENAME
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
               value: "ACCEPT"
+            - name: FELIX_HEALTHENABLED
+              value: "true"
           securityContext:
             privileged: true
           resources:
             requests:
               cpu: 250m
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 9099
+            periodSeconds: 10
+            initialDelaySeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 9099
+            periodSeconds: 10
           volumeMounts:
             - mountPath: /lib/modules
               name: lib-modules
@@ -108,13 +123,12 @@ spec:
             - mountPath: /var/run/calico
               name: var-run-calico
               readOnly: false
-            - name: pki
-              mountPath: "/etc/kubernetes/"
-              readOnly: true
         - name: install-cni
           image: quay.io/calico/cni:v1.10.0
           command: ["/install-cni.sh"]
           env:
+            - name: CNI_CONF_NAME
+              value: "10-calico.conflist"
             - name: CNI_NETWORK_CONFIG
               valueFrom:
                 configMapKeyRef:
@@ -131,14 +145,10 @@ spec:
               name: cni-net-dir
         - name: kube-flannel
           image: quay.io/coreos/flannel:v0.9.0-amd64
-          command: [ "/opt/bin/flanneld" ]
-          args:
-          - "--ip-masq"
-          - "--kube-subnet-mgr"
-          - "--kube-api-url={{ lb_api_url }}"
-          - "--kubeconfig-file={{ kubernetes.config.admin }}"
-          securityContext:
-            privileged: true
+          command:
+            - /opt/bin/flanneld
+            - --ip-masq
+            - --kube-subnet-mgr
           env:
             - name: POD_NAME
               valueFrom:
@@ -158,18 +168,14 @@ spec:
                 configMapKeyRef:
                   name: canal-config
                   key: masquerade
+          securityContext:
+            privileged: true
           volumeMounts:
           - name: run
             mountPath: /run
           - name: flannel-cfg
             mountPath: /etc/kube-flannel/
-          - name: pki
-            mountPath: "/etc/kubernetes/"
-            readOnly: true
       volumes:
-        - name: pki
-          hostPath:
-            path: "/etc/kubernetes"
         - name: lib-modules
           hostPath:
             path: /lib/modules
@@ -178,13 +184,69 @@ spec:
             path: /var/run/calico
         - name: cni-bin-dir
           hostPath:
-            path: /opt/cni/bin
+            path: {{ kubernetes.dir.cni_bin }}
         - name: cni-net-dir
           hostPath:
-            path: /etc/cni/net.d
+            path: {{ kubernetes.dir.cni }}
         - name: run
           hostPath:
             path: /run
         - name: flannel-cfg
           configMap:
             name: canal-config
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global Felix Configuration
+kind: CustomResourceDefinition
+metadata:
+   name: globalfelixconfigs.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalFelixConfig
+    plural: globalfelixconfigs
+    singular: globalfelixconfig
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global BGP Configuration
+kind: CustomResourceDefinition
+metadata:
+  name: globalbgpconfigs.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalBGPConfig
+    plural: globalbgpconfigs
+    singular: globalbgpconfig
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico IP Pools
+kind: CustomResourceDefinition
+metadata:
+  name: ippools.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: IPPool
+    plural: ippools
+    singular: ippool
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global Network Policies
+kind: CustomResourceDefinition
+metadata:
+  name: globalnetworkpolicies.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalNetworkPolicy
+    plural: globalnetworkpolicies
+    singular: globalnetworkpolicy

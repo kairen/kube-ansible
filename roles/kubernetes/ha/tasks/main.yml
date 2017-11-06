@@ -17,11 +17,11 @@
 
 - name: Create HAProxy config directory
   when: haproxy
-  file: path={{ haproxy.dir.etc }} state=directory
+  file: path={{ haproxy_etc_dir }} state=directory
 
 - name: Copy HAProxy config file
   when: haproxy
-  template: src="haproxy.cfg.j2" dest={{ haproxy.dir.etc }}/haproxy.cfg
+  template: src="haproxy.cfg.j2" dest={{ haproxy_etc_dir }}/haproxy.cfg
 
 - name: Copy HAProxy manifest yaml file
   when: haproxy

@@ -1,9 +1,31 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik-ingress-service
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+  namespace: kube-system
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - "{{ lb_vip_address }}"
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+    - protocol: TCP
+      port: 8580
+      name: admin
+  selector:
+    k8s-app: traefik-ingress
+---
 kind: DaemonSet
 apiVersion: extensions/v1beta1
 metadata:
-  name: traefik-ingress-lb
+  name: traefik-ingress
   labels:
-    k8s-app: traefik-ingress-lb
+    k8s-app: traefik-ingress
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
   namespace: kube-system
@@ -11,10 +33,9 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: traefik-ingress-lb
-        name: traefik-ingress-lb
+        k8s-app: traefik-ingress
     spec:
-      serviceAccountName: traefik-ingress-lb-sa
+      serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:
       - name: traefik-ingress-lb

@@ -1,4 +1,4 @@
-{{ bootstrap_token }},kubelet-bootstrap,10001,"system:kubelet-bootstrap"
+{{ bootstrap_token }},kubelet-bootstrap,10001,"system:bootstrappers"
 {% if extra_auth.token is defined -%}
 {% for val in extra_auth.token.values %}
 {{ val }}

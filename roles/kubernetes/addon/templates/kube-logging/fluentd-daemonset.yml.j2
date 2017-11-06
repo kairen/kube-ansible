@@ -15,10 +15,10 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
-      serviceAccountName: fluentd-es-sa
+      serviceAccountName: fluentd-es
       containers:
       - name: fluentd-es
-        image: gcr.io/google-containers/fluentd-elasticsearch:v2.0.1
+        image: gcr.io/google-containers/fluentd-elasticsearch:v2.0.2
         env:
         - name: FLUENTD_ARGS
           value: --no-supervisor -q

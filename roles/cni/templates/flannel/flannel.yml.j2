@@ -4,7 +4,7 @@ metadata:
   name: kube-flannel-cfg
   namespace: kube-system
   labels:
-    k8s-app: flannel
+    cni: flannel
 data:
   cni-conf.json: |
     {
@@ -14,19 +14,26 @@ data:
         "isDefaultGateway": true
       }
     }
+  net-conf.json: |
+    {
+      "Network": "{{ pod_network_cidr }}",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: kube-flannel-ds
+  name: kube-flannel
   namespace: kube-system
   labels:
-    k8s-app: flannel
+    cni: flannel
 spec:
   template:
     metadata:
       labels:
-        k8s-app: flannel
+        cni: flannel
     spec:
       hostNetwork: true
       tolerations:
@@ -51,17 +58,11 @@ spec:
       containers:
       - name: kube-flannel
         image: quay.io/coreos/flannel:v0.9.0-amd64
-        command: [ "/opt/bin/flanneld" ]
-        args:
-        - --ip-masq
-        - --etcd-endpoints={{ etcd_endpoints }}
-        - --etcd-prefix={{ flannel_key }}
-        - --etcd-cafile={{ etcd.certs.ca }}
-        - --etcd-certfile={{ etcd.certs.cert }}
-        - --etcd-keyfile={{ etcd.certs.cert_key }}
-        - "{{ cni_iface }}"
-        securityContext:
-          privileged: true
+        command:
+          - /opt/bin/flanneld
+          - --ip-masq
+          - --kube-subnet-mgr
+          - {{ cni_iface }}
         env:
         - name: POD_NAME
           valueFrom:
@@ -71,33 +72,20 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: run
           mountPath: /run
-        - name: pki
-          mountPath: {{ kubernetes.dir.pki }}
-          readOnly: true
         - name: flannel-cfg
           mountPath: /etc/kube-flannel/
-        - mountPath: {{ etcd.dir.ssl }}
-          name: etcd-ca-certs
-          readOnly: true
       volumes:
-        - hostPath:
+        - name: run
+          hostPath:
             path: /run
-          name: run
-        - hostPath:
-            path: {{ etcd.dir.ssl }}
-            type: DirectoryOrCreate
-          name: etcd-ca-certs
-        - hostPath:
+        - name: cni
+          hostPath:
             path: {{ kubernetes.dir.cni }}
-            type: DirectoryOrCreate
-          name: cni
-        - hostPath:
-            path: {{ kubernetes.dir.pki }}
-            type: DirectoryOrCreate
-          name: pki
-        - configMap:
+        - name: flannel-cfg
+          configMap:
             name: kube-flannel-cfg
-          name: flannel-cfg

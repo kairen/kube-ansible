@@ -24,6 +24,12 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       serviceAccountName: kube-proxy
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        key: node.cloudprovider.kubernetes.io/uninitialized
+        value: "true"
       containers:
       - name: kube-proxy-amd64
         image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
@@ -31,6 +37,12 @@ spec:
         - kube-proxy
         - --v=0
         - --logtostderr=true
+        {% if kube_proxy_mode == 'ipvs' -%}
+        - --feature-gates=SupportIPVSProxyMode=true
+        - --ipvs-min-sync-period=5s
+        - --ipvs-sync-period=5s
+        - --ipvs-scheduler={{ kube_proxy_ipvs_scheduler }}
+        {% endif -%}
         - --kubeconfig=/run/kube-proxy.conf
         - --cluster-cidr={{ pod_network_cidr }}
         - --proxy-mode={{ kube_proxy_mode }}
@@ -38,8 +50,8 @@ spec:
         securityContext:
           privileged: true
         volumeMounts:
-        - mountPath: /var/run/dbus
-          name: dbus
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
         - mountPath: /run/kube-proxy.conf
           name: kubeconfig
       dnsPolicy: ClusterFirst
@@ -48,10 +60,10 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
       - hostPath:
-          path: /var/run/dbus
-          type: DirectoryOrCreate
-        name: dbus
+          path: /run/xtables.lock
+          type: FileOrCreate
+        name: xtables-lock
       - hostPath:
-          path: /etc/kubernetes/kube-proxy.conf
+          path: {{ kubernetes.config.kube_proxy }}
           type: FileOrCreate
         name: kubeconfig

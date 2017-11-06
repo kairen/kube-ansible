@@ -1,8 +1,13 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: canal
+  namespace: kube-system
+---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico
-  namespace: kube-system
 rules:
   - apiGroups: [""]
     resources:
@@ -33,54 +38,27 @@ rules:
       - watch
   - apiGroups: ["extensions"]
     resources:
-      - thirdpartyresources
-    verbs:
-      - create
-      - get
-      - list
-      - watch
-  - apiGroups: ["extensions"]
-    resources:
       - networkpolicies
     verbs:
       - get
       - list
       - watch
-  - apiGroups: ["projectcalico.org"]
+  - apiGroups: ["crd.projectcalico.org"]
     resources:
-      - globalbgppeers
-    verbs:
-      - get
-      - list
-  - apiGroups: ["projectcalico.org"]
-    resources:
-      - globalconfigs
+      - globalfelixconfigs
+      - bgppeers
       - globalbgpconfigs
-    verbs:
-      - create
-      - get
-      - list
-      - update
-      - watch
-  - apiGroups: ["projectcalico.org"]
-    resources:
       - ippools
+      - globalnetworkpolicies
     verbs:
       - create
       - get
       - list
       - update
-      - watch
-  - apiGroups: ["alpha.projectcalico.org"]
-    resources:
-      - systemnetworkpolicies
-    verbs:
-      - get
-      - list
       - watch
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: flannel
 rules:
@@ -105,7 +83,7 @@ rules:
       - patch
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: canal-flannel
 roleRef:
@@ -117,7 +95,7 @@ subjects:
   name: canal
   namespace: kube-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: canal-calico

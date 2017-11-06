@@ -67,7 +67,7 @@ linter-reset-yaml:
     FILE: reset.yml
   <<: *linter_template
 
-linter-eph-k8s-yaml:
+linter-ceph-k8s-yaml:
   variables:
     FILE: ceph-k8s.yml
   <<: *linter_template

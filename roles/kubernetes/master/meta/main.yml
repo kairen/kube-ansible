@@ -1,5 +1,4 @@
 dependencies:
-  - { role: commons/os-check }
   - { role: commons/packages, pkg: "{{ downloads.kubelet }}" }
   - { role: commons/packages, pkg: "{{ downloads.helm }}" }
   - { role: commons/packages, pkg: "{{ downloads.cni }}" }

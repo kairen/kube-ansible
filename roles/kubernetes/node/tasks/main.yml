@@ -1,5 +1,5 @@
 ---
-  
+
 - name: Check kubelet service already exists
   stat: path="{{ systemd.dir.service }}/kubelet.service"
   register: check_kubelet_service
