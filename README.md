@@ -5,7 +5,7 @@ A ansible playbooks to building the hard way Kubernetes cluster, This playbook i
 
 Feature list:
 - [x] Support build virtual cluster using vagrant.
-- [x] Kubernetes v1.7.0+.
+- [x] Kubernetes v1.8.0+.
 - [x] Kubernetes common addons.
 - [x] Build HA using keepalived and haproxy.
 - [x] Ingress controller.
@@ -42,7 +42,7 @@ Login the addon's dashboard:
 In this section you will manually deploy a cluster on your machines.
 
 Prerequisites:
-* *Ansible version*: v2.4 (or newer)
+* *Ansible version*: v2.4 (or newer).
 * *Linux distributions*: Ubuntu 16/CentOS 7.
 * All Master/Node should have password-less access from `Deploy` node.
 

@@ -42,9 +42,10 @@
     - { file: encryption.yml, path: "{{ kubernetes.polices.encryption }}" }
 
 - name: Copy Kubernetes admin config into home directory
-  template:
+  copy:
     src: "{{ kubernetes.config.admin }}"
     dest: "{{ ansible_env.HOME }}/.kube/config"
+    remote_src: yes
 
 - name: Copy helmrc file
   when: helm_init
