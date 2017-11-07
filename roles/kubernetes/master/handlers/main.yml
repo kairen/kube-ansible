@@ -17,6 +17,8 @@
 - name: Helm server initialization
   when: helm_init and service_started
   command: "helm init"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: init_result
   until: init_result.rc == 0
   retries: 5
@@ -35,6 +37,7 @@
     {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
             apply -f {{ kubernetes.polices.apiserver_rbac }}
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_result
   until: create_result.rc == 0
   retries: 5
@@ -46,6 +49,7 @@
     {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
             get clusterrolebinding | grep kubelet-bootstrap
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: check_bootstrap_rbac
   ignore_errors: true
 
@@ -57,6 +61,7 @@
       --clusterrole=system:node-bootstrapper \
       --user=kubelet-bootstrap
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_result
   until: create_result.rc == 0
   retries: 5

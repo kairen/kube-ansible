@@ -3,17 +3,20 @@
 - name: Check SSL certificate directory already exists
   stat: path={{ dir.gen_ssl }}
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: check_ssl_dir
 
 - name: Create SSL certificate directory
   when: not check_ssl_dir.stat.exists
   file: path={{ dir.gen_ssl }} state=directory
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_ssl_dir
 
 - name: Generate SSL CA config
   template: src=ca-config.json.j2 dest="{{ ca_config }}"
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: gen_ca_config
 
 - name: Generate SSL certificate json files
@@ -32,6 +35,7 @@
     - { file: front-proxy-client-csr.json, name: front-proxy-client, org: Kubernetes }
     - { file: kube-proxy-csr.json,         name: "system:kube-proxy", org: "system:kube-proxy" }
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: gen_json_files
 
 - name: Create SSL certificate authority files
@@ -44,6 +48,7 @@
     - { file: etcd-ca-csr.json,        bare: etcd-ca }
     - { file: front-proxy-ca-csr.json, bare: front-proxy-ca }
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_ca_files
 
 - name: Create SSL certificate key files
@@ -68,6 +73,7 @@
     - { file: scheduler-csr.json,          ca: ca, hosts: "{{ master_hosts }}", bare: scheduler }
     - { file: front-proxy-client-csr.json, ca: front-proxy-ca, bare: front-proxy-client }
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_ssl_files
 
 - name: Generate master kubelet SSL certificate json files
@@ -76,6 +82,7 @@
     dest: "{{ dir.gen_ssl }}/kubelet-{{ hostvars['' + item].ansible_hostname }}-csr.json"
   with_items: "{{ groups['masters'] }}"
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: gen_kubelet_json_files
 
 - name: Create master kubelet SSL certificate key files
@@ -91,12 +98,14 @@
       {{ dir.bin }}/cfssljson -bare {{ dir.gen_ssl }}/kubelet-{{ hostvars['' + item].ansible_hostname }}
   with_items: "{{ groups['masters'] }}"
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_kubelet_ssl_files
 
 - name: Check service account key already exists
   stat:
     path: "{{ dir.gen_ssl  }}/sa.key"
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: check_sa_key
 
 - name: Create service account private and public key
@@ -105,6 +114,8 @@
   with_items:
     - "openssl genrsa -out {{ dir.gen_ssl }}/sa.key 2048"
     - "openssl rsa -in {{ dir.gen_ssl }}/sa.key -pubout -out {{ dir.gen_ssl }}/sa.pub"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: create_sa_key
 
 - name: Find all key file on remote host
@@ -112,9 +123,11 @@
     paths: "{{ dir.gen_ssl }}"
     patterns: 'sa.*,*.pem'
   delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: find_result
 
 - name: Fetch files from remote host
   fetch: src="{{ item.path }}" dest="{{ dir.local_ssl }}" flat=yes
   with_items: "{{ find_result.files }}"
+  run_once: true
   delegate_to: "{{ groups['masters'][0] }}"

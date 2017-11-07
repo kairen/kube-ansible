@@ -17,3 +17,5 @@
   notify:
     - Recreate docker0 interface
     - Enable and restart Docker engine
+    - Write system variables for Kubernetes
+    - Enable system variables for Kubernetes

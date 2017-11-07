@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# Program: Vagrant func and vars
+# History: 2017/1/19 Kyle.b Release
+
+GROUP_VARS_PATH="./group_vars/all.yml"
+SUBNET="172.16.35"
+
+# Replace roles defaults variable
+function role_config() {
+  perl -i -pe "s/${1}/${2}/g" ${3}
+}
+
+# Create inventory file
+function set_inventory() {
+  local NET_COUNT=10
+  local TOTAL=$((${NODES}+${MASTERS}))
+  local nodes="${SUBNET}.[${NET_COUNT}:$((${NET_COUNT}+${NODES}-1))]"
+  local masters="${SUBNET}.[$((${NET_COUNT}+${NODES})):$((${NET_COUNT}+${TOTAL}-1))]"
+  local master="${SUBNET}.$((${NET_COUNT}+${NODES}+${MASTERS}-1))"
+  local host_var="ansible_user=vagrant ansible_password=vagrant"
+  rm -f inventory
+  for group in "etcds" "masters" "nodes" "kube-cluster:children"; do
+    echo "[${group}]" >> inventory
+    if [ ${group} == "nodes" ]; then
+      echo -e "${nodes} ${host_var}\n" >> inventory
+    elif [ ${group} == "kube-cluster:children" ]; then
+      echo -e "masters\nnodes" >> inventory
+    else
+      echo -e "${masters} ${host_var}\n" >> inventory
+    fi
+  done
+}
+
+# Create hosts file
+function set_hosts() {
+  local NET_COUNT=10
+  local TOTAL=$((${NODES}+${MASTERS}))
+  echo -e "127.0.0.1 localhost\n::1 localhost" > hosts
+
+  for ((i=0; i<${TOTAL}; i++)) do
+    PREFIX=""
+    if [ ${i} -lt ${NODES} ]; then
+      PREFIX="node$((${i}+1))"
+    else
+      PREFIX="master$((${i}+1-${NODES}))"
+    fi
+    echo "${SUBNET}.$((${NET_COUNT}+${i})) ${PREFIX}" >> hosts
+  done
+}
+
+# Create hosts file
+function create_cache_env() {
+  echo "export MASTERS=${MASTERS}" > ./tools/.cache
+  echo "export NODES=${NODES}" >> ./tools/.cache
+}
+
+# Check is number
+function isnum() {
+  re='^[0-9]+$'
+  if ! [[ ${1} =~ ${re} ]] ; then
+    echo "Error: Not a number." >&2; exit 1
+  fi
+}
+
+function check_cni() {
+  local cni=${1}
+  local isExist=false
+  for n in "calico" "flannel" "canal" "weave" "router"; do
+    if [ ${cni} == ${n} ]; then
+      isExist=true
+    fi
+  done
+  if [ ${isExist} == "false" ]; then
+    echo "ERROR: the \"${cni}\" is not support."
+    exit 1;
+  fi
+}
