@@ -46,6 +46,8 @@ before_script:
     - ansible-playbook reset.yml
     - ansible-playbook cluster.yml
     - ansible-playbook addons.yml
+    - sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+    - sudo chmod 775 ~/.kube/config
     - kubectl get node
     - kubectl -n kube-system get po
     - kubectl -n kube-system get svc
