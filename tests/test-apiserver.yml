@@ -1,0 +1,26 @@
+---
+
+- hosts: masters
+  become: yes
+  tasks:
+    - name: Check Kubernetes apiserver version
+      uri:
+        url: "https://{{ inventory_hostname }}:6443/version"
+        client_cert: "{{ kubernetes.certs.apiserver }}"
+        client_key: "{{ kubernetes.certs.apiserver_key }}"
+        validate_certs: no
+      register: result
+      until: result.status == 200
+      retries: 5
+      delay: 2
+
+    - name: Curl Kubernetes v1 api
+      uri:
+        url: "https://{{ inventory_hostname }}:6443/api/v1"
+        client_cert: "{{ kubernetes.certs.apiserver }}"
+        client_key: "{{ kubernetes.certs.apiserver_key }}"
+        validate_certs: no
+      register: result
+      until: result.status == 200
+      retries: 5
+      delay: 2

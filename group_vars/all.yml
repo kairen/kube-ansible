@@ -60,9 +60,9 @@ kube_proxy_mode: iptables # support: iptables, userspace or ipvs(alpha).
 kube_proxy_ipvs_scheduler: rr # depend on ipvs mode.
 
 # Extra addons
-kube_dashboard: true
+kube_dashboard: false
 kube_logging: false
-kube_monitoring: true
+kube_monitoring: false
 
 ingress: false
 ingress_type: nginx # support: nginx or traefik.
