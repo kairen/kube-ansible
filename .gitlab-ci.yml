@@ -24,9 +24,8 @@ before_script:
 .vbox_template: &vbox_template
   stage: deploy-virtualbox
   script:
+    - './tools/setup -m ${MEMORY} -n ${CNI_PLUGIN} -w ${WORKER} -b ${MASTER} -o ${OS} -f true'
     - './tools/reset'
-    - './tools/setup -m 2048 -n ${CNI_PLUGIN} -f true'
-    - vagrant destroy -f
   only: [/^pr-.*$/]
   tags:
     - shell
@@ -75,15 +74,42 @@ linter-ceph-k8s-yaml:
   <<: *linter_template
 
 # deploy vbox
-vbox-ubuntu-calico:
+vbox-ubuntu-flannel:
   variables:
+    OS: ubuntu16
     CNI_PLUGIN: flannel
+    MEMORY: 2048
+    WORKER: 2
+    MASTER: 3
   <<: *vbox_template
 
-vbox-ubuntu-flannel:
+vbox-ubuntu-calico:
   when: manual
   variables:
+    OS: ubuntu16
+    CNI_PLUGIN: calico
+    MEMORY: 2048
+    WORKER: 2
+    MASTER: 1
+  <<: *vbox_template
+
+vbox-centos-flannel:
+  variables:
+    OS: centos7
     CNI_PLUGIN: flannel
+    MEMORY: 2048
+    WORKER: 2
+    MASTER: 3
+  <<: *vbox_template
+
+vbox-centos-calico:
+  when: manual
+  variables:
+    OS: centos7
+    CNI_PLUGIN: calico
+    MEMORY: 2048
+    WORKER: 2
+    MASTER: 1
   <<: *vbox_template
 
 # deploy openstack

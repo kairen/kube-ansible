@@ -1,0 +1,71 @@
+---
+
+- name: Create kubernetes ceph-addon directory
+  file: path="{{ ceph.dir.addon }}" state=directory
+
+- name: Copy kubernetes ceph-addon config file
+  template:
+    src: "yaml/{{ item }}.j2"
+    dest: "{{ ceph.dir.addon }}/{{ item }}"
+  with_items:
+    - ceph-mds-dp.yml
+    - ceph-mon-check-dp.yml
+    - ceph-mon-dp.yml
+    - ceph-osd-ds.yml
+  register: copy_ceph_yaml
+
+- name: Check ceph mds deployment
+  when: copy_ceph_yaml
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        get deploy --namespace=ceph | grep ceph-mds
+  register: check_ceph_mds
+  ignore_errors: true
+
+- name: Create ceph mds deployment
+  when: check_ceph_mds|failed
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        create -f {{ ceph.dir.addon }}/ceph-mds-dp.yml
+
+- name: Check mon check deployment
+  when: copy_ceph_yaml
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        get deploy --namespace=ceph | grep ceph-mon-check
+  register: check_ceph_mon_health
+  ignore_errors: true
+
+- name: Create mon check deployment
+  when: check_ceph_mon_health|failed
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        create -f {{ ceph.dir.addon }}/ceph-mon-check-dp.yml
+
+- name: Check mon deployment
+  when: copy_ceph_yaml
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        get deploy --namespace=ceph | awk '{ print $1}' | grep ceph-mon$
+  register: check_ceph_mon
+  ignore_errors: true
+
+- name: Create mon deployment
+  when: check_ceph_mon|failed
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        create -f {{ ceph.dir.addon }}/ceph-mon-dp.yml
+
+- name: Check osd daemonset
+  when: copy_ceph_yaml
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        get ds --namespace=ceph | grep ceph-osd
+  register: check_ceph_osd
+  ignore_errors: true
+
+- name: Create osd daemonset
+  when: check_ceph_osd|failed
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+        create -f {{ ceph.dir.addon }}/ceph-osd-ds.yml

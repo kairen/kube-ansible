@@ -1,36 +1,20 @@
 ---
-    
-- name: Adding Ceph APT GPG key
-  when: ansible_os_family == "Debian"
-  apt_key:
-    url: "https://download.ceph.com/keys/release.asc"
-    state: present
 
-- name: Adding Ceph APT repository
-  when: ansible_os_family == "Debian"
-  apt_repository:
-    repo: "deb https://download.ceph.com/debian-{{ ceph_version }}/ xenial main"
-    state: present
-    filename: 'ceph'
+- name: Install Ceph dependency packages
+  include_tasks: install-ceph.yml
 
-- name: Adding Ceph yum repository
-  when: ansible_os_family == "RedHat"
-  yum_repository:
-    name: "ceph-{{ ceph_version }}"
-    description: Ceph Repository
-    file: ceph
-    baseurl: "https://download.ceph.com/rpm-{{ ceph_version }}/el7/x86_64"
-    enabled: yes
-    gpgcheck: yes
-    gpgkey: https://download.ceph.com/keys/release.asc
+- name: Create and copy generator config file
+  include_tasks: gen-config.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
 
-- name: Install Ceph packages (RHEL/CentOS)
-  when: ansible_os_family == "RedHat"
-  yum: name=ceph state=present
+- name: Deploy Ceph components on Kubernetes
+  include_tasks: ceph-on-k8s.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
 
-- name: Install Ceph packages (Debian/Ubuntu)
-  when: ansible_os_family == "Debian"
-  apt: name=ceph state=present
-
-- name: Update dns resolv conf for Ceph
-  template: src="resolv.conf.j2" dest="/etc/resolv.conf"
+# - name: Label all storage nodes
+#   shell: "kubectl label nodes node-type=storage"
+#   delegate_to: "{{ groups['masters'][0] }}"
+#   run_once: true
+#   ignore_errors: true

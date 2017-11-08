@@ -38,7 +38,7 @@ spec:
           emptyDir: {}
       containers:
         - name: osd-pod
-          image: "ceph/daemon:{{ ceph_image_tag }}"
+          image: "ceph/daemon:{{ ceph.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: devices

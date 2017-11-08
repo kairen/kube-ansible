@@ -6,9 +6,9 @@
     repos: "{{ img.repos }}"
 
 - name: Override local registry repos
-  when: 'img is defined and registry_offline'
+  when: 'img is defined and registry'
   set_fact:
-    repos: "{{ registry_offline_url }}/"
+    repos: "{{ registry_url }}/"
 
 - name: "Check {{ img.name }} image already exists"
   when: img is defined

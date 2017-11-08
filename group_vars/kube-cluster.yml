@@ -78,3 +78,4 @@ docker:
 ceph:
   dir:
     etc: /etc/ceph
+    addon: /etc/ceph/addons

@@ -69,11 +69,14 @@ ingress_type: nginx # support: nginx or traefik.
 
 helm_init: false # Helm auto initialize.
 
-# Offline mode area
-registry_offline: false # enable local registry.
-registry_ui: false # enable local registry ui.
-registry_offline_url: "172.16.35.9:5000"
+# Extra storage
+registry: false
+registry_ui: false
+registry_url: "172.16.35.9:5000"
 
-repos_offline: false # enable local pkg repository
+ceph_cluster: false
+
+# Offline mode area
+repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

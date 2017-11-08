@@ -1,0 +1,12 @@
+---
+# Require the cluster is fully operation and running
+
+- hosts: kube-cluster
+  become: yes
+  roles:
+    - { role: storage/ceph, when: ceph_cluster,  tags: ceph }
+
+- hosts: registrys
+  become: yes
+  roles:
+    - { role: storage/registry, when: registry, tags: registry }
