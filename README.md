@@ -1,3 +1,4 @@
+[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/master/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/master)
 # Ansible playbooks to build Kubernetes
 A ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
@@ -21,16 +22,32 @@ Prerequisites:
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
-$ ./setup-vagrant -w 3 -n calico
-Cluster Size: 1 master, 3 worker.
+$ ./tools/setup -m 2048 -n calico
+Cluster Size: 1 master, 2 worker.
      VM Size: 1 vCPU, 2048 MB
      VM Info: ubuntu16, virtualbox
          CNI: calico
-Start deploying?(y): y
+Start deploying?(y):
 ```
-> Using libvirt provider:
+> Use libvirt provider as `sudo ./tools/setup -p libvirt -i eth1`.
+
+The default cluster using 'RBAC', so you need add permission to access API:
 ```sh
-$ sudo ./setup-vagrant -p libvirt -i eth1
+$ cat <<EOF | kubectl create -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: open-door
+  namespace: ""
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: system:anonymous
+EOF
 ```
 
 Login the addon's dashboard:

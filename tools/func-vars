@@ -4,7 +4,14 @@
 # History: 2017/1/19 Kyle.b Release
 
 GROUP_VARS_PATH="./group_vars/all.yml"
-SUBNET="172.16.35"
+VAGRAN_CONFIG_PATH="./tools/.config.rb"
+SUBNET=$(grep -i "^\$private_subnet" ${VAGRAN_CONFIG_PATH} | awk '{ print $3 }' | sed 's/\"//g')
+NET_COUNT=$(grep -i "^\$net_count" ${VAGRAN_CONFIG_PATH} | awk '{ print $3 }' | sed 's/\"//g')
+
+# Replace vagrant config
+function vagrant_config() {
+  perl -i -pe "s/${1}/${2}/g" ${VAGRAN_CONFIG_PATH}
+}
 
 # Replace roles defaults variable
 function role_config() {
@@ -13,7 +20,6 @@ function role_config() {
 
 # Create inventory file
 function set_inventory() {
-  local NET_COUNT=10
   local TOTAL=$((${NODES}+${MASTERS}))
   local nodes="${SUBNET}.[${NET_COUNT}:$((${NET_COUNT}+${NODES}-1))]"
   local masters="${SUBNET}.[$((${NET_COUNT}+${NODES})):$((${NET_COUNT}+${TOTAL}-1))]"
@@ -34,7 +40,6 @@ function set_inventory() {
 
 # Create hosts file
 function set_hosts() {
-  local NET_COUNT=10
   local TOTAL=$((${NODES}+${MASTERS}))
   echo -e "127.0.0.1 localhost\n::1 localhost" > hosts
 
@@ -47,12 +52,6 @@ function set_hosts() {
     fi
     echo "${SUBNET}.$((${NET_COUNT}+${i})) ${PREFIX}" >> hosts
   done
-}
-
-# Create hosts file
-function create_cache_env() {
-  echo "export MASTERS=${MASTERS}" > ./tools/.cache
-  echo "export NODES=${NODES}" >> ./tools/.cache
 }
 
 # Check is number

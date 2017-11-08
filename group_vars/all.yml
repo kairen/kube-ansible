@@ -38,7 +38,7 @@ add_registry:
 insecure_registrys:
 # - "172.16.35.9:5000"
 
-# Kubernetes authenticating
+# Kubernetes authentication and security
 bootstrap_token: b96cee11d16de85256d63efd2e18e7d8
 extra_auth:
   basic:
@@ -47,6 +47,8 @@ extra_auth:
   # token:
   #   values:
   #   - "0fdd1a8875ec,admin,admin"
+
+encryption_token: iTNwwjHuxNI9+8niwh8GJKT5NQiHFqcOTrrhzYfhAvk=
 
 # Core addons (Strongly recommend)
 kube_dns: true
@@ -62,7 +64,7 @@ kube_dashboard: true
 kube_logging: false
 kube_monitoring: true
 
-ingress: true
+ingress: false
 ingress_type: nginx # support: nginx or traefik.
 
 helm_init: false # Helm auto initialize.

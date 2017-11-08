@@ -23,17 +23,7 @@
     - scheduler.yml
   register: copy_core_yaml
 
-- name: Generate encryption secret key
-  when: copy_core_yaml
-  shell: "head -c 32 /dev/urandom | base64"
-  register: gen_secret
-
-- name: Set secret key from gen_secret var
-  when: gen_secret
-  set_fact:
-    secret_key: "{{ gen_secret.stdout }}"
-
-- name: Copy Kubernetes feature gate yaml files
+- name: Copy Kubernetes extra policy yaml files
   template:
     src: "yaml/{{ item.file }}.j2"
     dest: "{{ item.path }}"

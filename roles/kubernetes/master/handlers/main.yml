@@ -29,6 +29,8 @@
   template:
     src: "yaml/apiserver-rbac.yml.j2"
     dest: "{{ kubernetes.polices.apiserver_rbac }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
   register: copy_apiserver_rbac
 
 - name: Create kube-apiserver to kubelet rbac

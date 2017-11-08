@@ -19,7 +19,7 @@
   register: check_image
 
 - name: "Pull {{ img.name }} image"
-  when: img is defined and check_image.stdout == ''
+  when: img is defined and check_image.stdout == '' and pre_pull|default(true)
   command: |
     {{ dir.bin }}/docker pull {{ repos }}{{ img.name }}:{{ img.tag }}
   register: pull_result
