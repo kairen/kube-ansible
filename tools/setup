@@ -17,42 +17,13 @@ set -eu
 : ${OS_IMAGE:="ubuntu16"}
 : ${FORCE:="false"}
 
-function usage() {
-  echo -e "Usage : setup-vagrant [options]\n"
-  echo " -b|--boss        Number of master."
-  echo " -w|--worker      Number of worker."
-  echo " -c|--cpu         Number of cores per vm."
-  echo " -m|--memory      Memory size per vm."
-  echo " -p|--provider    Virtual machine provider(virtualbox, libvirt)."
-  echo " -o|--os-image    Virtual machine operation system(ubuntu16, centos7)."
-  echo " -i|--interface   Network bind interface."
-  echo " -n|--network     Container Network plugin."
-  echo " -f|--force       Force deployment."
-  exit 1
-}
-
 [ ${#} -gt 0 ] && [ ${1} == "-h" ] && usage
 
-while [ ${#} -gt 0 ]; do
-  case "${1}" in
-      -b|--boss)   isnum ${2}; export MASTERS=${2}; shift;;
-      -w|--worker) isnum ${2}; export NODES=${2}; shift;;
-      -c|--cpu)    isnum ${2}; export CPU=${2}; shift;;
-      -m|--memory) isnum ${2}; export MEMORY=${2}; shift;;
-      -i|--interface) export ETH=${2}; shift;;
-      -o|--os-image)  export OS_IMAGE=${2}; shift;;
-      -p|--provider)  export PROVIDER=${2}; shift;;
-      -n|--network)  export CNI_PLUGIN=${2}; shift;;
-      -f|--force)    export FORCE=${2}; shift;;
-      *) usage; break;;
-  esac
-  shift
-done
-
+check_opts $@
 echo "Cluster Size: ${MASTERS} master, ${NODES} worker."
 echo "     VM Size: ${CPU} vCPU, ${MEMORY} MB"
 echo "     VM Info: ${OS_IMAGE}, ${PROVIDER}"
-echo "         CNI: ${CNI_PLUGIN}"
+echo "         CNI: ${CNI_PLUGIN}, Binding iface: ${ETH}"
 if [ ${FORCE} == "false" ]; then
   read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
 fi
