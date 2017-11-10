@@ -14,6 +14,9 @@ bases:
   docker:
     url: "https://download.docker.com"
     version: 17.09.0-ce
+  cri_containerd:
+    url: "https://github.com"
+    version: 1.0.0-alpha.1
   cni:
     url: "https://github.com"
     version: 0.6.0
@@ -59,12 +62,21 @@ downloads:
   docker:
     name: docker
     description: "Docker engine"
-    dir: /opt/docker
+    dir: /opt/cri
     url: "{{ bases.docker.url }}/linux/static/stable/x86_64"
     unarchive:
       extra_opt: "['--strip-components=1']"
     symlinks: [ 'docker', 'dockerd', 'docker-containerd', 'docker-containerd-ctr', 'docker-containerd-shim', 'docker-init', 'docker-proxy', 'docker-runc' ]
     file: "docker-{{ bases.docker.version }}.tgz"
+  cri_containerd:
+    name: cri_containerd
+    description: "CRI containerd"
+    dir: /opt/cri
+    url: "{{ bases.cri_containerd.url }}/kubernetes-incubator/cri-containerd/releases/download/v{{ bases.cri_containerd.version }}"
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+    symlinks: [ 'containerd', 'containerd-release', 'cri-containerd', 'containerd-shim', 'containerd-stress', 'crictl', 'ctr' ]
+    file: "cri-containerd-{{ bases.cri_containerd.version }}.tar.gz"
   cni:
     name: cni
     description: "Container network interface"

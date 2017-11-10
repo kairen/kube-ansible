@@ -8,6 +8,7 @@ Feature list:
 - [x] Support build virtual cluster using vagrant.
 - [x] Kubernetes v1.8.0+.
 - [x] Kubernetes common addons.
+- [x] Support CNI(calico, flannel, ..., etc) and CRI(docker, containerd).
 - [x] Build HA using Keepalived and HAProxy.
 - [ ] Build HA using Nginx reverse proxy.
 - [x] Ingress controller.
@@ -97,10 +98,15 @@ Set the variables in `group_vars/all.yml` to reflect you need options. For examp
 # Kubenrtes version, only support 1.8.0+.
 kube_version: 1.8.2
 
-# CNI plugin
-# Support: flannel, calico, canal, weave or router.
+# CRI plugin,
+# Supported runtime: docker, containerd.
+cri_plugin: docker
+
+# CNI plugin,
+# Supported network: flannel, calico, canal, weave or router.
 network: calico
 pod_network_cidr: 10.244.0.0/16
+
 # CNI opts: flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8).
 cni_iface: interface=eth1
 

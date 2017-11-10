@@ -1,0 +1,20 @@
+---
+
+- name: Check Containerd release directory
+  stat: path={{ pkg.dir }}
+  register: check_dir
+
+- name: Move Container binaries into release directory
+  when: check_dir.stat.exists
+  shell: "{{ item }}"
+  with_items:
+    - "mv {{ pkg.dir }}/usr/local/bin/* {{ pkg.dir }}"
+    - "mv {{ pkg.dir }}/usr/local/sbin/* {{ pkg.dir }}"
+  register: move_dir
+
+- name: Remove Container extra directory
+  when: move_dir
+  file: path="{{ pkg.dir }}/{{ item }}" state=absent
+  with_items:
+    - usr
+    - etc

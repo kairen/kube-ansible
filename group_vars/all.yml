@@ -3,10 +3,15 @@
 # Kubenrtes version, only support 1.8.0+.
 kube_version: 1.8.2
 
-# CNI plugin
-# Support: flannel, calico, canal, weave or router.
+# CRI plugin,
+# Supported runtime: docker, containerd.
+cri_plugin: docker
+
+# CNI plugin,
+# Supported network: calico
 network: calico
 pod_network_cidr: 10.244.0.0/16
+
 # CNI opts: flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8).
 cni_iface: ""
 

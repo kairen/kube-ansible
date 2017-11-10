@@ -53,6 +53,7 @@ role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: ${ETH}" ${G
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 
 # Create inventory and hosts
+rm -rf /tmp/ssl
 set_inventory
 set_hosts
 

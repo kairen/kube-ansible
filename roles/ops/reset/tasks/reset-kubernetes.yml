@@ -6,6 +6,8 @@
     - kubelet.service
     - docker.service
     - docker.socket
+    - cri-containerd.service
+    - containerd.service
   ignore_errors: True
   register: stop_component
 
@@ -15,6 +17,8 @@
     - kubelet.service
     - docker.service
     - docker.socket
+    - cri-containerd.service
+    - containerd.service
   ignore_errors: True
 
 - name: Find all kubelet mount volume
@@ -41,7 +45,9 @@
     - "{{ ansible_env.HOME }}/.kube"
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ downloads.docker.dir }}"
+    - "{{ downloads.cri_containerd.dir }}"
     - "{{ downloads.kubelet.dir }}"
+    - "{{ containerd.dir.data }}"
     - "{{ docker.dir.data }}/containers"
     - "{{ docker.dir.data }}/vfs/dir"
   ignore_errors: True

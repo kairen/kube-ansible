@@ -11,10 +11,10 @@
    - { role: etcd, tags: etcd }
 
 - hosts: kube-cluster
-  gather_facts: no
   become: yes
   roles:
-    - { role: cri/docker, tags: docker }
+    - { role: cri/docker,     when: cri_plugin == 'docker', tags: docker }
+    - { role: cri/containerd, when: cri_plugin == 'containerd', tags: containerd }
 
 - hosts: masters
   become: yes
@@ -36,3 +36,8 @@
     - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
     - { role: kubernetes/addon, when: kube_dns,   addon: "{{ addons.dns }}",   tags: kube-dns }
     - { role: cni, tags: cni }
+
+- hosts: kube-cluster
+  become: yes
+  roles:
+    - { role: cri/checker, when: cri_plugin == 'containerd', tags: checker }

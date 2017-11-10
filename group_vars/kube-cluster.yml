@@ -2,6 +2,7 @@
 
 dir:
   bin: /usr/local/bin
+  sbin: /usr/local/sbin
   gen_ssl: /etc/ssl/certs/kubernetes
   local_ssl: /tmp/ssl/
   download: /tmp
@@ -75,6 +76,9 @@ kubernetes:
 docker:
   dir:
     data: /var/lib/docker
+containerd:
+  dir:
+    data:  /var/lib/containerd
 ceph:
   dir:
     etc: /etc/ceph

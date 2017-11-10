@@ -50,6 +50,7 @@ spec:
       - --audit-log-maxsize=100
       - --audit-log-path={{ kubernetes.dir.log }}/audit.log
       - --audit-policy-file={{ kubernetes.polices.audit }}
+      - --runtime-config=api/all
       - --experimental-encryption-provider-config={{ kubernetes.polices.encryption }}
       {% if feature_gates.apiserver != "" -%}
       - --feature-gates={{ feature_gates.apiserver }}
@@ -64,7 +65,7 @@ spec:
       httpGet:
         host: 127.0.0.1
         path: /healthz
-        port: 6443
+        port: {{ api_secure_port }}
         scheme: HTTPS
       initialDelaySeconds: 15
       timeoutSeconds: 15

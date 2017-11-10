@@ -3,7 +3,7 @@ dependencies:
   - { role: commons/packages, pkg: "{{ downloads.helm }}" }
   - { role: commons/packages, pkg: "{{ downloads.cni }}" }
   - { role: commons/packages, pkg: "{{ downloads.calicoctl }}", when: network == 'calico' or network == 'canal'}
-  - { role: commons/container-images, img: "{{ images.pod_infra }}", pre_pull: false }
-  - { role: commons/container-images, img: "{{ images.apiserver }}" }
-  - { role: commons/container-images, img: "{{ images.manager }}" }
-  - { role: commons/container-images, img: "{{ images.scheduler }}" }
+  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.pod_infra }}", pre_pull: false }
+  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.manager }}",   pre_pull: false }
+  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.scheduler }}", pre_pull: false }
+  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.apiserver }}" }
