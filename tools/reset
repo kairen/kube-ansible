@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Program: Reset all config
+# History: 2017/1/25 Kyle.b Release
+
+source ./tools/func-vars
+set -eu
+
+ETH=${1:-"enp0s8"}
+
+role_config "network:.*" "network: calico" ${GROUP_VARS_PATH}
+role_config "cni_iface:.*" "cni_iface: \"\"" ${GROUP_VARS_PATH}
+role_config "etcd_iface:.*" "etcd_iface: \"\"" ${GROUP_VARS_PATH}
+role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: \"{{ ansible_default_ipv4.interface }}\"" ${GROUP_VARS_PATH}
+role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
+
+# clean up
+rm -rf inventory hosts
+vagrant destroy -f
+
+vagrant_config "master_count.*" "master_count = 1"
+vagrant_config "node_count.*" "node_count = 2"
+vagrant_config "system_vcpus.*" "system_vcpus = 1"
+vagrant_config "system_memory.*" "system_memory = 2048"

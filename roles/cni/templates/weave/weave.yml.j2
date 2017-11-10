@@ -1,27 +1,23 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: weave-net
-  labels:
-    name: weave-net
-  namespace: kube-system
----
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: weave-net
   labels:
-    name: weave-net
+    cni: weave-net
   namespace: kube-system
 spec:
   template:
     metadata:
       labels:
-        name: weave-net
+        cni: weave-net
     spec:
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      serviceAccountName: weave-net
       containers:
         - name: weave
-          image: 'weaveworks/weave-kube:2.0.4'
+          image: weaveworks/weave-kube:2.0.4
           command:
             - /home/weave/launch.sh
           env:
@@ -76,10 +72,6 @@ spec:
       restartPolicy: Always
       securityContext:
         seLinuxOptions: {}
-      serviceAccountName: weave-net
-      tolerations:
-        - effect: NoSchedule
-          operator: Exists
       volumes:
         - name: weavedb
           hostPath:

@@ -1,15 +1,16 @@
 stages:
-  - linter-check
-  - deploy-virtualbox
-  - deploy-libvirt
-  - deploy-openstack
+  - Ansible lint check
+  - Virtualbox Deploy
+  - Libvirt Deploy
+  - OpenStack Deploy
 
 before_script:
   - 'sudo rm -rf ~/VirtualBox\ VMs/*'
+  - 'sudo rm -rf /tmp/ssl'
 
 # linter check template
 .linter_template: &linter_template
-  stage: linter-check
+  stage: Ansible lint check
   before_script:
     - sudo pip install -U pip
     - sudo pip install -U ansible-lint
@@ -22,11 +23,10 @@ before_script:
 
 # virtualbox template
 .vbox_template: &vbox_template
-  stage: deploy-virtualbox
+  stage: Virtualbox Deploy
   script:
-    - ./reset-config
-    - './setup-vagrant -m 2048 -n ${CNI_PLUGIN} -f true'
-    - vagrant destroy -f
+    - './tools/setup -m ${MEMORY} -n ${CNI_PLUGIN} -w ${WORKER} -b ${MASTER} -o ${OS} -f true'
+    - './tools/reset'
   only: [/^pr-.*$/]
   tags:
     - shell
@@ -34,9 +34,8 @@ before_script:
 
 # openstack template
 .os_template: &os_template
-  stage: deploy-openstack
+  stage: OpenStack Deploy
   script:
-    - ./reset-config
     - 'cp ${INVENTORY_PATH} ./'
     - export MASTER_IP=$(ip route get 8.8.8.8 | awk '{print $NF; exit}')
     - 'perl -i -pe "s/172.16.35.9/${MASTER_IP}/g" ${GROUP_VARS_PATH}'
@@ -46,42 +45,51 @@ before_script:
     - ansible-playbook reset.yml
     - ansible-playbook cluster.yml
     - ansible-playbook addons.yml
+    - mkdir -p ~/.kube/
+    - sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+    - sudo chmod 775 ~/.kube/config
     - kubectl get node
     - kubectl -n kube-system get po
     - kubectl -n kube-system get svc
   only: [/^pr-.*$/]
 
 # linter check
-linter-cluster-yaml:
+cluster-yaml-lint:
   variables:
     FILE: cluster.yml
   <<: *linter_template
 
-linter-addons-yaml:
+addons-yaml-lint:
   variables:
     FILE: addons.yml
   <<: *linter_template
 
-linter-reset-yaml:
+reset-yaml-lint:
   variables:
     FILE: reset.yml
   <<: *linter_template
 
-linter-eph-k8s-yaml:
+storage-yaml-lint:
   variables:
-    FILE: ceph-k8s.yml
+    FILE: storage.yml
   <<: *linter_template
 
-# deploy vbox
-vbox-ubuntu-calico:
+vagrant-ubuntu-calico:
   variables:
-    CNI_PLUGIN: flannel
+    OS: ubuntu16
+    CNI_PLUGIN: calico
+    MEMORY: 2048
+    MASTER: 1
+    WORKER: 2
   <<: *vbox_template
 
-vbox-ubuntu-flannel:
-  when: manual
+vagrant-centos-calico:
   variables:
-    CNI_PLUGIN: flannel
+    OS: centos7
+    CNI_PLUGIN: calico
+    MEMORY: 2048
+    MASTER: 1
+    WORKER: 2
   <<: *vbox_template
 
 # deploy openstack

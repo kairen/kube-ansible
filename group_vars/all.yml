@@ -1,33 +1,59 @@
 ---
 
-# Kubenrtes version, only support 1.7.0+
-kube_version: 1.7.9
+# Kubenrtes version, only support 1.8.0+.
+kube_version: 1.8.2
 
-# Network plugin implementation('flannel', 'calico', 'canal', 'weave', 'router')
+# CRI plugin,
+# Supported runtime: docker, containerd.
+cri_plugin: docker
+
+# CNI plugin,
+# Supported network: calico
 network: calico
-pod_network_cidr: "10.244.0.0/16"
+pod_network_cidr: 10.244.0.0/16
 
-# flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8)
+# CNI opts: flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8).
 cni_iface: ""
 
-# Kubernetes cluster network
+# Kubernetes cluster network.
 cluster_subnet: 10.96.0
 kubernetes_service_ip: "{{ cluster_subnet }}.1"
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
 api_secure_port: 5443
 
-# Set if you want to access kubernetes cluster via load balancer
+# Highly Available configuration.
+haproxy: true
+keepalived: true # set `lb_vip_address` as keepalived vip, if this enable.
+keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
+
 lb_vip_address: 172.16.35.9
 lb_secure_port: 6443
 lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
 
-# Highly Available configuration
-haproxy: true
+# Etcd configuration variables.
+etcd_initial_token: etcd-k8s-cluster
+etcd_domain_name: test.etcd.com
+etcd_iface: ""
 
-keepalived: true
-keepalived_vip_interface: "{{ ansible_default_ipv4.interface }}"
-keepalived_virtual_mask: 24
+# A list of insecure registrys you might need to define
+add_registry:
+# - "gcr.io"
+
+insecure_registrys:
+# - "172.16.35.9:5000"
+
+# Kubernetes authentication and security
+bootstrap_token: b96cee11d16de85256d63efd2e18e7d8
+extra_auth:
+  basic:
+    accounts:
+    - 'p@ssw0rd,admin,admin'
+  # token:
+  #   values:
+  #   - "0fdd1a8875ec,admin,admin"
+
+encryption_token: iTNwwjHuxNI9+8niwh8GJKT5NQiHFqcOTrrhzYfhAvk=
 
 # Core addons (Strongly recommend)
 kube_dns: true
@@ -35,66 +61,27 @@ dns_name: cluster.local # cluster dns name
 dns_ip: "{{ cluster_subnet }}.10"
 
 kube_proxy: true
-kube_proxy_mode: iptables # "ipvs(1.8+)", "iptables" or "userspace".
-
-# Etcd variable
-etcd_domain_name: test.etcd.com # use to create wildcard ssl certificate for api and etcd
-etcd_peer_url_scheme: http # http / https
-
-# A list of insecure registrys you might need to define
-insecure_registrys:
-# - "gcr.io"
-
-# Extra authenticating
-extra_auth:
-  basic:
-    accounts:
-    - 'p@ssw0rd,admin,admin'
-  # rbac:
-  #   rules:
-  # abac:
-  #   policies:
-  #   - '{"user":"admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kube-admin", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kube-node", "nonResourcePath": "*", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"scheduler", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"user":"kubelet", "namespace": "*", "resource": "*", "apiGroup": "*"}'
-  #   - '{"group":"system:serviceaccounts", "namespace": "*", "resource": "*", "apiGroup": "*", "nonResourcePath": "*"}'
-  # token:
-  #   values:
-  #   - '0fdd1a8875ec,admin,admin'
+kube_proxy_mode: iptables # support: iptables, userspace or ipvs(alpha).
+kube_proxy_ipvs_scheduler: rr # depend on ipvs mode.
 
 # Extra addons
-kube_dashboard: true # Kubenetes dasobhard console.
-kube_logging: false # EFK stack for Kubernetes
-kube_monitoring: true # Grafana + Infuxdb + Heapster monitoring
+kube_dashboard: false
+kube_logging: false
+kube_monitoring: false
 
-# Ingress controller
-ingress: true
-ingress_type: nginx # 'nginx', 'haproxy', 'traefik'
+ingress: false
+ingress_type: nginx # support: nginx or traefik.
 
-# Helm auto initialize
-helm_init: false
+helm_init: false # Helm auto initialize.
 
-kube_watch: false # Watch Kubernetes events to notify Slack channel.
-watch_vars:
-  slack:
-    token: "<Slack legacy token>"
-    channel: "<Slack channel>"
-  resources:
-    dp: false
-    rc: false
-    rs: false
-    ds: false
-    svc: true
-    pod: true
-
-# Local Docker registry info
-registry_offline: false
+# Extra storage
+registry: false
 registry_ui: false
-registry_offline_url: "172.16.35.9:5000"
+registry_url: "172.16.35.9:5000"
 
-# Enable offline pkg repository mode
+ceph_cluster: false
+
+# Offline mode area
 repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

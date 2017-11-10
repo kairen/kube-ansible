@@ -1,0 +1,7 @@
+{{ bootstrap_token }},kubelet-bootstrap,10001,"system:bootstrappers"
+{% if extra_auth.token is defined -%}
+{% for val in extra_auth.token.values %}
+{{ val }}
+{% if not loop.last -%}{%- endif -%}
+{% endfor %}
+{% endif -%}

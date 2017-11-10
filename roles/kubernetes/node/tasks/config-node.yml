@@ -1,0 +1,19 @@
+---
+
+- name: Create Kubernetes etc directory
+  file: path={{ kubernetes.dir.etc }} state=directory
+
+- name: Create Kubernetes manifest config directory
+  file: path={{ kubernetes.dir.manifest }} state=directory
+
+- name: Create Kubernetes log directory
+  file: path={{ kubernetes.dir.log }} state=directory
+
+- name: Copy Kubernetes config from local
+  template:
+    src: "{{ dir.local_ssl }}/{{ item.file }}"
+    dest: "{{ item.path }}"
+  with_items:
+    - { file: kubelet-bootstrap.conf, path: "{{ kubernetes.config.bootstrap }}" }
+    - { file: kube-proxy.conf,        path: "{{ kubernetes.config.kube_proxy }}" }
+  register: copy_config

@@ -10,5 +10,5 @@
 - name: "Load {{ img.name }} image"
   when: check_image.stdout|int <= 0
   shell: |
-    docker load < {{ image_tmp }}/{{ img.name }}-{{ img.tag }}-image.tar
+    docker load < {{ dir.images }}/{{ img.name }}-{{ img.tag }}-image.tar
   register: load_image

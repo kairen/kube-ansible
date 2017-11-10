@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: commons/container-images, img: "{{ images.registry }}" }

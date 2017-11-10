@@ -1,0 +1,2 @@
+dependencies:
+  - { role: commons/packages, when: node_role == "master", pkg: "{{ downloads.kubectl }}" }

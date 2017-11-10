@@ -1,34 +1,26 @@
 ---
 
-etcd_endpoints: "{% for node in groups['etcd'] %}{{ etcd_peer_url_scheme }}://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
-flannel_key: /atomic.io/network
-conf_loc: "{{ flannel_key }}/config"
-
+etcd_endpoints: "{% for node in groups['etcds'] %}https://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
 flannel:
   name: flannel
   template:
     ds: flannel.yml
     rbac: flannel-rbac.yml
-    config: flannel-network.json
-
 calico:
   name: calico
   template:
     ds: calico.yml
     rbac: calico-rbac.yml
-
 canal:
   name: canal
   template:
     ds: canal.yml
     rbac: canal-rbac.yml
-
 weave:
   name: weave
   template:
     ds: weave.yml
     rbac: weave-rbac.yml
-
 router:
   name: kube-router
   template:

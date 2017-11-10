@@ -1,3 +1,0 @@
----
-dependencies:
-  - { role: images, img: "{{ images.repos }}" }

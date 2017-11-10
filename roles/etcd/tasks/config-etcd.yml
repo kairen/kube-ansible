@@ -1,0 +1,17 @@
+---
+
+- name: Create Etcd etc directory
+  file: path={{ etcd.dir.etc }} state=directory
+
+- name: Create Etcd SSL certificate directory
+  file: path={{ etcd.dir.ssl }} state=directory
+
+- name: Copy Etcd certificate from ansible host
+  copy:
+    src: "{{ dir.local_ssl }}/{{ item }}"
+    dest: "{{ etcd.dir.ssl }}/{{ item }}"
+  with_items: "{{ etcd_keys }}"
+  register: copy_etcd_certs
+
+- name: Copy Etcd conf template file
+  template: src=etcd.conf.j2 dest={{ etcd.dir.etc }}/etcd.conf

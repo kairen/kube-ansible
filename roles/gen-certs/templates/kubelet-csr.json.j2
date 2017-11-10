@@ -1,0 +1,16 @@
+{
+  "CN": "system:node:{{ hostvars['' + item].ansible_hostname }}",
+  "key": {
+    "algo": "{{ key.algo }}",
+    "size": {{ key.size }}
+  },
+  "names": [
+    {
+      "C": "{{ info.country }}",
+      "ST": "{{ info.state }}",
+      "L": "{{ info.locality }}",
+      "O": "system:nodes",
+      "OU": "{{ info.org_uit }}"
+    }
+  ]
+}

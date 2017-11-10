@@ -1,0 +1,22 @@
+---
+
+- name: Create kubelet systemd dropin directory
+  file:
+    path: "{{ systemd.dir.dropin }}/kubelet.service.d"
+    state: directory
+
+- name: Copy kubelet dropin file into directory
+  template:
+    src: "services/10-kubelet.conf.j2"
+    dest: "{{ systemd.dir.dropin }}/kubelet.service.d/10-kubelet.conf"
+
+- name: Create kubelet data directory
+  file: path={{ kubernetes.dir.kubelet_data }} state=directory
+
+- name: Copy kubelet systemd service file
+  template:
+    src: "services/kubelet.service.j2"
+    dest: "{{ systemd.dir.service }}/kubelet.service"
+    owner: root
+    group: root
+    mode: 0755

@@ -1,11 +1,11 @@
 ---
 
-# Keepalived configuration
 keepalived_check_ip: any
 keepalived_check_port: 2379
-keepalived_virtual_id: 51
+keepalived_check_vid: 51
+keepalived_check_vmask: 24
 
-# HAProxy configuration
-haproxy_monitor_port: 9090
+haproxy_etc_dir: /etc/haproxy
+haproxy_admin_port: 9090
 haproxy_admin_user: admin
-haproxy_admin_password: admin123
+haproxy_admin_passwd: admin123

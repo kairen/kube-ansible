@@ -1,8 +1,8 @@
 {% macro initial_cluster() -%}
-{% for host in groups[etcd_peers_group] -%}
-  {{ hostvars[host]['ansible_hostname'] }}={{ etcd_peer_url_scheme }}://
-  {%- if etcd_interface != "" -%}
-    {{ hostvars[host]['ansible_' + etcd_interface].ipv4.address }}
+{% for host in groups[etcd_group] -%}
+  {{ hostvars[host]['ansible_hostname'] }}=https://
+  {%- if etcd_iface != "" -%}
+    {{ hostvars[host]['ansible_' + etcd_iface].ipv4.address }}
   {%- else -%}
     {{ hostvars[host].ansible_default_ipv4.address }}
   {%- endif -%}
@@ -10,36 +10,28 @@
   {%- if not loop.last -%},{%- endif -%}
 {%- endfor -%}
 {% endmacro -%}
-
-{% if groups[etcd_peers_group] and groups[etcd_peers_group] | length > 0 %}
+# [member]
 ETCD_NAME={{ ansible_hostname }}
-{% else %}
-ETCD_NAME=default
-{% endif %}
-ETCD_DATA_DIR={{ etcd_data_dir }}
+ETCD_DATA_DIR={{ etcd.dir.data }}
+ETCD_PROXY=off
 
-{% if groups[etcd_peers_group] and groups[etcd_peers_group] | length > 0 %}
 # [cluster]
 ETCD_INITIAL_ADVERTISE_PEER_URLS={{ etcd_initial_advertise_peer_urls }}
 ETCD_INITIAL_CLUSTER={{ initial_cluster() }}
 ETCD_INITIAL_CLUSTER_STATE={{ etcd_initial_cluster_state }}
-ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_initial_cluster_token }}
+ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_initial_token }}
 ETCD_LISTEN_PEER_URLS={{ etcd_listen_peer_urls }}
 ETCD_ADVERTISE_CLIENT_URLS={{ etcd_advertise_client_urls }}
 ETCD_LISTEN_CLIENT_URLS="{{ etcd_listen_client_urls }}"
-{% endif %}
-
-# [proxy]
-ETCD_PROXY="off"
 
 # [security]
-{% if etcd_peer_url_scheme == 'https' -%}
-ETCD_CA_FILE={{ etcd_ca_file }}
-ETCD_CERT_FILE={{ etcd_cert_file }}
-ETCD_KEY_FILE={{ etcd_key_file }}
-{% endif -%}
-{% if etcd_peer_url_scheme == 'https' -%}
-ETCD_PEER_CA_FILE={{ etcd_ca_file }}
-ETCD_PEER_CERT_FILE={{ etcd_cert_file }}
-ETCD_PEER_KEY_FILE={{ etcd_key_file }}
-{% endif -%}
+ETCD_AUTO_TLS="true"
+ETCD_PEER_AUTO_TLS="true"
+ETCD_CLIENT_CERT_AUTH="true"
+ETCD_PEER_CLIENT_CERT_AUTH="true"
+ETCD_TRUSTED_CA_FILE="{{ etcd.certs.ca }}"
+ETCD_CERT_FILE="{{ etcd.certs.cert }}"
+ETCD_KEY_FILE="{{ etcd.certs.cert_key }}"
+ETCD_PEER_TRUSTED_CA_FILE="{{ etcd.certs.ca }}"
+ETCD_PEER_CERT_FILE="{{ etcd.certs.cert }}"
+ETCD_PEER_KEY_FILE="{{ etcd.certs.cert_key }}"

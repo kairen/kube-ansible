@@ -1,0 +1,44 @@
+---
+
+- name: Create dashboard certificates directory
+  file: path={{ kubernetes.addon.dashboard_certs }} state=directory
+
+- name: Check dashboard certificates already exists
+  stat: path="{{ kubernetes.addon.dashboard_certs }}/dashboard.crt"
+  register: check_certs
+
+- name: Create dashboard certificates
+  when: not check_certs.stat.exists
+  command: "{{ item }}"
+  with_items:
+    - "openssl genrsa -des3 -passout pass:x -out {{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key 2048"
+    - "openssl rsa -passin pass:x -in {{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.key"
+    - "openssl req -new -key {{ kubernetes.addon.dashboard_certs }}/dashboard.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.csr -subj '/CN=kube-dashboard'"
+    - "openssl x509 -req -sha256 -days 365 -in {{ kubernetes.addon.dashboard_certs }}/dashboard.csr -signkey {{ kubernetes.addon.dashboard_certs }}/dashboard.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.crt"
+  register: create_certs
+
+- name: Delete dashboard pass key
+  when: create_certs
+  file: path="{{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key" state=absent
+  ignore_errors: True
+
+- name: Check dashboard secret already exists
+  when: create_certs or check_certs.stat.exists
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+      get secrets -n kube-system | grep kubernetes-dashboard-certs
+  run_once: true
+  register: check_secret
+  ignore_errors: True
+
+- name: Create Kubernetes dashboard secret
+  when: check_secret|failed
+  command: |
+    {{ dir.bin }}/kubectl create --kubeconfig={{ kubernetes.config.admin }} \
+      secret generic kubernetes-dashboard-certs \
+      --from-file={{ kubernetes.addon.dashboard_certs }} -n kube-system
+  register: secret_result
+  until: secret_result.rc == 0
+  retries: 5
+  delay: 3
+  ignore_errors: True

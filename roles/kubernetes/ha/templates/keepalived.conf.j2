@@ -16,7 +16,7 @@ global_defs {
     vrrp_instance lb-vips {
         state BACKUP
         interface {{ keepalived_vip_interface }}
-        virtual_router_id {{ keepalived_virtual_id }}
+        virtual_router_id {{ keepalived_check_vid }}
         priority 100
         advert_int 1
         nopreempt
@@ -28,6 +28,6 @@ global_defs {
             auth_pass blahblah
         }
         virtual_ipaddress {
-            {{ lb_vip_address }}/{{ keepalived_virtual_mask }} dev {{ keepalived_vip_interface }}
+            {{ lb_vip_address }}/{{ keepalived_check_vmask }} dev {{ keepalived_vip_interface }}
         }
     }

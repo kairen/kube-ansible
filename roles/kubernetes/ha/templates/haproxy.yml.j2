@@ -7,10 +7,6 @@ metadata:
     component: haproxy
     tier: control-plane
 spec:
-  volumes:
-  - name: cfg-volume
-    hostPath:
-      path: "/etc/haproxy/haproxy.cfg"
   containers:
   - name: "{{ images.haproxy.name }}"
     image: "{{ images.haproxy.repos }}{{ images.haproxy.name }}:{{ images.haproxy.tag }}"
@@ -22,3 +18,7 @@ spec:
       readOnly: true
       mountPath: "/usr/local/etc/haproxy/haproxy.cfg"
   hostNetwork: true
+  volumes:
+  - name: cfg-volume
+    hostPath:
+      path: "/etc/haproxy/haproxy.cfg"

@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - { role: images }
+  - { role: commons/container-images }

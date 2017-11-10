@@ -1,0 +1,11 @@
+---
+
+- hosts: nodes
+  become: yes
+  vars:
+    bases:
+      kubectl:
+        url: "https://storage.googleapis.com"
+        version: "1.7.10"
+  roles:
+    - { role: commons/packages, pkg: "{{ downloads.kubectl }}" }

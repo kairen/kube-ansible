@@ -1,0 +1,22 @@
+---
+
+- hosts: nodes
+  become: yes
+  vars:
+    ubuntu:
+      name: ubuntu
+      repos: ""
+      tag: "16.04"
+  roles:
+    - { role: commons/container-images, img: "{{ images.keepalived }}", archive: true }
+    - { role: commons/container-images, img: "{{ ubuntu }}" }
+  tasks:
+    - name: Check archive Docker image
+      stat: path="{{ dir.images }}/{{ images.keepalived.name }}-{{ images.keepalived.tag  }}-image.tar"
+      register: check_archive_image
+
+    - name: Check custom pull image
+      shell: |
+        {{ dir.bin }}/docker images | awk '{print $1":"$2}' | \
+          grep -o '{{ ubuntu.repos }}{{ ubuntu.name }}:{{ ubuntu.tag }}'
+      register: check_pull_image
