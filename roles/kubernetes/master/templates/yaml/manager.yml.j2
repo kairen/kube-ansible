@@ -18,6 +18,7 @@ spec:
       - --v=0
       - --logtostderr=true
       - --address=127.0.0.1
+      - --port=10252
       - --cluster-cidr={{ pod_network_cidr }}
       - --root-ca-file={{ kubernetes.certs.ca }}
       - --cluster-signing-cert-file={{ kubernetes.certs.ca }}
@@ -33,8 +34,10 @@ spec:
       - --pod-eviction-timeout={{ pod_eviction_timeout }}
       - --controllers={{ controllers }}
       - --allocate-node-cidrs=true
+      {% if feature_gates.controller != "" -%}
+      - --feature-gates={{ feature_gates.controller }}
+      {% endif -%}
       - --use-service-account-credentials=true
-      - --feature-gates=RotateKubeletServerCertificate=true
     livenessProbe:
       failureThreshold: 8
       httpGet:

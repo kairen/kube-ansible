@@ -9,9 +9,11 @@
   service: name=kubelet enabled=yes state=stopped
 
 - name: Configure Kubernetes node component
+  when: "ansible_host not in groups['masters']"
   include_tasks: config-node.yml
 
 - name: Add kubelet systemd service
+  when: "ansible_host not in groups['masters']"
   include_tasks: config-systemd.yml
 
 - name: Enable and restart kubelet engine

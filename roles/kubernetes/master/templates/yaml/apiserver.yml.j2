@@ -51,6 +51,9 @@ spec:
       - --audit-log-path={{ kubernetes.dir.log }}/audit.log
       - --audit-policy-file={{ kubernetes.polices.audit }}
       - --experimental-encryption-provider-config={{ kubernetes.polices.encryption }}
+      {% if feature_gates.apiserver != "" -%}
+      - --feature-gates={{ feature_gates.apiserver }}
+      {% endif -%}
       - --token-auth-file={{ kubernetes.polices.token }}
       {% if extra_auth.basic is defined -%}
       - --basic-auth-file={{ kubernetes.polices.user }}

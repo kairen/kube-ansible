@@ -36,12 +36,19 @@
     - "{{ kubernetes.dir.etc }}"
     - "{{ kubernetes.dir.cni }}"
     - "{{ kubernetes.dir.cni_bin }}"
+    - "{{ kubernetes.dir.kubelet_data }}"
+    - "{{ systemd.dir.dropin }}/kubelet.service.d"
     - "{{ ansible_env.HOME }}/.kube"
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ downloads.docker.dir }}"
     - "{{ downloads.kubelet.dir }}"
     - "{{ docker.dir.data }}/containers"
     - "{{ docker.dir.data }}/vfs/dir"
+  ignore_errors: True
+
+- name: Delete IP-in-IP tunnel
+  when: stop_component
+  command: "modprobe -r ipip"
   ignore_errors: True
 
 - name: Delete interfaces for Kubernetes
@@ -54,11 +61,6 @@
     - "cni0"
     - "tunl0"
     - "kube-bridge"
-  ignore_errors: True
-
-- name: Delete IP-in-IP tunnel
-  when: stop_component
-  command: "modprobe -r ipip"
   ignore_errors: True
 
 - name: Delete blackhole route rule

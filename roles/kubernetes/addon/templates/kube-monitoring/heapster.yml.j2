@@ -13,7 +13,6 @@ metadata:
   name: heapster
   namespace: kube-system
   labels:
-    kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   ports:
@@ -28,7 +27,6 @@ metadata:
   name: heapster
   labels:
     k8s-app: heapster
-    kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
   namespace: kube-system
 spec:

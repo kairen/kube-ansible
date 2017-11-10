@@ -18,7 +18,11 @@ spec:
       - --v=0
       - --logtostderr=true
       - --address=127.0.0.1
+      - --port=10251
       - --leader-elect={{ leader_elect }}
+      {% if feature_gates.scheduler != "" -%}
+      - --feature-gates={{ feature_gates.scheduler }}
+      {% endif -%}
       - --kubeconfig={{ kubernetes.config.scheduler }}
     livenessProbe:
       failureThreshold: 8

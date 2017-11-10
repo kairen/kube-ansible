@@ -34,7 +34,7 @@ kubernetes:
     kubelet_data: /var/lib/kubelet
     rotate_cert: /var/lib/kubelet/pki
     log: /var/log/kubernetes
-    addon: /etc/kubernetes/addon
+    addon: /etc/kubernetes/addons
   addon:
     dashboard_certs: /etc/kubernetes/pki/dashboard-certs
     ingress_certs: /etc/kubernetes/pki/haproxy-ingress-certs

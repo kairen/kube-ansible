@@ -31,3 +31,4 @@
     - Create kube-apiserver to kubelet rbac
     - Check bootstrap clusterrole binding already exists
     - Create bootstrap clusterrole binding
+    - Modify node label if master is worker

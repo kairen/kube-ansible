@@ -69,3 +69,14 @@
   retries: 5
   delay: 2
   ignore_errors: true
+
+- name: Modify node label if master is worker
+  when: "ansible_host in groups['nodes']"
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+      label nodes {{ ansible_hostname }} node-role.kubernetes.io/node=true
+  register: modify_result
+  until: modify_result.rc == 0
+  retries: 5
+  delay: 2
+  ignore_errors: true

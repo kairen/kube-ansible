@@ -8,7 +8,8 @@ Feature list:
 - [x] Support build virtual cluster using vagrant.
 - [x] Kubernetes v1.8.0+.
 - [x] Kubernetes common addons.
-- [x] Build HA using keepalived and haproxy.
+- [x] Build HA using Keepalived and HAProxy.
+- [ ] Build HA using Nginx reverse proxy.
 - [x] Ingress controller.
 - [x] Ceph on Kubernetes(v10.2.0+).
 - [ ] Offline installation mode.
