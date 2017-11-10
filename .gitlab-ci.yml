@@ -6,6 +6,7 @@ stages:
 
 before_script:
   - 'sudo rm -rf ~/VirtualBox\ VMs/*'
+  - 'sudo rm -rf /tmp/ssl'
 
 # linter check template
 .linter_template: &linter_template
