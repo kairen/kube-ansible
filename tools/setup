@@ -16,6 +16,8 @@ set -eu
 : ${PROVIDER:="virtualbox"}
 : ${OS_IMAGE:="ubuntu16"}
 : ${FORCE:="false"}
+: ${COMBINE_MASTERS:="1"}
+: ${COMBINE_ETCD:="2"}
 
 [ ${#} -gt 0 ] && [ ${1} == "-h" ] && usage
 

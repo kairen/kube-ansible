@@ -73,43 +73,22 @@ storage-yaml-lint:
     FILE: storage.yml
   <<: *linter_template
 
-# deploy vbox
-vagrant-ubuntu-flannel:
-  variables:
-    OS: ubuntu16
-    CNI_PLUGIN: flannel
-    MEMORY: 2048
-    WORKER: 2
-    MASTER: 3
-  <<: *vbox_template
-
 vagrant-ubuntu-calico:
-  when: manual
   variables:
     OS: ubuntu16
     CNI_PLUGIN: calico
     MEMORY: 2048
-    WORKER: 2
     MASTER: 1
-  <<: *vbox_template
-
-vagrant-centos-flannel:
-  variables:
-    OS: centos7
-    CNI_PLUGIN: flannel
-    MEMORY: 2048
     WORKER: 2
-    MASTER: 3
   <<: *vbox_template
 
 vagrant-centos-calico:
-  when: manual
   variables:
     OS: centos7
     CNI_PLUGIN: calico
     MEMORY: 2048
-    WORKER: 2
     MASTER: 1
+    WORKER: 2
   <<: *vbox_template
 
 # deploy openstack
