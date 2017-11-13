@@ -13,7 +13,15 @@
   run_once: true
   register: create_ssl_dir
 
+- name: Check SSL CA config
+  when: create_ssl_dir
+  stat: path={{ ca_config }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_ca_config
+
 - name: Generate SSL CA config
+  when: not check_ca_config.stat.exists
   template: src=ca-config.json.j2 dest="{{ ca_config }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
