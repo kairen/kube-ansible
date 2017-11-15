@@ -1,18 +1,19 @@
 ---
 
 # Kubenrtes version, only support 1.8.0+.
-kube_version: 1.8.2
+kube_version: 1.8.3
 
 # CRI plugin,
 # Supported runtime: docker, containerd.
 cri_plugin: docker
 
 # CNI plugin,
-# Supported network: calico
+# Supported network: calico, flannel, weave, canal or router.
 network: calico
 pod_network_cidr: 10.244.0.0/16
 
-# CNI opts: flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8).
+# CNI opts,
+# flannel(--iface=enp0s8), calico(interface=enp0s8), canal(enp0s8).
 cni_iface: ""
 
 # Kubernetes cluster network.
