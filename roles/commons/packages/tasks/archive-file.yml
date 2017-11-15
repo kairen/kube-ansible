@@ -8,7 +8,7 @@
   when: not pkg_check.stat.exists
   get_url:
     url: "{{ pkg.url }}/{{ pkg.file }}"
-    dest: "{{ dir.download }}"
+    dest: "{{ dir.download }}/{{ pkg.file }}"
     validate_certs: False
   register: pkg_download
 
