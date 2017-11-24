@@ -1,14 +1,14 @@
 ---
 
 # Kubenrtes version, only support 1.8.0+.
-kube_version: 1.8.3
+kube_version: 1.8.4
 
 # CRI plugin,
-# Supported runtime: docker, containerd.
+# Supported: docker, containerd.
 cri_plugin: docker
 
 # CNI plugin,
-# Supported network: calico, flannel, weave, canal or router.
+# Supported: calico, flannel, weave, canal or router.
 network: calico
 pod_network_cidr: 10.244.0.0/16
 
