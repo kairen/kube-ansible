@@ -11,16 +11,6 @@
     dest: "{{ kubernetes.dir.cni}}/99-loopback.conf"
   register: copy_lo_conf
 
-- name: "Copy runc to sbin directory"
-  copy:
-    src: "{{ downloads.cri_containerd.dir }}/runc"
-    dest: "{{ dir.sbin }}/runc"
-    owner: root
-    group: root
-    mode: 0755
-    remote_src: True
-  register: runc_copy
-
 - name: Copy Containerd engine service files from host
   template:
     src: "{{ item }}.j2"
