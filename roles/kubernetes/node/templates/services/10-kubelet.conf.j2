@@ -9,7 +9,6 @@ Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file={{
 Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
 Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir={{ kubernetes.dir.rotate_cert }}"
 Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false --serialize-image-pulls=false"
-Environment="KUBE_NODE_LABEL=--node-labels=node-role.kubernetes.io/node=true"
 {% if cri_plugin == 'containerd'  %}
 Environment="CRU_RUNTIME_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-containerd.sock"
 {% endif %}

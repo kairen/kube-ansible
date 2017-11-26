@@ -167,9 +167,6 @@ metadata:
     cni: calico
   annotations:
     scheduler.alpha.kubernetes.io/critical-pod: ''
-    scheduler.alpha.kubernetes.io/tolerations: |
-      [{"key": "dedicated", "value": "master", "effect": "NoSchedule" },
-       {"key":"CriticalAddonsOnly", "operator":"Exists"}]
 spec:
   replicas: 1
   strategy:
@@ -181,6 +178,11 @@ spec:
       labels:
         cni: calico
     spec:
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       hostNetwork: true
       serviceAccountName: calico-kube-controllers
       containers:

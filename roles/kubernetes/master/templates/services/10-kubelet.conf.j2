@@ -12,9 +12,6 @@ Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir={{ k
 Environment="CRU_RUNTIME_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-containerd.sock"
 {% endif %}
 Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false --serialize-image-pulls=false"
-{% if ansible_host not in groups['nodes'] %}
-Environment="KUBE_NODE_LABEL=--node-labels=node-role.kubernetes.io/master=true"
-{% endif %}
 ExecStart=
 ExecStart=/usr/local/bin/kubelet $KUBELET_KUBECONFIG_ARGS \
                                  $KUBE_LOGTOSTDERR \
