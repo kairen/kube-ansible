@@ -1,5 +1,5 @@
 {
-  "CN": "system:node:{{ hostvars['' + item].ansible_hostname }}",
+  "CN": "system:node:{{ hostvars['' + item.item].ansible_hostname }}",
   "key": {
     "algo": "{{ key.algo }}",
     "size": {{ key.size }}

@@ -1,0 +1,19 @@
+---
+
+- name: Drain the node
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+      drain {{ item.split(':')[0] }} --delete-local-data --force --ignore-daemonsets
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  ignore_errors: True
+  with_items: "{{ del_nodes.split(',') }}"
+
+- name: Delete the node
+  shell: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+      delete node {{ item.split(':')[0] }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  ignore_errors: True
+  with_items: "{{ del_nodes.split(',') }}"

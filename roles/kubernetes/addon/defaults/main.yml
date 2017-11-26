@@ -9,7 +9,6 @@ addons:
   dns:
     files:
       - kube-dns.yml
-      - kube-dns-sa.yml
     name: kube-dns
   logging:
     files:
