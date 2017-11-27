@@ -52,10 +52,10 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      - key: "CriticalAddonsOnly"
-        operator: "Exists"
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       containers:
         - name: influxdb
           image: gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
