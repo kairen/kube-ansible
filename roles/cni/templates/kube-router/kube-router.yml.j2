@@ -33,11 +33,8 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
-        operator: Exists
       serviceAccountName: kube-router
       containers:
       - name: kube-router

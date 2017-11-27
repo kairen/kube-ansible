@@ -50,10 +50,8 @@ spec:
     spec:
       hostNetwork: true
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      - key: CriticalAddonsOnly
-        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       serviceAccountName: calico-cni-plugin
       containers:
       - name: calico-node
@@ -179,8 +177,6 @@ spec:
         cni: calico
     spec:
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
       hostNetwork: true

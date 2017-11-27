@@ -33,6 +33,11 @@ spec:
       labels:
         k8s-app: elasticsearch-logging
     spec:
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       serviceAccountName: elasticsearch-logging
       initContainers:
       - name: elasticsearch-logging-init

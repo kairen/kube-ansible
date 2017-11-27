@@ -37,9 +37,8 @@ spec:
     spec:
       hostNetwork: true
       tolerations:
-      - key: node-role.kubernetes.io/master
-        operator: Exists
-        effect: NoSchedule
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       serviceAccountName: flannel
       initContainers:
       - name: install-cni

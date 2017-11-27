@@ -33,6 +33,11 @@ spec:
       labels:
         k8s-app: traefik-ingress
     spec:
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:
