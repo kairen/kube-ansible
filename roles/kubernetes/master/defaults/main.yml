@@ -16,5 +16,5 @@ node_monitor_grace_period: 40s
 node_monitor_period: 5s
 feature_gates:
   controller: RotateKubeletServerCertificate=true
-  apiserver: ""
+  apiserver: "{% if kube_version.split('.')[1]|int < 8 %}AdvancedAuditing=true{% endif -%}"
   scheduler: ""

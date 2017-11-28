@@ -1,4 +1,4 @@
-[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-68/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-68)
+[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-80/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-80)
 # Ansible playbooks to build Kubernetes
 A ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
@@ -6,7 +6,7 @@ A ansible playbooks to building the hard way Kubernetes cluster, This playbook i
 
 Feature list:
 - [x] Support build virtual cluster using vagrant.
-- [x] Kubernetes v1.8.0+.
+- [x] Kubernetes v1.7.0+.
 - [x] Kubernetes common addons.
 - [x] Support CNI(calico, flannel, ..., etc) and CRI(docker, containerd).
 - [x] Build HA using Keepalived and HAProxy.
@@ -38,7 +38,7 @@ Start deploying?(y):
 The default cluster using 'RBAC', so you need add permission to access API:
 ```sh
 $ cat <<EOF | kubectl create -f -
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: open-door
@@ -55,15 +55,38 @@ EOF
 ```
 
 Login the addon's dashboard:
-- [Dashboard](https://<API_SERVER>:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
-- [Logging](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)
-- [Monitor](https://<API_SERVER>:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)
+- [Dashboard](https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+- [Logging](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)
+- [Monitor](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)
+
+As of release 1.7 Dashboard no longer has full admin privileges granted by default, so you need to create a token to access the resources:
+```sh
+$ kubectl -n kube-system create sa dashboard
+$ kubectl create clusterrolebinding dashboard --clusterrole cluster-admin --serviceaccount=kube-system:dashboard
+$ kubectl -n kube-system get sa dashboard -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: 2017-11-27T17:06:41Z
+  name: dashboard
+  namespace: kube-system
+  resourceVersion: "69076"
+  selfLink: /api/v1/namespaces/kube-system/serviceaccounts/dashboard
+  uid: 56b880bf-d395-11e7-9528-448a5ba4bd34
+secrets:
+- name: dashboard-token-vg52j
+
+$ kubectl -n kube-system describe secrets dashboard-token-vg52j
+...
+token:      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtdG9rZW4tdmc1MmoiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNTZiODgwYmYtZDM5NS0xMWU3LTk1MjgtNDQ4YTViYTRiZDM0Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZCJ9.bVRECfNS4NDmWAFWxGbAi1n9SfQ-TMNafPtF70pbp9Kun9RbC3BNR5NjTEuKjwt8nqZ6k3r09UKJ4dpo2lHtr2RTNAfEsoEGtoMlW8X9lg70ccPB0M1KJiz3c7-gpDUaQRIMNwz42db7Q1dN7HLieD6I4lFsHgk9NPUIVKqJ0p6PNTp99pBwvpvnKX72NIiIvgRwC2cnFr3R6WdUEsuVfuWGdF-jXyc6lS7_kOiXp2yh6Ym_YYIr3SsjYK7XUIPHrBqWjF-KXO_AL3J8J_UebtWSGomYvuXXbbAUefbOK4qopqQ6FzRXQs00KrKa8sfqrKMm_x71Kyqq6RbFECsHPA
+```
+> Copy and paste the `token` to dashboard.
 
 ## Manual deployment
 In this section you will manually deploy a cluster on your machines.
 
 Prerequisites:
-* *Ansible version*: v2.4 (or newer).
+* *Ansible version: v2.4 (or newer)*.
 * *Linux distributions*: Ubuntu 16/CentOS 7.
 * All Master/Node should have password-less access from `Deploy` node.
 
@@ -95,7 +118,7 @@ nodes
 
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
 ```yml
-# Kubenrtes version, only support 1.8.0+.
+# Kubenrtes version, only support 1.7.0+.
 kube_version: 1.8.2
 
 # CRI plugin,

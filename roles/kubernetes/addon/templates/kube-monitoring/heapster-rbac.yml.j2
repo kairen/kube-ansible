@@ -6,7 +6,7 @@ metadata:
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: heapster-binding
@@ -21,7 +21,7 @@ subjects:
   name: heapster
   namespace: kube-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name: system:pod-nanny
@@ -43,7 +43,7 @@ rules:
   - get
   - update
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: heapster-binding
