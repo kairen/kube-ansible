@@ -37,7 +37,11 @@ spec:
       - --kubelet-preferred-address-types={{ preferred_address }}
       - --admission-control={{ admission_controls }}
       - --authorization-mode={{ authorization_mode }}
+      {% if kube_version.split(".")[1]|int < 8 -%}
+      - --experimental-bootstrap-token-auth
+      {% else -%}
       - --enable-bootstrap-token-auth=true
+      {% endif -%}
       - --requestheader-client-ca-file={{ kubernetes.certs.front_ca }}
       - --proxy-client-cert-file={{ kubernetes.certs.front_client }}
       - --proxy-client-key-file={{ kubernetes.certs.front_client_key }}

@@ -7,7 +7,7 @@ metadata:
   namespace: kube-system
 ---
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: kubernetes-dashboard-minimal
   namespace: kube-system
@@ -24,7 +24,7 @@ rules:
   resourceNames: ["heapster"]
   verbs: ["proxy"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: kubernetes-dashboard-minimal

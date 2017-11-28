@@ -2,7 +2,7 @@
 
 keepalived_check_ip: any
 keepalived_check_port: 2379
-keepalived_check_vid: 51
+keepalived_check_vid: 53
 keepalived_check_vmask: 24
 
 haproxy_etc_dir: /etc/haproxy

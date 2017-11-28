@@ -1,6 +1,6 @@
 ---
 
-# Kubenrtes version, only support 1.8.0+.
+# Kubenrtes version, only support 1.7.0+.
 kube_version: 1.8.4
 
 # CRI plugin,

@@ -60,9 +60,7 @@ spec:
       volumes:
       - hostPath:
           path: /run/xtables.lock
-          type: FileOrCreate
         name: xtables-lock
       - hostPath:
           path: {{ kubernetes.config.kube_proxy }}
-          type: FileOrCreate
         name: kubeconfig
