@@ -1,4 +1,4 @@
-[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-68/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-68)
+[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-80/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-80)
 # Ansible playbooks to build Kubernetes
 A ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
