@@ -39,7 +39,7 @@ downloads:
   kubectl:
     name: kubectl
     description: "Kubernetes CLI tool"
-    dir: /opt/kube
+    dir: /opt/kubernetes
     url: "{{ bases.kubectl.url }}/kubernetes-release/release/v{{ bases.kubectl.version }}/bin/linux/amd64"
     symlinks: [ 'kubectl' ]
     file: kubectl
