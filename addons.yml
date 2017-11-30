@@ -1,7 +1,7 @@
 ---
 # Require the cluster is fully operation and running
 
-- hosts: masters
+- hosts: kube-addon
   become: yes
   roles:
   - { role: kubernetes/addon, tags: dashboard,  when: kube_dashboard,  addon: "{{ addons.dashboard }}" }

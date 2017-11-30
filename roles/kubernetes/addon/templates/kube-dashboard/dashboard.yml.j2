@@ -63,6 +63,10 @@ spec:
         args:
           - --tls-key-file=/certs/dashboard.key
           - --tls-cert-file=/certs/dashboard.crt
+        resources:
+          requests:
+            memory: {{ dashboard.requests.memory }}
+            cpu: {{ dashboard.requests.cpu }}
         volumeMounts:
         - name: kubernetes-dashboard-certs
           mountPath: /certs

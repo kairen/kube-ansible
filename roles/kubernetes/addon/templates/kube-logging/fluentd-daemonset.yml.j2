@@ -28,10 +28,10 @@ spec:
           value: --no-supervisor -q
         resources:
           limits:
-            memory: 500Mi
+            memory: {{ logging.fluentd.limits.memory }}
           requests:
-            cpu: 100m
-            memory: 200Mi
+            cpu: {{ logging.fluentd.requests.cpu }}
+            memory: {{ logging.fluentd.requests.memory }}
         volumeMounts:
         - name: varlog
           mountPath: /var/log

@@ -61,10 +61,10 @@ spec:
         image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.7
         resources:
           limits:
-            memory: 170Mi
+            memory: {{ dns.kubedns.limits.memory }}
           requests:
-            cpu: 100m
-            memory: 70Mi
+            cpu: {{ dns.kubedns.requests.cpu }}
+            memory: {{ dns.kubedns.requests.memory }}
         livenessProbe:
           httpGet:
             path: /healthcheck/kubedns
@@ -133,8 +133,8 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 150m
-            memory: 20Mi
+            cpu: {{ dns.dnsmasq.requests.cpu }}
+            memory: {{ dns.dnsmasq.requests.memory }}
         volumeMounts:
         - name: kube-dns-config
           mountPath: /etc/k8s/dns/dnsmasq-nanny
@@ -160,8 +160,8 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: 20Mi
-            cpu: 10m
+            memory: {{ dns.sidecar.requests.memory }}
+            cpu: {{ dns.sidecar.requests.cpu }}
       volumes:
       - name: kube-dns-config
         configMap:
