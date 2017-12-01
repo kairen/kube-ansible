@@ -1,0 +1,78 @@
+---
+
+num_nodes: "{{ groups['kube-cluster'] | length }}"
+base_metrics_memory: 140Mi
+base_metrics_cpu: 80m
+base_eventer_memory: 190Mi
+metrics_memory_per_node: 4
+metrics_cpu_per_node: 0.5
+eventer_memory_per_node: 500
+nanny_memory_per_node: 200
+nanny_memory: "{% if num_nodes >= 0 -%}{{ 90 * 1024 + num_nodes|int * nanny_memory_per_node}}Ki{%- else -%}90Mi{% endif -%}"
+dashboard:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+dns:
+  kubedns:
+    limits:
+      memory: 170Mi
+    requests:
+      cpu: 100m
+      memory: 70Mi
+  dnsmasq:
+    requests:
+      cpu: 150m
+      memory: 20Mi
+  sidecar:
+    requests:
+      memory: 20Mi
+      cpu: 10m
+monitor:
+  resizer:
+    limits:
+      cpu: 80m
+      memory: "{{ nanny_memory }}"
+    requests:
+      cpu: 50m
+      memory: "{{ nanny_memory }}"
+  influxdb:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 250Mi
+  grafana:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+logging:
+  kibana:
+    limits:
+      cpu: 1000m
+    requests:
+      cpu: 100m
+  fluentd:
+    limits:
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
+  elasticsearch:
+    max_map_count: 262144
+    limits:
+      cpu: 500m
+    requests:
+      cpu: 100m
+nginx_ingress:
+  backend:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+    requests:
+      cpu: 10m
+      memory: 20Mi

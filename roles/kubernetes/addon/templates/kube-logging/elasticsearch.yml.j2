@@ -42,7 +42,7 @@ spec:
       initContainers:
       - name: elasticsearch-logging-init
         image: alpine:3.6
-        command: ["/sbin/sysctl", "-w", "vm.max_map_count=262144"]
+        command: ["/sbin/sysctl", "-w", "vm.max_map_count={{ logging.elasticsearch.max_map_count }}"]
         securityContext:
           privileged: true
       containers:
@@ -50,9 +50,9 @@ spec:
         image: gcr.io/google-containers/elasticsearch:v5.6.2
         resources:
           limits:
-            cpu: 500m
+            cpu: {{ logging.elasticsearch.limits.cpu }}
           requests:
-            cpu: 100m
+            cpu: {{ logging.elasticsearch.requests.cpu }}
         ports:
         - containerPort: 9200
           name: db

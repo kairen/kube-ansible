@@ -42,9 +42,9 @@ spec:
         image: docker.elastic.co/kibana/kibana:5.6.2
         resources:
           limits:
-            cpu: 1000m
+            cpu: {{ logging.kibana.limits.cpu }}
           requests:
-            cpu: 100m
+            cpu: {{ logging.kibana.requests.cpu }}
         env:
           - name: ELASTICSEARCH_URL
             value: http://elasticsearch-logging:9200

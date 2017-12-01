@@ -43,18 +43,18 @@ function set_inventory() {
   local etcds="${SUBNET}.[$((${NET_COUNT}+${NODES}-${COMBINE_ETCD})):$((${NET_COUNT}+${TOTAL}-1))]"
   local host_var="ansible_user=vagrant ansible_password=vagrant"
   rm -f inventory
-  for group in "etcds" "masters" "nodes" "kube-cluster:children"; do
+  for group in "etcds" "masters" "nodes"; do
     echo "[${group}]" >> inventory
     if [ ${group} == "nodes" ]; then
       echo -e "${nodes} ${host_var}\n" >> inventory
-    elif [ ${group} == "kube-cluster:children" ]; then
-      echo -e "masters\nnodes" >> inventory
     elif [ ${group} == "etcds"  ]; then
       echo -e "${etcds} ${host_var}\n" >> inventory
     else
       echo -e "${masters} ${host_var}\n" >> inventory
     fi
   done
+  echo -e "[kube-cluster:children]\nmasters\nnodes\n" >> inventory
+  echo -e "[kube-addon:children]\nmasters" >> inventory
 }
 
 # Create hosts file

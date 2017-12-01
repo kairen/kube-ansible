@@ -61,11 +61,11 @@ spec:
           image: gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
           resources:
             limits:
-              cpu: 100m
-              memory: 500Mi
+              cpu: {{ monitor.influxdb.limits.cpu }}
+              memory: {{ monitor.influxdb.limits.memory }}
             requests:
-              cpu: 100m
-              memory: 500Mi
+              cpu: {{ monitor.influxdb.requests.cpu }}
+              memory: {{ monitor.influxdb.requests.memory }}
           ports:
             - name: http
               containerPort: 8083
@@ -79,11 +79,11 @@ spec:
           env:
           resources:
             limits:
-              cpu: 100m
-              memory: 100Mi
+              cpu: {{ monitor.influxdb.limits.cpu }}
+              memory: {{ monitor.influxdb.limits.memory }}
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: {{ monitor.grafana.requests.cpu }}
+              memory: {{ monitor.grafana.requests.memory }}
           env:
             - name: INFLUXDB_SERVICE_URL
               value: http://monitoring-influxdb:8086
