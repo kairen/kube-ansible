@@ -114,6 +114,9 @@ Add the machine info gathered above into a file called `inventory`. For inventor
 [kube-cluster:children]
 masters
 nodes
+
+[kube-addon:children]
+masters
 ```
 
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
