@@ -10,7 +10,7 @@ set -eu
 : ${MASTERS:="1"}
 : ${NODES:="2"}
 : ${CPU:="1"}
-: ${MEMORY:="1024"}
+: ${MEMORY:="2048"}
 : ${ETH:="enp0s8"}
 : ${CNI_PLUGIN:="calico"}
 : ${PROVIDER:="virtualbox"}
@@ -57,4 +57,4 @@ rm -rf /tmp/ssl
 set_inventory
 set_hosts
 
-vagrant up
+vagrant up --provider ${PROVIDER}
