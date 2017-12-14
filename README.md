@@ -55,9 +55,9 @@ EOF
 ```
 
 Login the addon's dashboard:
-- Dashboard: https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-- Logging: https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging
-- Monitor: https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+- Dashboard: [https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/](https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+- Logging: [https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)
+- Monitor: [https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)
 
 As of release 1.7 Dashboard no longer has full admin privileges granted by default, so you need to create a token to access the resources:
 ```sh
