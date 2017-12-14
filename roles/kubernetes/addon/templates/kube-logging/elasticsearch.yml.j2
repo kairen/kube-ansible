@@ -47,7 +47,7 @@ spec:
           privileged: true
       containers:
       - name: elasticsearch-logging
-        image: gcr.io/google-containers/elasticsearch:v5.6.2
+        image: {{ addon_images.elasticsearch }}
         resources:
           limits:
             cpu: {{ logging.elasticsearch.limits.cpu }}

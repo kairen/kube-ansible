@@ -25,8 +25,7 @@
     state: restarted
     enabled: yes
   notify:
-    - Wait for core component start
-    - Helm server initialization
+    - Wait for Kubernetes core component start
     - Copy kube-apiserver to kubelet rbac yaml
     - Create kube-apiserver to kubelet rbac
     - Check bootstrap clusterrole binding already exists

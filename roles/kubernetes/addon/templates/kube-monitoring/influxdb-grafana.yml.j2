@@ -4,6 +4,7 @@ metadata:
   name: monitoring-influxdb
   namespace: kube-system
   labels:
+    k8s-app: influx-grafana
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   ports:
@@ -22,6 +23,7 @@ metadata:
   name: monitoring-grafana
   namespace: kube-system
   labels:
+    k8s-app: influx-grafana
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   ports:
@@ -58,7 +60,7 @@ spec:
         key: node-role.kubernetes.io/master
       containers:
         - name: influxdb
-          image: gcr.io/google_containers/heapster-influxdb-amd64:v1.3.3
+          image: "{{ addon_images.influxdb }}"
           resources:
             limits:
               cpu: {{ monitor.influxdb.limits.cpu }}
@@ -75,7 +77,7 @@ spec:
           - name: influxdb-persistent-storage
             mountPath: /data
         - name: grafana
-          image: gcr.io/google_containers/heapster-grafana-amd64:v4.4.3
+          image: "{{ addon_images.grafana }}"
           env:
           resources:
             limits:
