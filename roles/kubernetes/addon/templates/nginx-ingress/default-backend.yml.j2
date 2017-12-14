@@ -41,7 +41,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: default-http-backend
-        image: gcr.io/google_containers/defaultbackend:1.4
+        image: {{ addon_images.default_backend }}
         livenessProbe:
           httpGet:
             path: /healthz

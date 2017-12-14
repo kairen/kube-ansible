@@ -1,7 +1,7 @@
 ---
 
 # Kubenrtes version, only support 1.7.0+.
-kube_version: 1.8.4
+kube_version: 1.8.5
 
 # CRI plugin,
 # Supported: docker, containerd.
@@ -72,8 +72,6 @@ kube_monitoring: false
 
 ingress: false
 ingress_type: nginx # support: nginx or traefik.
-
-helm_init: false # Helm auto initialize.
 
 # Extra storage
 registry: false

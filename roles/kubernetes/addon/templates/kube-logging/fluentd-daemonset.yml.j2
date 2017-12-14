@@ -22,7 +22,7 @@ spec:
       serviceAccountName: fluentd-es
       containers:
       - name: fluentd-es
-        image: gcr.io/google-containers/fluentd-elasticsearch:v2.0.2
+        image: {{ addon_images.fluentd }}
         env:
         - name: FLUENTD_ARGS
           value: --no-supervisor -q

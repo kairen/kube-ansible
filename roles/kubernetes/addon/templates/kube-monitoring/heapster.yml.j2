@@ -4,6 +4,7 @@ metadata:
   name: heapster
   namespace: kube-system
   labels:
+    k8s-app: heapster
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   ports:
@@ -39,7 +40,7 @@ spec:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
       containers:
-        - image: gcr.io/google_containers/heapster-amd64:v1.5.0-beta.2
+        - image: "{{ addon_images.heapster }}"
           name: heapster
           livenessProbe:
             httpGet:
@@ -53,13 +54,13 @@ spec:
             - --source=kubernetes.summary_api:''
             - --sink=influxdb:http://monitoring-influxdb:8086
         - name: eventer
-          image: gcr.io/google_containers/heapster-amd64:v1.5.0-beta.2
+          image: {{ addon_images.heapster }}
           command:
             - /eventer
             - --source=kubernetes:''
             - --sink=influxdb:http://monitoring-influxdb:8086
         - name: heapster-nanny
-          image: gcr.io/google_containers/addon-resizer:1.7
+          image: {{ addon_images.resizer }}
           resources:
             limits:
               cpu: {{ monitor.resizer.limits.cpu }}
@@ -88,7 +89,7 @@ spec:
             - --poll-period=300000
             - --estimator=exponential
         - name: eventer-nanny
-          image: gcr.io/google_containers/addon-resizer:1.7
+          image: {{ addon_images.resizer }}
           resources:
             limits:
               cpu: {{ monitor.resizer.limits.cpu }}

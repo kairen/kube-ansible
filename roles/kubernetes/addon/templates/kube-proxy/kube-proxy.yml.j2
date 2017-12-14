@@ -30,8 +30,8 @@ spec:
         key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
       containers:
-      - name: kube-proxy-amd64
-        image: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
+      - name: kube-proxy
+        image: {{ addon_images.kube_proxy }}
         command:
         - kube-proxy
         - --v=0

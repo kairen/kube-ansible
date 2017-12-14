@@ -41,7 +41,7 @@ $ cat <<EOF | kubectl create -f -
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: open-door
+  name: open-api
   namespace: ""
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -55,9 +55,9 @@ EOF
 ```
 
 Login the addon's dashboard:
-- [Dashboard](https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
-- [Logging](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging)
-- [Monitor](https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana)
+- Dashboard: https://API_SERVER:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+- Logging: https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/kibana-logging
+- Monitor: https://API_SERVER:6443/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
 
 As of release 1.7 Dashboard no longer has full admin privileges granted by default, so you need to create a token to access the resources:
 ```sh
@@ -86,8 +86,8 @@ token:      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZ
 In this section you will manually deploy a cluster on your machines.
 
 Prerequisites:
-* *Ansible version: v2.4 (or newer)*.
-* *Linux distributions*: Ubuntu 16/CentOS 7.
+* *Ansible version: v2.4.0 (or newer)*.
+* *Linux distributions*: Ubuntu 16+/CentOS 7.x.(CoreOS and SUSE coming soon)
 * All Master/Node should have password-less access from `Deploy` node.
 
 For machine example:
@@ -122,7 +122,7 @@ masters
 Set the variables in `group_vars/all.yml` to reflect you need options. For example:
 ```yml
 # Kubenrtes version, only support 1.7.0+.
-kube_version: 1.8.2
+kube_version: 1.8.4
 
 # CRI plugin,
 # Supported runtime: docker, containerd.

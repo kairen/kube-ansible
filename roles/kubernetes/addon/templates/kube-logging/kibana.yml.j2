@@ -39,7 +39,7 @@ spec:
         key: node-role.kubernetes.io/master
       containers:
       - name: kibana-logging
-        image: docker.elastic.co/kibana/kibana:5.6.2
+        image: {{ addon_images.kibana }}
         resources:
           limits:
             cpu: {{ logging.kibana.limits.cpu }}

@@ -36,9 +36,3 @@
     src: "{{ kubernetes.config.admin }}"
     dest: "{{ ansible_env.HOME }}/.kube/config"
     remote_src: yes
-
-- name: Copy helmrc file
-  when: helm_init
-  template:
-    src: helmrc.j2
-    dest: "{{ ansible_env.HOME }}"

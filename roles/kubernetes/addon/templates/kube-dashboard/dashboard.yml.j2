@@ -12,7 +12,7 @@ kind: Service
 apiVersion: v1
 metadata:
   labels:
-    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: kubernetes-dashboard
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
@@ -25,10 +25,9 @@ spec:
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
+  name: kubernetes-dashboard
   labels:
     k8s-app: kubernetes-dashboard
-    addonmanager.kubernetes.io/mode: Reconcile
-  name: kubernetes-dashboard
   namespace: kube-system
 spec:
   replicas: 1
@@ -39,38 +38,24 @@ spec:
     metadata:
       labels:
         k8s-app: kubernetes-dashboard
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       serviceAccountName: kubernetes-dashboard
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-      initContainers:
-      - name: kubernetes-dashboard-init
-        image: gcr.io/google_containers/kubernetes-dashboard-init-amd64:v1.0.1
-        volumeMounts:
-        - name: kubernetes-dashboard-certs
-          mountPath: /certs
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       containers:
-      - name: kubernetes-dashboard-amd64
-        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1
+      - name: kubernetes-dashboard
+        image: {{ addon_images.dashboard }}
         ports:
-        - containerPort: 9090
+        - containerPort: 8443
           protocol: TCP
         args:
-          - --tls-key-file=/certs/dashboard.key
-          - --tls-cert-file=/certs/dashboard.crt
-        resources:
-          requests:
-            memory: {{ dashboard.requests.memory }}
-            cpu: {{ dashboard.requests.cpu }}
+          - --auto-generate-certificates
         volumeMounts:
         - name: kubernetes-dashboard-certs
           mountPath: /certs
-          readOnly: true
+        - mountPath: /tmp
+          name: tmp-volume
         livenessProbe:
           httpGet:
             scheme: HTTPS
@@ -82,3 +67,5 @@ spec:
       - name: kubernetes-dashboard-certs
         secret:
           secretName: kubernetes-dashboard-certs
+      - name: tmp-volume
+        emptyDir: {}
