@@ -25,7 +25,7 @@ before_script:
 .vbox_template: &vbox_template
   stage: Virtualbox Deploy
   script:
-    - './tools/setup -m ${MEMORY} -n ${CNI_PLUGIN} -w ${WORKER} -b ${MASTER} -o ${OS} -f true'
+    - './tools/setup -m ${MEMORY} -i ${IFACE} -n ${CNI_PLUGIN} -w ${WORKER} -b ${MASTER} -o ${OS} -f true'
     - './tools/reset'
   only: [/^pr-.*$/]
   tags:
@@ -81,6 +81,7 @@ vagrant-ubuntu-calico:
     MEMORY: 2048
     MASTER: 1
     WORKER: 2
+    IFACE: eth1
   <<: *vbox_template
 
 vagrant-centos-calico:
@@ -90,6 +91,7 @@ vagrant-centos-calico:
     MEMORY: 2048
     MASTER: 1
     WORKER: 2
+    IFACE: enp0s8
   <<: *vbox_template
 
 # deploy openstack

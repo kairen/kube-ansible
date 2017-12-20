@@ -22,6 +22,11 @@ Prerequisites:
 * *Ansible version*: v2.4 (or newer).
 * [Vagrant](https://www.vagrantup.com/downloads.html): >= 1.7.0.
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads): >= 5.0.0.
+* Mac OS X need to install `sshpass` tool.
+
+```sh
+$ brew install http://git.io/sshpass.rb
+```
 
 The getting started guide will use Vagrant with VirtualBox. It can deploy your Kubernetes cluster with a single command:
 ```sh
