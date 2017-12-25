@@ -46,7 +46,7 @@ def set_hyperv(hv, config)
   case $os_image
   when :centos7
     config.vm.box = "generic/centos7"
-    config.vm.provision "shell", inline: "sudo yumt install -y python"
+    config.vm.provision "shell", inline: "sudo yum install -y python"
   when :ubuntu16
     config.vm.box = "generic/ubuntu1604"
     config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y python"
