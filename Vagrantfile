@@ -9,6 +9,7 @@ if File.exist?(CONFIG)
 end
 
 $os_image = (ENV['OS_IMAGE'] || "ubuntu16").to_sym
+$provider = (ENV['PROVIDER'] || "virtualbox").to_sym
 
 def set_vbox(vb, config)
   vb.gui = false
@@ -38,12 +39,29 @@ def set_libvirt(lv, config)
   end
 end
 
+def set_hyperv(hv, config)
+  hv.memory = $system_memory
+  hv.cpus = $system_vcpus
+
+  case $os_image
+  when :centos7
+    config.vm.box = "generic/centos7"
+    config.vm.provision "shell", inline: "sudo yumt install -y python"
+  when :ubuntu16
+    config.vm.box = "generic/ubuntu1604"
+    config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y python"
+  end
+end
+
 Vagrant.configure("2") do |config|
+  config.vm.provider "hyperv"
   config.vm.provider "virtualbox"
   config.vm.provider "libvirt"
 
   config.vm.provision "shell", inline: "sudo swapoff -a"
-  config.vm.provision "shell", inline: "sudo cp /vagrant/hosts /etc/"
+  if $provider.to_s != 'hyperv'
+    config.vm.provision "shell", inline: "sudo cp /vagrant/hosts /etc/"
+  end
 
   count = $net_count
   (1..($master_count + $node_count)).each do |mid|
@@ -69,9 +87,16 @@ Vagrant.configure("2") do |config|
         lv.host = "kube-#{n.vm.hostname}"
         set_libvirt(lv, override)
       end
+
+      # Configure hyperv provider
+      n.vm.provider :hyperv do |hv, override|
+        hv.vmname = "kube-#{n.vm.hostname}"
+        set_hyperv(hv, override)
+      end
+
       count += 1
 
-      if mid == ($master_count + $node_count)
+      if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv'
         n.vm.provision "cluster", type: "ansible" do |ansible|
           ansible.playbook = "cluster.yml"
           ansible.inventory_path = "inventory"

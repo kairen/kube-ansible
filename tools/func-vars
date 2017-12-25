@@ -15,7 +15,7 @@ function usage() {
   echo " -w|--worker       Number of worker."
   echo " -c|--cpu          Number of cores per vm."
   echo " -m|--memory       Memory size per vm."
-  echo " -p|--provider     Virtual machine provider(virtualbox, libvirt)."
+  echo " -p|--provider     Virtual machine provider(virtualbox, libvirt, hyperv)."
   echo " -o|--os-image     Virtual machine operation system(ubuntu16, centos7)."
   echo " -i|--interface    Network bind interface."
   echo " -n|--network      Container Network plugin."
