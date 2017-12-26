@@ -10,6 +10,7 @@ end
 
 $os_image = (ENV['OS_IMAGE'] || "ubuntu16").to_sym
 $provider = (ENV['PROVIDER'] || "virtualbox").to_sym
+$auto_deploy = (ENV['DEPLOY']|| "true").to_sym
 
 def set_vbox(vb, config)
   vb.gui = false
@@ -96,7 +97,7 @@ Vagrant.configure("2") do |config|
 
       count += 1
 
-      if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv'
+      if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv' && $auto_deploy.to_s == 'true'
         n.vm.provision "cluster", type: "ansible" do |ansible|
           ansible.playbook = "cluster.yml"
           ansible.inventory_path = "inventory"

@@ -11,11 +11,12 @@ set -eu
 : ${NODES:="2"}
 : ${CPU:="1"}
 : ${MEMORY:="2048"}
-: ${ETH:="enp0s8"}
+: ${ETH:="eth1"}
 : ${CNI_PLUGIN:="calico"}
 : ${PROVIDER:="virtualbox"}
 : ${OS_IMAGE:="ubuntu16"}
 : ${FORCE:="false"}
+: ${DEPLOY:="true"}
 : ${COMBINE_MASTERS:="1"}
 : ${COMBINE_ETCD:="2"}
 
