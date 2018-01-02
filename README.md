@@ -10,7 +10,7 @@ Feature list:
 - [x] Kubernetes common addons.
 - [x] Support CNI(calico, flannel, ..., etc) and CRI(docker, containerd).
 - [x] Build HA using Keepalived and HAProxy.
-- [ ] Build HA using Nginx reverse proxy.
+- [ ] Build HA using nginx reverse proxy.
 - [x] Ingress controller.
 - [x] Ceph on Kubernetes(v10.2.0+).
 - [ ] Offline installation mode.
