@@ -42,21 +42,7 @@ Start deploying?(y):
 
 The default cluster using 'RBAC', so you need add permission to access API:
 ```sh
-$ cat <<EOF | kubectl create -f -
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: open-api
-  namespace: ""
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: User
-    name: system:anonymous
-EOF
+$ kubectl create clusterrolebinding open-api --clusterrole=cluster-admin --user=system:anonymous
 ```
 
 Login the addon's dashboard:
