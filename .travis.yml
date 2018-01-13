@@ -1,0 +1,14 @@
+language: python
+os: linux
+sudo: required
+services:
+  - docker
+python:
+  - "2.7"
+before_install:
+  - pip install -U ansible ansible-lint
+script:
+  - ansible-lint reset.yml
+  - ansible-lint storage.yml
+  - ansible-lint addons.yml
+  - ansible-lint cluster.yml

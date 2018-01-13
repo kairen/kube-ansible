@@ -16,3 +16,10 @@
     dest: "{{ systemd.dir.env }}/docker"
     regexp: "^ADD_REGISTRY= "
     line: 'ADD_REGISTRY="{% for reg in add_registry %}--add-registry={{ reg }} {%endfor %}"'
+
+- name: Add extra options to Docker config
+  when: docker_opts is defined and docker_opts > 0
+  lineinfile:
+    dest: "{{ systemd.dir.env }}/docker"
+    regexp: "^DOCKER_OPTS= "
+    line: 'DOCKER_OPTS="{% for opt in docker_opts %}{{ opt }} {%endfor %}"'
