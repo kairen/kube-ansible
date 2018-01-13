@@ -1,5 +1,4 @@
 stages:
-  - Ansible lint check
   - Virtualbox Deploy
   - Libvirt Deploy
   - OpenStack Deploy
@@ -7,19 +6,6 @@ stages:
 before_script:
   - 'sudo rm -rf ~/VirtualBox\ VMs/*'
   - 'sudo rm -rf /tmp/ssl'
-
-# linter check template
-.linter_template: &linter_template
-  stage: Ansible lint check
-  before_script:
-    - sudo pip install -U pip
-    - sudo pip install -U ansible-lint
-  script:
-    - 'ansible-lint ${FILE}'
-  only: [/^pr-.*$/]
-  allow_failure: true
-  tags:
-    - shell
 
 # virtualbox template
 .vbox_template: &vbox_template
@@ -35,6 +21,7 @@ before_script:
 # openstack template
 .os_template: &os_template
   stage: OpenStack Deploy
+  when: manual
   script:
     - 'cp ${INVENTORY_PATH} ./'
     - export MASTER_IP=$(ip route get 8.8.8.8 | awk '{print $NF; exit}')
@@ -52,27 +39,6 @@ before_script:
     - kubectl -n kube-system get po
     - kubectl -n kube-system get svc
   only: [/^pr-.*$/]
-
-# linter check
-cluster-yaml-lint:
-  variables:
-    FILE: cluster.yml
-  <<: *linter_template
-
-addons-yaml-lint:
-  variables:
-    FILE: addons.yml
-  <<: *linter_template
-
-reset-yaml-lint:
-  variables:
-    FILE: reset.yml
-  <<: *linter_template
-
-storage-yaml-lint:
-  variables:
-    FILE: storage.yml
-  <<: *linter_template
 
 vagrant-ubuntu-calico:
   variables:

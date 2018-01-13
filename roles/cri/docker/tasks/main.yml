@@ -3,8 +3,8 @@
 - name: Add Docker systemd service
   include_tasks: config-systemd.yml
 
-- name: Add Docker registrys
-  include_tasks: config-registry.yml
+- name: Add Docker options
+  include_tasks: config-opts.yml
 
 - name: Enable and start Docker socket
   when: change_system_service|succeeded

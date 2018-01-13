@@ -44,6 +44,10 @@ add_registry:
 insecure_registrys:
 # - "172.16.35.9:5000"
 
+docker_opts:
+# - "HTTP_PROXY=http://proxy.example.com:80/"
+# - "HTTPS_PROXY=https://proxy.example.com:443/"
+
 # Kubernetes authentication and security
 bootstrap_token: b96cee11d16de85256d63efd2e18e7d8
 extra_auth:
@@ -73,12 +77,18 @@ kube_monitoring: false
 ingress: false
 ingress_type: nginx # support: nginx or traefik.
 
-# Extra storage
+# Enable docker registry
 registry: false
 registry_ui: false
 registry_url: "172.16.35.9:5000"
 
+# Enable and disable ceph cluster
 ceph_cluster: false
+
+# Add http and https proxy
+proxy_env:
+  http_proxy: "" # http://:<usr>@<passwd>:<ip>:<port>
+  https_proxy: "" # https://<usr>:<passwd>@<ip>:<port>
 
 # Offline mode area
 repos_offline: false

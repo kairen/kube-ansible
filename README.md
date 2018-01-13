@@ -1,6 +1,6 @@
-[![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-80/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-80)
+[![Build Status](https://travis-ci.org/kairen/kube-ansible.svg?branch=master)](https://travis-ci.org/kairen/kube-ansible) [![pipeline status](https://gitlab.com/kairen/kube-ansible/badges/pr-80/pipeline.svg)](https://gitlab.com/kairen/kube-ansible/commits/pr-80)
 # Ansible playbooks to build Kubernetes
-A ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
+Ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
 [![asciicast](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai.png)](https://asciinema.org/a/YjC8qJshj47pVndOLBFRQ7iai?speed=2)
 
@@ -10,10 +10,8 @@ Feature list:
 - [x] Kubernetes common addons.
 - [x] Support CNI(calico, flannel, ..., etc) and CRI(docker, containerd).
 - [x] Build HA using Keepalived and HAProxy.
-- [ ] Build HA using nginx reverse proxy.
 - [x] Ingress controller.
 - [x] Ceph on Kubernetes(v10.2.0+).
-- [ ] Offline installation mode.
 
 ## Quick Start
 In this section you will deploy a cluster using vagrant.
@@ -37,10 +35,9 @@ Cluster Size: 1 master, 2 worker.
          CNI: calico, Binding iface: eth1
 Start deploying?(y):
 ```
-> * Check latest vagrant image box interface(default binding `enp0s8`).
-> * Use libvirt provider as `sudo ./tools/setup -p libvirt -i eth1`.
+> * Use `sudo ./tools/setup -p libvirt -i eth1` command to setup libvirt provider .
 
-The default cluster using 'RBAC', so you need add permission to access API:
+If you want to access API you need to create RBAC object define the permission of role. For example using  `cluster-admin` role:
 ```sh
 $ kubectl create clusterrolebinding open-api --clusterrole=cluster-admin --user=system:anonymous
 ```
@@ -145,17 +142,6 @@ And then run `addons.yml` to create addons:
 $ ansible-playbook addons.yml
 ```
 
-### Deploy Ceph cluster on Kubernetes
-If you want to deploy a Ceph cluster on to Kubernetes, just run `storage.yml`:
-```sh
-$ ansible-playbook storage.yml
-```
-
-When Ceph cluster is fully running, you must label your storage nodes in order to run osd pods on them:
-```sh
-$ kubectl label node <node_name> node-type=storage
-```
-
 ### Reset cluster
 You can reset cluster with the `reset.yml` playbook:
 ```sh
@@ -170,31 +156,4 @@ $ kubectl get po,svc --namespace=kube-system
 NAME                                 READY     STATUS    RESTARTS   AGE       IP             NODE
 po/haproxy-master1                   1/1       Running   0          2h        172.16.35.13   master1
 ...
-```
-
-Check ceph cluster is running:
-```sh
-$ kubectl get po,svc --namespace=ceph
-
-NAME                                 READY     STATUS    RESTARTS   AGE       IP            NODE
-po/ceph-mds-2743106415-gccj5         1/1       Running   0          1h        172.16.35.10  node1
-po/ceph-mon-246094207-6r9g6          1/1       Running   0          1h        172.16.35.10  node1
-...
-```
-
-Get ceph status using kubectl exec:
-```sh
-$ kubectl --namespace=ceph exec -ti ceph-mon-246094207-6r9g6 -- ceph -s
-
-cluster bafca3e9-b361-464c-b8fa-04bf60b3189f
- health HEALTH_OK
- monmap e2: 1 mons at {ceph-mon-246094207-6r9g6=10.244.67.2:6789/0}
-        election epoch 4, quorum 0 ceph-mon-246094207-6r9g6
-  fsmap e5: 1/1/1 up {0=mds-ceph-mds-2743106415-gccj5=up:active}
-    mgr no daemons active
- osdmap e17: 3 osds: 3 up, 3 in
-        flags sortbitwise,require_jewel_osds,require_kraken_osds
-  pgmap v1813: 80 pgs, 3 pools, 2148 bytes data, 20 objects
-        32751 MB used, 83338 MB / 113 GB avail
-              80 active+clean
 ```

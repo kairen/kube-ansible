@@ -10,6 +10,7 @@
     url: "{{ pkg.url }}/{{ pkg.file }}"
     dest: "{{ dir.download }}/{{ pkg.file }}-{{ bases[''+ pkg.name].version }}"
     validate_certs: False
+  environment: "{{ proxy_env }}"
   register: pkg_download
 
 - name: "Copy {{ pkg.description }} file to release directory"
