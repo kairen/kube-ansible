@@ -16,7 +16,7 @@ bases:
     version: 17.09.0-ce
   cri_containerd:
     url: "https://github.com"
-    version: 1.0.0-alpha.1
+    version: 1.0.0-beta.1
   cni:
     url: "https://github.com"
     version: 0.6.0
@@ -25,7 +25,7 @@ bases:
     version: 1.6.0
   helm:
     url: "https://kubernetes-helm.storage.googleapis.com"
-    version: 2.7.0
+    version: 2.7.2
   cfssl:
     url: "https://pkg.cfssl.org"
     version: 1.2
@@ -76,7 +76,7 @@ downloads:
     unarchive:
       extra_opt: "['--strip-components=0']"
     symlinks: [ 'containerd', 'containerd-release', 'cri-containerd', 'containerd-shim', 'containerd-stress', 'crictl', 'ctr' ]
-    file: "cri-containerd-{{ bases.cri_containerd.version }}.tar.gz"
+    file: "cri-containerd-{{ bases.cri_containerd.version }}.linux-amd64.tar.gz"
   cni:
     name: cni
     description: "Container network interface"
