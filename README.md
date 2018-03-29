@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/inwinstack/kube-ansible.svg?branch=master)](https://travis-ci.org/inwinstack/kube-ansible) [![pipeline status](https://gitlab.com/inwinstack/kube-ansible/badges/pr-94/pipeline.svg)](https://gitlab.com/inwinstack/kube-ansible/commits/pr-94)
+[![Build Status](https://travis-ci.org/kairen/kube-ansible.svg?branch=master)](https://travis-ci.org/kairen/kube-ansible) [![pipeline status](https://gitlab.com/inwinstack/kube-ansible/badges/pr-94/pipeline.svg)](https://gitlab.com/inwinstack/kube-ansible/commits/pr-94)
 # Ansible playbooks to build Kubernetes
 Ansible playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
 
