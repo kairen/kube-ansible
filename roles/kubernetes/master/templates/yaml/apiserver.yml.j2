@@ -45,7 +45,7 @@ spec:
       - --requestheader-client-ca-file={{ kubernetes.certs.front_ca }}
       - --proxy-client-cert-file={{ kubernetes.certs.front_client }}
       - --proxy-client-key-file={{ kubernetes.certs.front_client_key }}
-      - --requestheader-allowed-names=aggregator
+      - --requestheader-allowed-names=front-proxy-client
       - --requestheader-group-headers=X-Remote-Group
       - --requestheader-extra-headers-prefix=X-Remote-Extra-
       - --requestheader-username-headers=X-Remote-User
