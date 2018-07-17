@@ -9,8 +9,8 @@ defaults
   #option httplog
   option dontlognull
   timeout connect 5000ms
-  timeout client 50000ms
-  timeout server 50000ms
+  timeout client 1800000ms
+  timeout server 1800000ms
 
 listen stats
     bind :{{ haproxy_admin_port }}
