@@ -12,7 +12,7 @@ Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path={{ kubernetes.dir.mani
 Environment="KUBELET_POD_CONTAINER=--pod-infra-container-image={{ images.pod_infra.repos }}{{ images.pod_infra.name }}:{{ images.pod_infra.tag }}"
 Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir={{ kubernetes.dir.cni }} --cni-bin-dir={{ kubernetes.dir.cni_bin }}"
 Environment="KUBELET_DNS_ARGS=--cluster-dns={{ dns_ip }} --cluster-domain={{ dns_name }}"
-Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file={{ kubernetes.certs.ca }}"
+Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --authentication-token-webhook=true --client-ca-file={{ kubernetes.certs.ca }}"
 Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
 {% if cri_plugin == 'containerd'  %}
 Environment="CRU_RUNTIME_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-containerd.sock"
