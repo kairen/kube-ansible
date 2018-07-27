@@ -1,0 +1,8 @@
+---
+
+files:
+  - serviceaccount.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - deployment.yaml
+  - class.yaml

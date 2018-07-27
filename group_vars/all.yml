@@ -94,3 +94,9 @@ proxy_env:
 repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"
+
+# Add nfs-client
+nfs_client: true
+nfs_server: "192.168.21.29"
+nfs_path: "/var/nfs/home"
+nfs_storage_class: "nfs"

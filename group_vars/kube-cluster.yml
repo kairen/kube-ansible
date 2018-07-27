@@ -83,3 +83,6 @@ ceph:
   dir:
     etc: /etc/ceph
     addon: /etc/ceph/addons
+nfs_client:
+  dir:
+    addon: /etc/nfs-client/addons
