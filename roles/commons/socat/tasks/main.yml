@@ -1,0 +1,9 @@
+---
+
+- name: Install Socat packages (RHEL/CentOS)
+  when: ansible_os_family == "RedHat"
+  yum: name=socat state=present
+
+- name: Install Socat packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt: name=socat state=present
