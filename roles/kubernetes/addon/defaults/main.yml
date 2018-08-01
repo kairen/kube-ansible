@@ -37,6 +37,7 @@ addons:
       - nginx-ingress-configmap.yml
       - default-backend.yml
       - nginx-ingress.yml
+      - auth-secret.yml
       name: nginx-ingress
     traefik:
       files:
