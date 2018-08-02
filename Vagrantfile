@@ -66,8 +66,8 @@ Vagrant.configure("2") do |config|
 
   count = $net_count
   (1..($master_count + $node_count)).each do |mid|
-    name = (mid <= $node_count) ? "node" : "master"
-    id   = (mid <= $node_count) ? mid : (mid - $node_count)
+    name = (mid <= $master_count) ? "k8s-m" : "k8s-n"
+    id   = (mid <= $master_count) ? mid : (mid - $master_count)
 
     config.vm.define "#{name}#{id}" do |n|
       n.vm.hostname = "#{name}#{id}"
@@ -79,38 +79,37 @@ Vagrant.configure("2") do |config|
 
       # Configure virtualbox provider
       n.vm.provider :virtualbox do |vb, override|
-        vb.name = "kube-#{n.vm.hostname}"
+        vb.name = "#{n.vm.hostname}"
         set_vbox(vb, override)
       end
 
       # Configure libvirt provider
       n.vm.provider :libvirt do |lv, override|
-        lv.host = "kube-#{n.vm.hostname}"
+        lv.host = "#{n.vm.hostname}"
         set_libvirt(lv, override)
       end
 
       # Configure hyperv provider
       n.vm.provider :hyperv do |hv, override|
-        hv.vmname = "kube-#{n.vm.hostname}"
+        hv.vmname = "#{n.vm.hostname}"
         set_hyperv(hv, override)
       end
 
       count += 1
-
-      if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv' && $auto_deploy.to_s == 'true'
-        n.vm.provision "cluster", type: "ansible" do |ansible|
-          ansible.playbook = "cluster.yml"
-          ansible.inventory_path = "inventory"
-          ansible.limit = "all"
-          ansible.host_key_checking = false
-        end
-        n.vm.provision "addon", type: "ansible" do |ansible|
-          ansible.playbook = "addons.yml"
-          ansible.inventory_path = "inventory"
-          ansible.limit = "all"
-          ansible.host_key_checking = false
-        end
-      end
+      # if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv' && $auto_deploy.to_s == 'true'
+      #   n.vm.provision "cluster", type: "ansible" do |ansible|
+      #     ansible.playbook = "cluster.yml"
+      #     ansible.inventory_path = "inventory"
+      #     ansible.limit = "all"
+      #     ansible.host_key_checking = false
+      #   end
+      #   n.vm.provision "addon", type: "ansible" do |ansible|
+      #     ansible.playbook = "addons.yml"
+      #     ansible.inventory_path = "inventory"
+      #     ansible.limit = "all"
+      #     ansible.host_key_checking = false
+      #   end
+      # end
     end
   end
 end

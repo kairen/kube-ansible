@@ -3,12 +3,9 @@ Description=Etcd Service
 After=network.target
 
 [Service]
-EnvironmentFile=-{{ etcd.dir.etc }}/etcd.conf
 Type=notify
-User=etcd
-PermissionsStartOnly=true
-ExecStart={{ dir.bin }}/etcd
-Restart={{ systemd.restart }}
+ExecStart={{ bin_dir }}/etcd --config-file={{ etcd_config_file }}
+Restart=on-failure
 RestartSec=10
 LimitNOFILE=65536
 

@@ -3,7 +3,7 @@
 # Program: Vagrant func and vars
 # History: 2017/1/19 Kyle.b Release
 
-GROUP_VARS_PATH="./group_vars/all.yml"
+GROUP_VARS_PATH="./inventory/group_vars/all.yml"
 VAGRAN_CONFIG_PATH="./tools/.config.rb"
 SUBNET=$(grep -i "^\$private_subnet" ${VAGRAN_CONFIG_PATH} | awk '{ print $3 }' | sed 's/\"//g')
 NET_COUNT=$(grep -i "^\$net_count" ${VAGRAN_CONFIG_PATH} | awk '{ print $3 }' | sed 's/\"//g')
@@ -43,32 +43,32 @@ function set_inventory() {
   local masters="${SUBNET}.[$((${NET_COUNT}+${NODES}-${COMBINE_MASTERS})):$((${NET_COUNT}+${TOTAL}-1))]"
   local etcds="${SUBNET}.[$((${NET_COUNT}+${NODES}-${COMBINE_ETCD})):$((${NET_COUNT}+${TOTAL}-1))]"
   local host_var="ansible_user=vagrant ansible_password=vagrant"
-  rm -f inventory
+  rm -f hosts.ini
   for group in "etcds" "masters" "nodes"; do
-    echo "[${group}]" >> inventory
+    echo "[${group}]" >> hosts.ini
     if [ ${group} == "nodes" ]; then
-      echo -e "${nodes} ${host_var}\n" >> inventory
+      echo -e "${nodes} ${host_var}\n" >> hosts.ini
     elif [ ${group} == "etcds"  ]; then
-      echo -e "${etcds} ${host_var}\n" >> inventory
+      echo -e "${etcds} ${host_var}\n" >> hosts.ini
     else
-      echo -e "${masters} ${host_var}\n" >> inventory
+      echo -e "${masters} ${host_var}\n" >> hosts.ini
     fi
   done
-  echo -e "[kube-cluster:children]\nmasters\nnodes\n" >> inventory
-  echo -e "[kube-addon:children]\nmasters" >> inventory
+  echo -e "[kube-cluster:children]\nmasters\nnodes\n" >> hosts.ini
+  echo -e "[kube-addon:children]\nmasters" >> hosts.ini
 }
 
 # Create hosts file
 function set_hosts() {
   local TOTAL=$((${NODES}+${MASTERS}))
-  echo -e "127.0.0.1 localhost\n::1 localhost" > hosts
+  echo -e "127.0.0.1 localhost\n::1 localhost\n" > hosts
 
   for ((i=0; i<${TOTAL}; i++)) do
     PREFIX=""
-    if [ ${i} -lt ${NODES} ]; then
-      PREFIX="node$((${i}+1))"
+    if [ ${i} -lt ${MASTERS} ]; then
+      PREFIX="k8s-m$((${i}+1))"
     else
-      PREFIX="master$((${i}+1-${NODES}))"
+      PREFIX="k8s-n$((${i}+1-${MASTERS}))"
     fi
     echo "${SUBNET}.$((${NET_COUNT}+${i})) ${PREFIX}" >> hosts
   done

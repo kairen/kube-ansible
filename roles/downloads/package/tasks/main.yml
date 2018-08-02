@@ -1,0 +1,37 @@
+---
+
+- name: Override local repository url
+  when: 'pkg is defined and repos_offline'
+  set_fact:
+    base: >
+      {{ base |
+         combine({ pkg.name: {
+             'url': repos_offline_url,
+             'version': base[pkg.name]['version']
+         }})
+      }}
+
+- name: Create download binaries tmp directory
+  when: pkg is defined
+  file: path="{{ cache_dir }}" state=directory
+
+- name: "Create {{ pkg.description }} release directory"
+  when: pkg is defined
+  file: path="{{ pkg.dir }}" state=directory
+
+- name: Include download archive tasks
+  when: 'pkg is defined and "unarchive" in pkg'
+  include_tasks: archive.yml
+
+- name: Include download binary tasks
+  when: 'pkg is defined and not "unarchive" in pkg'
+  include_tasks: binary.yml
+
+- name: "Symlinks {{ pkg.description }} to {{ bin_dir }}"
+  when: 'pkg is defined and "symlinks" in pkg and pkg_copy'
+  file:
+    src: "{{ pkg.dir }}/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item }}"
+    state: link
+    force: yes
+  with_items: "{{ pkg['symlinks'] }}"

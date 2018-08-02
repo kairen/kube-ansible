@@ -1,0 +1,18 @@
+{
+  "signing": {
+    "default": {
+      "expiry": "{{ cert_info_expiry }}"
+    },
+    "profiles": {
+      "{{ cert_info_profile }}": {
+        "usages": [
+          "signing",
+          "key encipherment",
+          "server auth",
+          "client auth"
+        ],
+        "expiry": "{{ cert_info_expiry }}"
+      }
+    }
+  }
+}

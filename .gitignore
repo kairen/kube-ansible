@@ -5,6 +5,7 @@ tmp
 tmp/*
 hosts
 *.ovpn
-inventory
 .keys/
 .venv/
+logs/
+roles-bk/

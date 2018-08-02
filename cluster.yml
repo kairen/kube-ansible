@@ -1,43 +1,46 @@
 ---
 
 - hosts: masters
-  become: yes
+  become: true
   roles:
-    - { role: gen-certs, tags: gen-certs }
+    - { role: k8s-defaults }
+    - { role: certs, tags: certs }
+
+- hosts: kube-cluster
+  gather_facts: false
+  become: true
+  roles:
+    - { role: k8s-defaults }
+    - { role: container-runtimes, tags: container-runtimes }
 
 - hosts: etcds
-  become: yes
+  become: true
   roles:
+   - { role: k8s-defaults }
    - { role: etcd, tags: etcd }
-
-- hosts: kube-cluster
-  become: yes
-  roles:
-    - { role: cri/docker,     when: cri_plugin == 'docker', tags: docker }
-    - { role: cri/containerd, when: cri_plugin == 'containerd', tags: containerd }
-
-- hosts: masters
-  become: yes
-  roles:
-    - { role: kubernetes/gen-configs, node_role: "master", tags: master-gen-config }
-    - { role: kubernetes/ha, tags: ha }
-    - { role: kubernetes/master, tags: master }
-
-- hosts: nodes
-  become: yes
-  roles:
-    - { role: kubernetes/gen-configs, node_role: "node", tags: master-gen-config }
-    - { role: kubernetes/node, tags: node }
-
-- hosts: masters
-  become: yes
-  roles:
-    - { role: kubernetes/approve-certs, tags: approve-certs }
-    - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
-    - { role: kubernetes/addon, when: kube_dns,   addon: "{{ addons.dns }}",   tags: kube-dns }
-    - { role: cni, tags: cni }
-
-- hosts: kube-cluster
-  become: yes
-  roles:
-    - { role: cri/checker, when: cri_plugin == 'containerd', tags: checker }
+#
+# - hosts: masters
+#   become: yes
+#   roles:
+#     - { role: kubernetes/gen-configs, node_role: "master", tags: master-gen-config }
+#     - { role: kubernetes/ha, tags: ha }
+#     - { role: kubernetes/master, tags: master }
+#
+# - hosts: nodes
+#   become: yes
+#   roles:
+#     - { role: kubernetes/gen-configs, node_role: "node", tags: master-gen-config }
+#     - { role: kubernetes/node, tags: node }
+#
+# - hosts: masters
+#   become: yes
+#   roles:
+#     - { role: kubernetes/approve-certs, tags: approve-certs }
+#     - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
+#     - { role: kubernetes/addon, when: kube_dns,   addon: "{{ addons.dns }}",   tags: kube-dns }
+#     - { role: cni, tags: cni }
+#
+# - hosts: kube-cluster
+#   become: yes
+#   roles:
+#     - { role: cri/checker, when: cri_plugin == 'containerd', tags: checker }

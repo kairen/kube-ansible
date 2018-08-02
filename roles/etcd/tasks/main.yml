@@ -1,16 +1,11 @@
 ---
 
-- name: Etcd configuration
-  include_tasks: config-etcd.yml
+- name: Include vars of cert-path.yml
+  include_vars:
+    file: ../certs/defaults/cert-path.yml
 
-- name: Add Etcd systemd service
-  include_tasks: config-systemd.yml
+- include_tasks: copy-etcd-certs.yml
 
-- name: Enable and restart Etcd
-  when: change_etcd
-  systemd:
-    name: etcd
-    daemon_reload: yes
-    state: restarted
-    enabled: yes
-  register: started_etcd
+- include_tasks: config-etcd.yml
+
+- include_tasks: systemd-etcd.yml

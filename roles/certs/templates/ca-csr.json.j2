@@ -1,0 +1,16 @@
+{
+  "CN": "{{ item.item.name }}",
+  "key": {
+    "algo": "{{ cert_key_algo }}",
+    "size": {{ cert_key_size }}
+  },
+  "names": [
+    {
+      "C": "{{ cert_info_country }}",
+      "ST": "{{ cert_info_state }}",
+      "L": "{{ cert_info_locality }}",
+      "O": "{{ item.item.org }}",
+      "OU": "{{ cert_info_org_uit }}"
+    }
+  ]
+}

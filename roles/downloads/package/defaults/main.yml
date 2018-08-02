@@ -1,0 +1,116 @@
+---
+
+base:
+  kubelet:
+    url: "https://storage.googleapis.com"
+    version: "{{ kube_version }}"
+  kubectl:
+    url: "https://storage.googleapis.com"
+    version: "{{ kube_version }}"
+  etcd:
+    url: "https://github.com"
+    version: 3.2.9
+  docker:
+    url: "https://download.docker.com"
+    version: 18.03.0-ce
+  cri_containerd:
+    url: "https://github.com"
+    version: 1.0.0-beta.1
+  cni:
+    url: "https://github.com"
+    version: 0.6.0
+  helm:
+    url: "https://kubernetes-helm.storage.googleapis.com"
+    version: 2.7.2
+  cfssl:
+    url: "https://pkg.cfssl.org"
+    version: 1.2
+  cfssljson:
+    url: "https://pkg.cfssl.org"
+    version: 1.2
+  sigil:
+    url: "https://github.com"
+    version: 0.4.0
+
+package:
+  kubectl:
+    name: kubectl
+    description: "Kubernetes CLI tool"
+    dir: /opt/kubernetes
+    url: "{{ base.kubectl.url }}/kubernetes-release/release/v{{ base.kubectl.version }}/bin/linux/amd64"
+    symlinks: [ 'kubectl' ]
+    file: kubectl
+  kubelet:
+    name: kubelet
+    description: "Kubernetes kubelet component"
+    dir: /opt/kubernetes
+    url: "{{ base.kubelet.url }}/kubernetes-release/release/v{{ base.kubelet.version }}/bin/linux/amd64"
+    symlinks: [ 'kubelet' ]
+    file: kubelet
+  etcd:
+    name: etcd
+    description: "etcd key/value store"
+    dir: /opt/etcd
+    url: "{{ base.etcd.url }}/coreos/etcd/releases/download/v{{ base.etcd.version }}"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    symlinks: [ 'etcd', 'etcdctl' ]
+    file: "etcd-v{{ base.etcd.version }}-linux-amd64.tar.gz"
+  docker:
+    name: docker
+    description: "Docker engine"
+    dir: /opt/cri
+    url: "{{ base.docker.url }}/linux/static/stable/x86_64"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    symlinks: [ 'docker', 'dockerd', 'docker-containerd', 'docker-containerd-ctr', 'docker-containerd-shim', 'docker-init', 'docker-proxy', 'docker-runc' ]
+    file: "docker-{{ base.docker.version }}.tgz"
+  cri_containerd:
+    name: cri_containerd
+    description: "CRI containerd"
+    dir: /opt/cri
+    url: "{{ base.cri_containerd.url }}/kubernetes-incubator/cri-containerd/releases/download/v{{ base.cri_containerd.version }}"
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+    symlinks: [ 'containerd', 'containerd-release', 'cri-containerd', 'containerd-shim', 'containerd-stress', 'crictl', 'ctr' ]
+    file: "cri-containerd-{{ base.cri_containerd.version }}.linux-amd64.tar.gz"
+  cni:
+    name: cni
+    description: "Container network interface"
+    dir: /opt/cni/bin
+    url: "{{ base.cni.url }}/containernetworking/plugins/releases/download/v{{ base.cni.version }}"
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+    file: "cni-plugins-amd64-v{{ base.cni.version }}.tgz"
+  helm:
+    name: helm
+    description: "Kubernetes package manager"
+    dir: /opt/helm
+    url: "{{ base.helm.url }}"
+    unarchive:
+      extra_opt: "['--strip-components=1']"
+    symlinks: [ 'helm' ]
+    file: "helm-v{{ base.helm.version }}-linux-amd64.tar.gz"
+  cfssl:
+    name: cfssl
+    description: "CFSSL tool"
+    dir: /opt/cfssl
+    url: "{{ base.cfssl.url }}/R{{ base.cfssl.version }}"
+    symlinks: [ 'cfssl' ]
+    file: cfssl_linux-amd64
+  cfssljson:
+    name: cfssljson
+    description: "CFSSL JSON tool"
+    dir: /opt/cfssl
+    url: "{{ base.cfssljson.url }}/R{{ base.cfssljson.version }}"
+    symlinks: [ 'cfssljson' ]
+    file: cfssljson_linux-amd64
+  sigil:
+    name: sigil
+    description: "Sigil tool"
+    dir: /opt/sigil
+    url: "{{ base.sigil.url }}/gliderlabs/sigil/releases/download/v{{ base.sigil.version }}/"
+    unarchive:
+      extra_opt: "['--strip-components=0']"
+    symlinks: [ 'sigil' ]
+    file: "sigil_{{ base.sigil.version }}_Linux_x86_64.tgz"

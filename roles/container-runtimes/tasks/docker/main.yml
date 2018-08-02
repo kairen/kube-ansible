@@ -1,0 +1,24 @@
+---
+
+# Add Docker systemd service
+- include_tasks: config-systemd.yml
+
+# Add Docker options
+- include_tasks: config-opts.yml
+
+- name: Enable and start Docker socket
+  when: change_system_service is succeeded
+  systemd:
+    name: docker.socket
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  register: docker_socket_started
+
+- name: Enable and restart Docker engine
+  systemd:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  register: started_docker

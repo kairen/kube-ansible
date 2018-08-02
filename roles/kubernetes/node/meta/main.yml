@@ -1,4 +1,0 @@
-dependencies:
-  - { role: commons/packages, pkg: "{{ downloads.kubelet }}" }
-  - { role: commons/packages, pkg: "{{ downloads.cni }}" }
-  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.pod_infra }}", pre_pull: false }

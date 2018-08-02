@@ -1,0 +1,30 @@
+[Unit]
+Description=Docker Engine
+After=network.target docker.socket
+
+[Service]
+Type=notify
+EnvironmentFile=-{{ systemd_env_dir }}/docker
+ExecStart={{ bin_dir }}/dockerd {% if ansible_os_family == 'Debian' -%} -H fd:// {% endif -%} \
+  $OPTIONS \
+  $DOCKER_STORAGE_OPTIONS \
+  $DOCKER_OPTS \
+  $DOCKER_NETWORK_OPTIONS \
+  $ADD_REGISTRY \
+  $BLOCK_REGISTRY \
+  $INSECURE_REGISTRY
+
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TimeoutStartSec=0
+Delegate=yes
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

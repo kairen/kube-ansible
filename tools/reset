@@ -15,7 +15,7 @@ role_config "keepalived_vip_interface:.*" "keepalived_vip_interface: \"{{ ansibl
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 
 # clean up
-rm -rf inventory hosts
+rm -rf hosts hosts.ini
 vagrant destroy -f
 
 vagrant_config "master_count.*" "master_count = 1"

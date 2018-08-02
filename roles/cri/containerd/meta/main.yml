@@ -1,2 +1,0 @@
-dependencies:
-  - { role: commons/packages, pkg: "{{ downloads.cri_containerd }}" }
