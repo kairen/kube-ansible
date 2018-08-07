@@ -1,0 +1,29 @@
+---
+
+- name: Create Kubernetes nfs-client-addon directory
+  file: path="{{ nfs_client.dir.addon }}" state=directory
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: "Copy Kubernetes nfs-client-addon yml files"
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ nfs_client.dir.addon }}/{{ item }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  with_items: "{{ files }}"
+  run_once: true
+  register: copy_addon
+
+- name: "Apply {{ addon.name }} addon"
+  when: copy_addon
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+      apply -f {{ nfs_client.dir.addon }}/{{ item }}
+  delegate_to: "{{ groups['masters'][0] }}"
+  with_items: "{{ files }}"
+  run_once: true
+  register: apply_addon
+  until: apply_addon.rc == 0
+  retries: 5
+  delay: 2
+

@@ -7,6 +7,7 @@ Environment="KUBELET_KUBECONFIG_ARGS=--address=0.0.0.0 --port=10250 --kubeconfig
 Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir={{ kubernetes.dir.rotate_cert }}"
 Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false --serialize-image-pulls=false"
 {% endif %}
+Environment="KUBE_NODE_IP=--node-ip={{ ansible_host }}"
 Environment="KUBE_LOGTOSTDERR=--logtostderr=true --v=0"
 Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path={{ kubernetes.dir.manifest }} --allow-privileged=true --anonymous-auth=false"
 Environment="KUBELET_POD_CONTAINER=--pod-infra-container-image={{ images.pod_infra.repos }}{{ images.pod_infra.name }}:{{ images.pod_infra.tag }}"
@@ -28,4 +29,5 @@ ExecStart=/usr/local/bin/kubelet $KUBELET_KUBECONFIG_ARGS \
                                  $KUBELET_AUTHZ_ARGS \
                                  $KUBELET_CERTIFICATE_ARGS \
                                  $KUBELET_EXTRA_ARGS \
+                                 $KUBE_NODE_IP \
                                  $KUBE_NODE_LABEL

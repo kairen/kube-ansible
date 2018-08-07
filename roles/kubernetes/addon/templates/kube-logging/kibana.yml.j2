@@ -48,8 +48,6 @@ spec:
         env:
           - name: ELASTICSEARCH_URL
             value: http://elasticsearch-logging:9200
-          - name: SERVER_BASEPATH
-            value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy/
           - name: XPACK_MONITORING_ENABLED
             value: "false"
           - name: XPACK_SECURITY_ENABLED
@@ -58,3 +56,23 @@ spec:
         - containerPort: 5601
           name: ui
           protocol: TCP
+{% if logging_host -%}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - {{ auth_user }}"
+  name: kibana-logging
+  namespace: kube-system
+spec:
+  rules:
+  - host: {{ logging_host }}
+    http:
+      paths:
+      - backend:
+          serviceName: kibana-logging
+          servicePort: 5601
+{% endif -%}

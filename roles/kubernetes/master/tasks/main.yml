@@ -32,3 +32,7 @@
     - Create bootstrap clusterrole binding
     - Mark master node label
     - Set taint to effect NoSchedule
+    - Create tiller manifest directory
+    - Copy tiller yaml files
+    - Create tiller rbac
+    - Init helm

@@ -22,7 +22,7 @@ addon_images:
   traefik: traefik:v1.5-alpine
   # Kube-proxy
   kube_proxy: "gcr.io/google_containers/kube-proxy-amd64:v{{ kube_version }}"
-  
+  nfs_client: "quay.io/external_storage/nfs-client-provisioner:latest"
 # Kube-addons resources
 num_nodes: "{{ groups['kube-cluster'] | length }}"
 base_metrics_memory: 140Mi

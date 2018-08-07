@@ -10,3 +10,8 @@
   become: yes
   roles:
     - { role: storage/registry, when: registry, tags: registry }
+
+- hosts: masters
+  become: yes
+  roles:
+    - { role: storage/nfs-client, when: nfs_client, tags: nfs-client }

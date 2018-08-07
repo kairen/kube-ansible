@@ -82,3 +82,37 @@
   retries: 5
   delay: 2
   ignore_errors: true
+
+- name: Create tiller manifest directory
+  file:
+    path: "{{ kubernetes.dir.addon }}/tiller"
+    state: directory
+
+- name: Copy tiller yaml files
+  template:
+    src: "yaml/tiller-rbac.yml.j2"
+    dest: "{{ kubernetes.dir.addon }}/tiller/tiller-rbac.yml"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_tiller_rbac
+
+- name: Create tiller rbac
+  when: copy_tiller_rbac and service_started
+  command: |
+    {{ dir.bin }}/kubectl --kubeconfig={{ kubernetes.config.admin }} \
+            apply -f {{ kubernetes.dir.addon }}/tiller/tiller-rbac.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_tiller_result
+  until: create_tiller_result.rc == 0
+  retries: 5
+  delay: 2
+  ignore_errors: true
+
+- name: Init helm
+  when: create_tiller_result
+  command: |
+    {{ dir.bin }}/helm init --service-account tiller
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  ignore_errors: true
