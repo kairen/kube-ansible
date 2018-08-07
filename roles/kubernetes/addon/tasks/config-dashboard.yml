@@ -11,7 +11,7 @@
   when: not check_certs.stat.exists
   command: "{{ item }}"
   with_items:
-    - "openssl genrsa -des3 -passout pass:x -out {{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key 2048"
+    - "openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out {{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key"
     - "openssl rsa -passin pass:x -in {{ kubernetes.addon.dashboard_certs }}/dashboard.pass.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.key"
     - "openssl req -new -key {{ kubernetes.addon.dashboard_certs }}/dashboard.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.csr -subj '/CN=kube-dashboard'"
     - "openssl x509 -req -sha256 -days 365 -in {{ kubernetes.addon.dashboard_certs }}/dashboard.csr -signkey {{ kubernetes.addon.dashboard_certs }}/dashboard.key -out {{ kubernetes.addon.dashboard_certs }}/dashboard.crt"
