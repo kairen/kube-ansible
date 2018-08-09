@@ -1,10 +1,13 @@
 ---
 # Require the cluster is fully operation and running
 
-- hosts: kube-addon
-  become: yes
+- hosts: masters
+  become: true
+  gather_facts: false
   roles:
-  - { role: kubernetes/addon, tags: dashboard,  when: kube_dashboard,  addon: "{{ addons.dashboard }}" }
-  - { role: kubernetes/addon, tags: logging,    when: kube_logging,    addon: "{{ addons.logging }}" }
-  - { role: kubernetes/addon, tags: monitoring, when: kube_monitoring, addon: "{{ addons.monitoring }}" }
-  - { role: kubernetes/addon, tags: ingress,    when: ingress,         addon: "{{ addons.ingress[ingress_type] }}" }
+  - { role: cluster-default }
+  - { role: k8s-addon, tags: dashboard,     when: enable_dashboard,     addon: "{{ addons.dashboard }}" }
+  - { role: k8s-addon, tags: logging,       when: enable_logging,       addon: "{{ addons.logging }}" }
+  - { role: k8s-addon, tags: monitoring,    when: enable_monitoring,    addon: "{{ addons.monitoring }}" }
+  - { role: k8s-addon, tags: ingress-nginx, when: enable_ingress_nginx, addon: "{{ addons.ingress_nginx }}" }
+  - { role: k8s-addon, tags: metric-server, when: enable_metric_server, addon: "{{ addons.metric_server }}" }

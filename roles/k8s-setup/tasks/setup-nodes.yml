@@ -1,0 +1,12 @@
+---
+
+- name: Ensure kubelet config directory exists
+  file: path={{ kubelet_config_dir }} state=directory
+
+- name: Ensure cni config directory exists
+  file: path={{ cni_etc_dir }} state=directory
+
+- name: Copy kubelet config template
+  template:
+    src: "kubelet-config.yml.j2"
+    dest: "{{ kubelet_config }}"

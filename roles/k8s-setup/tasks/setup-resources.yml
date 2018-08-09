@@ -1,0 +1,65 @@
+---
+
+- name: Copy kube-apiserver to kubelet rbac yaml
+  copy: src="{{ item }}" dest="{{ cache_dir }}/{{ item }}"
+  with_items:
+    - apiserver-to-kubelet-rbac.yml
+    - kubelet-bootstrap-rbac.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_rbac_file
+
+- name: Copy TLS bootstrap secret template
+  template: src=kubelet-bootstrap-secret.yml.j2 dest="{{ cache_dir }}/kubelet-bootstrap-secret.yml"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_sercet_file
+
+- name: Create kube-apiserver to kubelet RBAC
+  when: copy_rbac_file and service_started
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ cache_dir }}/apiserver-to-kubelet-rbac.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_result
+  until: create_result.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true
+
+- name: Create TLS bootstrap secret
+  when: copy_sercet_file and service_started
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ cache_dir }}/kubelet-bootstrap-secret.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_result
+  until: create_result.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true
+
+- name: Create TLS bootstrap RBAC
+  when: copy_rbac_file and service_started
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ cache_dir }}/kubelet-bootstrap-rbac.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_result
+  until: create_result.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true
+
+- name: Set taint to effect NoSchedule
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      taint nodes {{ ansible_hostname }} node-role.kubernetes.io/master="":NoSchedule --overwrite
+  register: set_taint
+  until: set_taint.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true

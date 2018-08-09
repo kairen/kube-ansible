@@ -1,4 +1,4 @@
 ---
 
 dependencies:
-  - { role: downloads/package, pkg: "{{ package.etcd }}" }
+  - { role: download/package, pkg: "{{ package.etcd }}" }

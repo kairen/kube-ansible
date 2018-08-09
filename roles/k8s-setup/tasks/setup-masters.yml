@@ -1,0 +1,34 @@
+---
+
+- name: Ensure HAProxy config directory exists
+  file: path={{ haproxy_config_dir }} state=directory
+
+- name: Ensure audit directory exists
+  file: path={{ audit_policy_dir }} state=directory
+
+- name: Ensure audit log directory exists
+  file: path={{ audit_log_dir }} state=directory
+
+- name: Ensure encryption directory exists
+  file: path={{ encryption_config_dir }} state=directory
+
+- name: Ensure Kubernetes manifests directory exists
+  file: path={{ manifest_dir }} state=directory
+
+- name: Copy manifest and config files into cluster
+  template: src="{{ item.src }}.j2" dest="{{ item.dest }}"
+  with_items:
+    - { src: "etc/haproxy.cfg",                       dest: "{{ haproxy_config }}" }
+    - { src: "audit/policy.yml",                      dest: "{{ audit_policy }}" }
+    - { src: "encryption/config.yml",                 dest: "{{ encryption_config }}" }
+    - { src: "manifests/haproxy.yml",                 dest: "{{ manifest_dir }}/haproxy.yml" }
+    - { src: "manifests/keepalived.yml",              dest: "{{ manifest_dir }}/keepalived.yml" }
+    - { src: "manifests/kube-apiserver.yml",          dest: "{{ manifest_dir }}/kube-apiserver.yml" }
+    - { src: "manifests/kube-scheduler.yml",          dest: "{{ manifest_dir }}/kube-scheduler.yml" }
+    - { src: "manifests/kube-controller-manager.yml", dest: "{{ manifest_dir }}/kube-controller-manager.yml" }
+    
+- name: Copy Kubernetes admin config to home directory
+  copy:
+    src: "{{ admin_kubeconfig }}"
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    remote_src: yes

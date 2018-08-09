@@ -1,0 +1,51 @@
+---
+
+- name: Check Kubernetes config already exists
+  stat:
+    path: "{{ item.path }}"
+  with_items: "{{ config.contexts }}"
+  register: check_config_files
+
+- name: Set Kubernetes cluster into config files
+  when: not item.stat.exists
+  command: |
+    {{ bin_dir }}/kubectl config set-cluster {{ config.cluster_name }} \
+      --certificate-authority={{ item.item.ca }} \
+      --embed-certs=true \
+      --server={{ lb_api_url }} \
+      --kubeconfig={{ item.item.path }}
+  with_items: "{{ check_config_files['results'] }}"
+  register: set_cluster_config
+
+- name: Set Kubernetes credentials into config files
+  when: set_cluster_config and not item.stat.exists
+  command: |
+    {{ bin_dir }}/kubectl config set-credentials {{ item.item.name }} \
+      {% if item.item.token is defined -%}
+      --token={{ item.item.token }} \
+      {% else %}
+      --client-certificate={{ item.item.cert }} \
+      --client-key={{ item.item.cert_key }} \
+      --embed-certs=true \
+      {% endif -%}
+      --kubeconfig={{ item.item.path }}
+  with_items: "{{ check_config_files['results'] }}"
+  register: set_credentials_config
+
+- name: Set Kubernetes context into config files
+  when: set_credentials_config and not item.stat.exists
+  command: |
+    {{ bin_dir }}/kubectl config set-context {{ item.item.context }} \
+      --cluster={{ config.cluster_name }} \
+      --user={{ item.item.name }} \
+      --kubeconfig={{ item.item.path }}
+  with_items: "{{ check_config_files['results'] }}"
+  register: set_context_config
+
+- name: Use Kubernetes context config files
+  when: set_context_config and not item.stat.exists
+  command: |
+    {{ bin_dir }}/kubectl config use-context {{ item.item.context }} \
+      --kubeconfig={{ item.item.path }}
+  with_items: "{{ check_config_files['results'] }}"
+  register: use_context_config

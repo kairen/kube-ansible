@@ -1,0 +1,13 @@
+[Unit]
+Description=The Kubernetes Node Agent
+Documentation=http://kubernetes.io/docs/
+
+[Service]
+ExecStart={{ bin_dir }}/kubelet
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

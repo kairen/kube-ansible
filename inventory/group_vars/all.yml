@@ -1,3 +1,30 @@
 ---
 
-etcd_bind_iface: eth1
+kube_version: 1.11.2
+
+# Container runtime,
+# Supported: docker.
+container_runtime: docker
+
+# Container network,
+# Supported: calico, flannel.
+cni_enable: true
+container_network: calico
+cni_iface: ""
+
+# Highly Available configuration.
+vip_interface: ""
+lb_vip_address: 172.16.35.9
+
+# etcd configuration variables.
+etcd_iface: ""
+
+# Kubernetes extra addons
+enable_dashboard: true
+enable_logging: true
+enable_monitoring: false
+enable_ingress_nginx: false
+enable_metric_server: false
+
+grafana_user: "admin"
+grafana_password: "p@ssw0rd"

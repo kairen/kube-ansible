@@ -1,0 +1,97 @@
+---
+
+- name: Ensure Kubernetes PKI directory already exists
+  file: path={{ pki_dir }} state=directory
+
+- name: Check Kubernetes SSL certificate json files
+  stat:
+    path: "{{ pki_dir }}/{{ item.bare }}.pem"
+  with_items:
+    - { file: ca-csr.json,                 name: kubernetes, org: Kubernetes, bare: ca }
+    - { file: admin-csr.json,              name: admin, org: "system:masters", bare: admin }
+    - { file: apiserver-csr.json,          name: kube-apiserver, org: Kubernetes, bare: apiserver }
+    - { file: manager-csr.json,            name: "system:kube-controller-manager", org: "system:kube-controller-manager", bare: controller-manager }
+    - { file: scheduler-csr.json,          name: "system:kube-scheduler", org: "system:kube-scheduler", bare: scheduler }
+    - { file: front-proxy-ca-csr.json,     name: kubernetes-front, org: Kubernetes, bare: front-proxy-ca }
+    - { file: front-proxy-client-csr.json, name: front-proxy-client, org: Kubernetes, bare: front-proxy-client }
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_json_files
+
+- name: Generate Kubernetes SSL certificate json files
+  when: check_json_files and not item.stat.exists
+  template:
+    src: ca-csr.json.j2
+    dest: "{{ pki_dir }}/{{ item.item.file }}"
+  with_items: "{{ check_json_files['results'] }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: gen_json_files
+
+- name: Check Kubernetes SSL certificate authority files
+  stat:
+    path: "{{ pki_dir }}/{{ item.bare }}.pem"
+  with_items:
+    - { file: ca-csr.json,             bare: ca }
+    - { file: front-proxy-ca-csr.json, bare: front-proxy-ca }
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_ca_files
+
+- name: Create Kubernetes SSL certificate authority files
+  when: check_ca_files and not item.stat.exists
+  shell: |
+    {{ bin_dir }}/cfssl gencert -initca {{ pki_dir }}/{{ item.item.file }} | \
+      {{ bin_dir }}/cfssljson -bare {{ pki_dir }}/{{ item.item.bare }}
+  with_items: "{{ check_ca_files['results'] }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_ca_files
+
+- name: Check Kubernetes SSL certificate key files
+  stat:
+    path: "{{ pki_dir }}/{{ item.bare }}.pem"
+  with_items:
+    - { file: apiserver-csr.json,          ca: ca, hosts: "{{ apiserver_hosts }}", bare: apiserver }
+    - { file: admin-csr.json,              ca: ca, bare: admin }
+    - { file: manager-csr.json,            ca: ca, bare: controller-manager }
+    - { file: scheduler-csr.json,          ca: ca, bare: scheduler }
+    - { file: front-proxy-client-csr.json, ca: front-proxy-ca, bare: front-proxy-client }
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_ssl_files
+
+- name: Create Kubernetes SSL certificate key files
+  when: check_ssl_files and not item.stat.exists
+  shell: |
+    {{ bin_dir }}/cfssl gencert \
+      -ca={{ pki_dir }}/{{ item.item.ca }}.pem \
+      -ca-key={{ pki_dir }}/{{ item.item.ca }}-key.pem \
+      -config={{ ca_config }} \
+      {% if item.item.hosts is defined -%}
+      -hostname={{ item.item.hosts }} \
+      {% endif -%}
+      -profile={{ cert_info_profile }} \
+      {{ pki_dir }}/{{ item.item.file }} | \
+      {{ bin_dir }}/cfssljson -bare {{ pki_dir }}/{{ item.item.bare }}
+  with_items: "{{ check_ssl_files['results'] }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_ssl_files
+
+- name: Check service account key already exists
+  stat:
+    path: "{{ pki_dir  }}/sa.key"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_sa_key
+
+- name: Create service account private and public key
+  when: not check_sa_key.stat.exists
+  command: "{{ item }}"
+  with_items:
+    - "openssl genrsa -out {{ pki_dir}}/sa.key 2048"
+    - "openssl rsa -in {{ pki_dir }}/sa.key -pubout -out {{ pki_dir }}/sa.pub"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_sa_key

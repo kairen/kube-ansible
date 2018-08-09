@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  kubelet: |
+    {{ kubelet_config_content }}
+kind: ConfigMap
+metadata:
+  name: kubelet-config
+  namespace: kube-system

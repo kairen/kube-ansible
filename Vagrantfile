@@ -3,7 +3,7 @@ require "fileutils"
 
 Vagrant.require_version ">= 1.7.0"
 
-CONFIG = File.expand_path("./tools/.config.rb")
+CONFIG = File.expand_path("./hack/.config.rb")
 if File.exist?(CONFIG)
   require CONFIG
 end
@@ -96,20 +96,22 @@ Vagrant.configure("2") do |config|
       end
 
       count += 1
-      # if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv' && $auto_deploy.to_s == 'true'
-      #   n.vm.provision "cluster", type: "ansible" do |ansible|
-      #     ansible.playbook = "cluster.yml"
-      #     ansible.inventory_path = "inventory"
-      #     ansible.limit = "all"
-      #     ansible.host_key_checking = false
-      #   end
-      #   n.vm.provision "addon", type: "ansible" do |ansible|
-      #     ansible.playbook = "addons.yml"
-      #     ansible.inventory_path = "inventory"
-      #     ansible.limit = "all"
-      #     ansible.host_key_checking = false
-      #   end
-      # end
+      if mid == ($master_count + $node_count) && $provider.to_s != 'hyperv' && $auto_deploy.to_s == 'true'
+        n.vm.provision "cluster", type: "ansible" do |ansible|
+          ansible.playbook = "cluster.yml"
+          ansible.inventory_path = "./inventory/hosts.ini"
+          ansible.become = true
+          ansible.limit = "all"
+          ansible.host_key_checking = false
+        end
+        n.vm.provision "addon", type: "ansible" do |ansible|
+          ansible.playbook = "addons.yml"
+          ansible.inventory_path = "./inventory/hosts.ini"
+          ansible.become = true
+          ansible.limit = "all"
+          ansible.host_key_checking = false
+        end
+      end
     end
   end
 end

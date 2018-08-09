@@ -1,0 +1,21 @@
+---
+
+- name: Copy Kubernetes CNI files
+  template:
+    src: "{{ container_network }}.yml.j2"
+    dest: "{{ cache_dir }}/{{ container_network }}.yml"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_cni
+
+- name: Apply Kubernetes CNI
+  when: copy_cni
+  shell: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ cache_dir }}/{{ container_network }}.yml
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: apply_cni
+  until: apply_cni.rc == 0
+  retries: 10
+  delay: 2

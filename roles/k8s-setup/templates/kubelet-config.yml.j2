@@ -1,0 +1,76 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+address: {{ kubelet_bind_address }}
+port: {{ kubelet_bind_port }}
+readOnlyPort: {{ kubelet_bind_read_port }}
+healthzBindAddress: {{ kubelet_bind_healthz_address }}
+healthzPort: {{ kubelet_bind_healthz_port }}
+staticPodPath: {{ manifest_dir }}
+clusterDNS:
+- {{ cluster_dns_ip }}
+clusterDomain: {{ cluster_domain_name }}
+{% if kubelet_feature_gates -%}
+featureGates:
+{% for k,v in kubelet_feature_gates.iteritems() %}
+  {{ k }}: {{ v | lower }}
+{% endfor -%}
+{% endif -%}
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
+  x509:
+    clientCAFile: {{ ca }}
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+failSwapOn: true
+cgroupDriver: cgroupfs
+cgroupsPerQOS: true
+containerLogMaxFiles: 5
+containerLogMaxSize: 10Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 10s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: 15%
+  memory.available: 100Mi
+  nodefs.available: 10%
+  nodefs.inodesFree: 5%
+evictionPressureTransitionPeriod: 5m0s
+fileCheckFrequency: 20s
+hairpinMode: promiscuous-bridge
+httpCheckFrequency: 20s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: 110
+nodeStatusUpdateFrequency: 10s
+oomScoreAdj: -999
+podPidsLimit: -1
+registryBurst: 10
+registryPullQPS: 5
+resolvConf: /etc/resolv.conf
+rotateCertificates: true
+runtimeRequestTimeout: 2m0s
+serializeImagePulls: true
+streamingConnectionIdleTimeout: 4h0m0s
+syncFrequency: 1m0s
+volumeStatsAggPeriod: 1m0s

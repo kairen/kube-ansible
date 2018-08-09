@@ -1,0 +1,15 @@
+---
+
+- hosts: "{{ hosts | default('kube-cluster') }}"
+  become: true
+  tags: reset_k8s
+  roles:
+    - { role: cluster-default }
+    - { role: cluster-reset, reset_k8s: true }
+
+- hosts: etcds
+  become: true
+  tags: reset_etcd
+  roles:
+    - { role: cluster-default }
+    - { role: cluster-reset, reset_etcd: true }

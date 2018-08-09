@@ -1,0 +1,62 @@
+---
+
+- name: Ensure etcd PKI directory already exists
+  file: path={{ etcd_pki_dir }} state=directory
+
+- name: Check etcd SSL certificate json files
+  stat:
+    path: "{{ etcd_pki_dir }}/{{ item.bare }}.pem"
+  with_items:
+    - { file: etcd-ca-csr.json, name: etcd, org: etcd, bare: etcd-ca}
+    - { file: etcd-csr.json, name: etcd, org: etcd, bare: etcd }
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_etcd_json_files
+
+- name: Generate etcd SSL certificate json files
+  when: check_etcd_json_files and not item.stat.exists
+  template:
+    src: ca-csr.json.j2
+    dest: "{{ etcd_pki_dir }}/{{ item.item.file }}"
+  with_items: "{{ check_etcd_json_files['results'] }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: gen_etcd_json_files
+
+- name: Check etcd SSL certificate authority files
+  stat:
+    path: "{{ etcd_ca }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_etcd_ca_file
+
+- name: Create etcd SSL certificate authority files
+  when: not check_etcd_ca_file.stat.exists
+  shell: |
+    {{ bin_dir }}/cfssl gencert -initca {{ etcd_pki_dir }}/etcd-ca-csr.json | \
+      {{ bin_dir }}/cfssljson -bare {{ etcd_pki_dir }}/etcd-ca
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_etcd_ca_file
+
+- name: Check etcd SSL certificate key file
+  stat:
+    path: "{{ etcd_cert }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_etcd_ssl_file
+
+- name: Create etcd SSL certificate key files
+  when: not check_etcd_ssl_file.stat.exists
+  shell: |
+    {{ bin_dir }}/cfssl gencert \
+      -ca={{ etcd_ca }} \
+      -ca-key={{ etcd_ca_key }} \
+      -config={{ ca_config }} \
+      -hostname={{ etcd_hosts | trim }} \
+      -profile={{ cert_info_profile }} \
+      {{ etcd_pki_dir }}/etcd-csr.json | \
+      {{ bin_dir }}/cfssljson -bare {{ etcd_pki_dir }}/etcd
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: create_etcd_ssl_file

@@ -1,0 +1,47 @@
+---
+
+log_level: 0
+
+# feature-gates
+feature_gates: "PodPriority=true"
+kubelet_feature_gates:
+  PodPriority: true
+
+# apiserver variables
+apiserver_bind_address: 0.0.0.0
+apiserver_secure_port: 6443
+apiserver_insecure_port: 0
+apiserver_allowed_names: front-proxy-client
+apiserver_disable_admission: "PersistentVolumeLabel"
+apiserver_enable_admission: "NodeRestriction"
+apiserver_authorization_mode: "Node,RBAC"
+
+# kubelet variables
+kubelet_bind_address: 0.0.0.0
+kubelet_bind_healthz_address: 127.0.0.1
+kubelet_bind_port: 10250
+kubelet_bind_read_port: 10255
+kubelet_bind_healthz_port: 10248
+
+# keepalived variables
+keepalived_unicast_peers: "{% for host in groups['masters'] %}{% if vip_interface != '' %}'{{ hostvars[host]['ansible_' + vip_interface].ipv4.address }}'{% else %}'{{ hostvars[host].ansible_default_ipv4.address }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+keepalived_password: "koobernetes"
+keepalived_priority: "{% if inventory_hostname == groups['masters'][0] %}100{% else %}150{% endif %}"
+keepalived_router_id: 51
+
+# haproxy variables
+haproxy_stats_bind_address: 9090
+haproxy_stats_uri: "/haproxy_stats"
+haproxy_stats_user: "admin"
+haproxy_stats_password: "admin123"
+
+# kube-dns variables
+cluster_domain_name: cluster.local
+cluster_dns_ip: "{{ cluster_subnet }}.10"
+
+# kube-proxy variables
+kubeproxy_bind_address: 0.0.0.0
+kubeproxy_healthz_bind_address: 0.0.0.0:10256
+kubeproxy_metrics_bind_address: 127.0.0.1:10249
+kubeproxy_mode: iptables # support: iptables or ipvs.
+kubeproxy_ipvs_scheduler: rr

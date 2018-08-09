@@ -1,0 +1,64 @@
+apiVersion: v1
+data:
+  config.conf: |-
+    apiVersion: kubeproxy.config.k8s.io/v1alpha1
+    kind: KubeProxyConfiguration
+    bindAddress: {{ kubeproxy_bind_address }}
+    clientConnection:
+      acceptContentTypes: ""
+      burst: 10
+      contentType: application/vnd.kubernetes.protobuf
+      kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
+      qps: 5
+    clusterCIDR: {{ pod_network_cidr }}
+    configSyncPeriod: 15m0s
+    conntrack:
+      maxPerCore: 32768
+      min: 131072
+      tcpCloseWaitTimeout: 1h0m0s
+      tcpEstablishedTimeout: 24h0m0s
+    enableProfiling: false
+    healthzBindAddress: {{ kubeproxy_healthz_bind_address }}
+    hostnameOverride: ""
+    iptables:
+      masqueradeAll: false
+      masqueradeBit: 14
+      minSyncPeriod: 0s
+      syncPeriod: 30s
+    ipvs:
+      minSyncPeriod: 0s
+      scheduler: {{ kubeproxy_ipvs_scheduler }}
+      syncPeriod: 30s
+    metricsBindAddress: {{ kubeproxy_metrics_bind_address }}
+    mode: {{ kubeproxy_mode }}
+    featureGates:
+      SupportIPVSProxyMode: true
+    oomScoreAdj: -999
+    portRange: ""
+    resourceContainer: /kube-proxy
+    udpIdleTimeout: 250ms
+  kubeconfig.conf: |-
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        server: {{ lb_api_url }}
+      name: default
+    contexts:
+    - context:
+        cluster: default
+        namespace: default
+        user: default
+      name: default
+    current-context: default
+    users:
+    - name: default
+      user:
+        tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+kind: ConfigMap
+metadata:
+  labels:
+    app: kube-proxy
+  name: kube-proxy
+  namespace: kube-system

@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - { role: os-check }
-  - { role: downloads/package, when: container_runtime == 'docker', pkg: "{{ package.docker }}" }

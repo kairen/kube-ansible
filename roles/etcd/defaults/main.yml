@@ -1,18 +1,11 @@
 ---
 
-etcd_data_dir: /var/lib/etcd
-etcd_wal_dir: /var/lib/etcd/wal
-etcd_config_dir: /etc/etcd
-etcd_config_file: /etc/etcd/config.yml
-
-etcd_listen_addr: "{% if etcd_bind_iface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_bind_iface].ipv4.address }}
+etcd_listen_addr: "{% if etcd_iface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_iface].ipv4.address }}
 {%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
-etcd_client_port: 2379
-etcd_peer_port: 2380
-etcd_listen_client_urls: "https://127.0.0.1:2379,https://{{ etcd_listen_addr }}:{{ etcd_client_port }}"
-etcd_listen_peer_urls: "https://{{ etcd_listen_addr }}:{{ etcd_peer_port }}"
-etcd_advertise_client_urls: "https://{{ etcd_listen_addr }}:{{ etcd_client_port }}"
-etcd_initial_advertise_peer_urls: "https://{{ etcd_listen_addr }}:{{ etcd_peer_port }}"
+etcd_listen_client_urls: "https://127.0.0.1:2379,https://{{ etcd_listen_addr }}:2379"
+etcd_listen_peer_urls: "https://{{ etcd_listen_addr }}:2380"
+etcd_advertise_client_urls: "https://{{ etcd_listen_addr }}:2379"
+etcd_initial_advertise_peer_urls: "https://{{ etcd_listen_addr }}:2380"
 
 etcd_initial_cluster_state: new
 etcd_initial_token: k8s-etcd-cluster

@@ -1,12 +1,12 @@
 {% macro initial_cluster() -%}
 {% for host in groups['etcds'] -%}
   {{ hostvars[host]['ansible_hostname'] }}=https://
-  {%- if etcd_bind_iface != "" -%}
-    {{ hostvars[host]['ansible_' + etcd_bind_iface].ipv4.address }}
+  {%- if etcd_iface != "" -%}
+    {{ hostvars[host]['ansible_' + etcd_iface].ipv4.address }}
   {%- else -%}
     {{ hostvars[host].ansible_default_ipv4.address }}
   {%- endif -%}
-:{{ etcd_peer_port }}
+:2380
   {%- if not loop.last -%},{%- endif -%}
 {%- endfor -%}
 {% endmacro -%}

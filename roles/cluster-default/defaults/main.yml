@@ -1,0 +1,80 @@
+---
+
+###################
+# Kubernetes opts #
+###################
+
+kube_version: 1.10.5
+
+# Container runtime,
+# Supported: docker, containerd, cri-o.
+container_runtime: docker
+
+# Container network,
+# Supported: calico, flannel.
+cni_enable: true
+container_network: calico
+cni_iface: ""
+
+# Kubernetes cluster network
+pod_network_cidr: 10.244.0.0/16
+cluster_subnet: 10.96.0
+service_ip_range: "{{ cluster_subnet }}.0/12"
+service_node_port_range: 30000-32767
+api_service_ip: "{{ cluster_subnet }}.1"
+
+# Kubernetes HA extra variables.
+vip_interface: ""
+lb_vip_address: 172.16.35.9
+lb_secure_port: 8443
+lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
+ingress_lb_address: "{{ lb_vip_address }}"
+
+# etcd extra variables.
+etcd_iface: ""
+etcd_domain_name: test.etcd.com
+
+# Kubernetes bootstrap token
+bootstrap_token_id: "6ac849"
+bootstrap_token_secret: "18fac0a6405e8e15"
+bootstrap_token: "{{ bootstrap_token_id }}.{{ bootstrap_token_secret }}"
+
+# Kubernetes secret encryption
+encryption_token: iTNwwjHuxNI9+8niwh8GJKT5NQiHFqcOTrrhzYfhAvk=
+
+# Kubernetes extra addons
+enable_dashboard: false
+enable_logging: false
+enable_monitoring: false
+enable_ingress_nginx: false
+enable_metric_server: false
+
+grafana_user: "admin"
+grafana_password: "p@ssw0rd"
+
+###############
+# Docker opts #
+###############
+
+# A list of insecure registrys you might need to define
+add_registry:
+# - "gcr.io"
+
+insecure_registrys:
+# - "172.16.35.9:5000"
+
+docker_opts:
+# - "HTTP_PROXY=http://proxy.example.com:80/"
+# - "HTTPS_PROXY=https://proxy.example.com:443/"
+
+# Add http and https proxy
+proxy_env:
+  http_proxy: "" # http://:<usr>@<passwd>:<ip>:<port>
+  https_proxy: "" # https://<usr>:<passwd>@<ip>:<port>
+
+#############
+# Msic opts #
+#############
+repos_offline: false # download pkg from custom url
+repos_port: 4040
+repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

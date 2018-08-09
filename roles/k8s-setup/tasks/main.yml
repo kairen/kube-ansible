@@ -1,0 +1,25 @@
+---
+  
+- when: node_role == 'master'
+  include_tasks: setup-masters.yml
+
+- include_tasks: setup-nodes.yml
+
+- include_tasks: config-systemd.yml
+
+- name: Wait for Kubernetes core component start
+  when: node_role == 'master'
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item }}"
+    delay: 1
+    connect_timeout: 60
+    timeout: 300
+  with_items:
+    - "{{ apiserver_secure_port }}"
+    - "{{ lb_secure_port }}"
+    - "10252"
+    - "10251"
+
+- when: node_role == 'master'
+  include_tasks: setup-resources.yml
