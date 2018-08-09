@@ -5,8 +5,9 @@ A playbooks to building the hard way Kubernetes cluster, This playbook is a full
 [![asciicast](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi.png)](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi?speed=2)
 
 Feature list:
-- [x] Kubernetes v1.10.0+.
+- [x] Support Kubernetes v1.10.0+.
 - [x] Highly available Kubernetes cluster.
+- [x] Full of binaries installation.
 - [x] Kubernetes addons:
   - [x] Promethues monitoring
   - [x] Metrics Server
@@ -14,7 +15,7 @@ Feature list:
   - [x] Ingress Controller
   - [x] Kubernetes Dashboard
   - [ ] Harbor registry
-- [x] Support CNI:
+- [x] Support container network:
   - [x] calico
   - [x] flannel
 - [x] Support container runtime:
