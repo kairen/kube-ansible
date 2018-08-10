@@ -7,7 +7,7 @@
 kube_version: 1.10.5
 
 # Container runtime,
-# Supported: docker, containerd, cri-o.
+# Supported: docker, containerd.
 container_runtime: docker
 
 # Container network,
@@ -25,10 +25,9 @@ api_service_ip: "{{ cluster_subnet }}.1"
 
 # Kubernetes HA extra variables.
 vip_interface: ""
-lb_vip_address: 172.16.35.9
+vip_address: 172.16.35.9
 lb_secure_port: 8443
-lb_api_url: "https://{{ lb_vip_address }}:{{ lb_secure_port }}"
-ingress_lb_address: "{{ lb_vip_address }}"
+lb_api_url: "https://{{ vip_address }}:{{ lb_secure_port }}"
 
 # etcd extra variables.
 etcd_iface: ""
@@ -43,14 +42,16 @@ bootstrap_token: "{{ bootstrap_token_id }}.{{ bootstrap_token_secret }}"
 encryption_token: iTNwwjHuxNI9+8niwh8GJKT5NQiHFqcOTrrhzYfhAvk=
 
 # Kubernetes extra addons
+enable_ingress: false
 enable_dashboard: false
 enable_logging: false
 enable_monitoring: false
-enable_ingress_nginx: false
 enable_metric_server: false
 
-grafana_user: "admin"
-grafana_password: "p@ssw0rd"
+ingress_lb_address: "{{ vip_address }}"
+
+monitoring_grafana_user: "admin"
+monitoring_grafana_password: "p@ssw0rd"
 
 ###############
 # Docker opts #

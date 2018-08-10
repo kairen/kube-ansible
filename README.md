@@ -7,21 +7,21 @@ A playbooks to building the hard way Kubernetes cluster, This playbook is a full
 Feature list:
 - [x] Support Kubernetes v1.10.0+.
 - [x] Highly available Kubernetes cluster.
-- [x] Full of binaries installation.
+- [x] Full of the binaries installation.
 - [x] Kubernetes addons:
   - [x] Promethues monitoring
   - [x] Metrics Server
   - [x] EFK logging
   - [x] Ingress Controller
   - [x] Kubernetes Dashboard
-  - [ ] Harbor registry
 - [x] Support container network:
   - [x] calico
   - [x] flannel
 - [x] Support container runtime:
   - [x] docker
+  - [ ] nvidia-docker
+  - [x] containerd
   - [ ] cri-o
-  - [ ] cri-containerd
 
 ## Quick Start
 In this section you will deploy a cluster using vagrant.
@@ -43,7 +43,7 @@ Cluster Size: 1 master, 2 worker.
   VM Size: 1 vCPU, 2048 MB
   VM Info: ubuntu16, virtualbox
   CNI binding iface: eth1
-Start deploying?(y): y
+Start to deploy?(y):
 ```
 > * You also can use `sudo ./hack/setup-vms -p libvirt -i eth1` command to deploy the cluster on KVM.
 
@@ -130,7 +130,7 @@ cni_iface: ''
 
 # highly available variables
 vip_interface: ''
-lb_vip_address: 172.16.35.9
+vip_address: 172.16.35.9
 
 # etcd variables
 etcd_iface: ''
@@ -139,12 +139,12 @@ etcd_iface: ''
 enable_dashboard: true
 enable_logging: false
 enable_monitoring: false
-enable_ingress_nginx: false
+enable_ingress: false
 enable_metric_server: true
 
 # monitoring grafana user/password
-grafana_user: "admin"
-grafana_password: "p@ssw0rd"
+monitoring_grafana_user: "admin"
+monitoring_grafana_password: "p@ssw0rd"
 ```
 
 ### Deploy a Kubernetes cluster

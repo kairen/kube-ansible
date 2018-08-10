@@ -28,7 +28,7 @@ echo "  VM Size: ${CPU} vCPU, ${MEMORY} MB"
 echo "  VM Info: ${OS_IMAGE}, ${PROVIDER}"
 echo "  CNI binding iface: ${ETH}"
 if [ ${FORCE} == "false" ]; then
-  read -p "Start deploying?(y): " check && [ "${check}" != "y" ] && exit 1
+  read -p "Start to deploy?(y): " check && [ "${check}" != "y" ] && exit 1
 fi
 
 vagrant_config "master_count.*" "master_count = ${MASTERS}"

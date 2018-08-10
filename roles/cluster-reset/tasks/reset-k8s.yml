@@ -29,6 +29,12 @@
   ignore_errors: True
   register: stop_docker_service
 
+- name: Stop containerd systemd service
+  when: container_runtime == 'containerd'
+  systemd: name=containerd.service state=stopped enabled=no
+  ignore_errors: True
+  register: stop_containerd_service
+
 - name: Find kubelet mounted volumes
   when: stop_kubelet_service
   shell: "df | grep -o '/var/lib/kubelet.*'"
@@ -53,11 +59,13 @@
     - "{{ ansible_env.HOME }}/.kube"
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ docker_data_dir }}"
+    - "{{ containerd_data_dir }}"
     - "{{ package.docker.dir }}"
-    - "{{ package.cri_containerd.dir }}"
+    - "{{ package.containerd.dir }}"
     - "{{ package.kubelet.dir }}"
     - "{{ package.helm.dir }}"
     - "{{ package.cfssl.dir }}"
+    - "{{ package.cni.dir }}"
   ignore_errors: True
 
 - name: Delete IP-in-IP tunnel

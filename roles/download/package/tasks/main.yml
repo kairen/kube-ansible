@@ -15,7 +15,7 @@
   when: pkg is defined
   file: path="{{ cache_dir }}" state=directory
 
-- name: "Create {{ pkg.description }} release directory"
+- name: "Create {{ pkg.name }} release directory"
   when: pkg is defined
   file: path="{{ pkg.dir }}" state=directory
 
@@ -27,7 +27,11 @@
   when: 'pkg is defined and not "unarchive" in pkg'
   include_tasks: binary.yml
 
-- name: "Symlinks {{ pkg.description }} to {{ bin_dir }}"
+# filting containerd files
+- when: pkg is defined and pkg.name == 'containerd'
+  include_tasks: fix-containerd.yml
+
+- name: "Symlinks {{ pkg.name }} to {{ bin_dir }}"
   when: 'pkg is defined and "symlinks" in pkg and pkg_copy'
   file:
     src: "{{ pkg.dir }}/{{ item }}"

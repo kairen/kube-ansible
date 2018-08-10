@@ -5,7 +5,7 @@ import urllib2
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-TMPL_FILE = '../roles/download/package/defaults/main.yml'
+TMPL_FILE = '../../roles/download/package/defaults/main.yml'
 YML_FILE = './pkg.yml'
 PKG_HOME_DIR = os.environ.get('PKG_HOME_DIR','/usr/local/apache2/htdocs')
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -31,7 +31,7 @@ def download_pkg(yml_file):
 
     with open(yml_file, 'r') as f:
         yml = yaml.load(f)
-        downloads = yml['downloads']
+        downloads = yml['package']
         bases = yml['bases']
         for key, value in zip(downloads, downloads.values()) :
             for item in value['items']:

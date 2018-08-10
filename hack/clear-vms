@@ -15,7 +15,7 @@ role_config "vip_interface:.*" "vip_interface: \"\"" ${GROUP_VARS_PATH}
 role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
 
 # clean up
-rm -rf ${INVENTORY_PATH}
+rm -rf ${INVENTORY_PATH} hosts
 vagrant destroy -f
 
 vagrant_config "master_count.*" "master_count = 1"

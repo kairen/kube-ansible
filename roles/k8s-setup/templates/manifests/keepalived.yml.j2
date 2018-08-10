@@ -16,7 +16,7 @@ spec:
     image: docker.io/osixia/keepalived:1.4.5
     env:
     - name: KEEPALIVED_VIRTUAL_IPS
-      value: "{{ lb_vip_address }}"
+      value: "{{ vip_address }}"
     - name: KEEPALIVED_INTERFACE
       value: "{% if vip_interface != '' %}{{ vip_interface }}{% else %}{{ ansible_default_ipv4.interface }}{% endif %}"
     - name: KEEPALIVED_UNICAST_PEERS

@@ -1,10 +1,10 @@
 ---
 
-- name: "Check {{ pkg.description }} binary already exists"
+- name: "Check {{ pkg.name }} binary already exists"
   stat: path="{{ cache_dir }}/{{ pkg.file }}-{{ base[''+ pkg.name].version }}"
   register: pkg_check
 
-- name: "Downloading {{ pkg.description }} file"
+- name: "Downloading {{ pkg.name }} file"
   when: not pkg_check.stat.exists
   get_url:
     url: "{{ pkg.url }}/{{ pkg.file }}"
@@ -13,7 +13,7 @@
   environment: "{{ proxy_env }}"
   register: pkg_download
 
-- name: "Copy {{ pkg.description }} file to release directory"
+- name: "Copy {{ pkg.name }} file to release directory"
   copy:
     src: "{{ cache_dir }}/{{ pkg.file }}-{{ base[''+ pkg.name].version }}"
     dest: "{{ pkg.dir }}/{{ item }}"

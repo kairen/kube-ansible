@@ -1,0 +1,24 @@
+---
+
+- name: Ensure containerd release directory exists
+  stat: path={{ pkg.dir }}
+  register: check_dir
+
+- name: Move containerd binaries into release directory
+  when: check_dir.stat.exists
+  command: "mv {{ pkg.dir }}/usr/local/bin/{{ item }} {{ pkg.dir }}"
+  with_items: "{{ pkg['symlinks'] }}"
+  register: move_containerd_dir
+
+- name: Move runC binaries into release directory
+  when: check_dir.stat.exists
+  command: "mv {{ pkg.dir }}/usr/local/sbin/runc {{ sbin_dir }}/runc"
+  register: move_runc_dir
+
+- name: Remove containerd extra directory
+  when: move_containerd_dir and move_runc_dir
+  file: path="{{ pkg.dir }}/{{ item }}" state=absent
+  with_items:
+    - usr
+    - etc
+    - opt

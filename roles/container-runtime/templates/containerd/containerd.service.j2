@@ -1,0 +1,21 @@
+[Unit]
+Description=containerd container runtime
+Documentation=https://containerd.io
+After=network.target
+
+[Service]
+ExecStartPre=/sbin/modprobe overlay
+ExecStartPre=/sbin/modprobe br_netfilter
+ExecStart={{ bin_dir }}/containerd
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+Delegate=yes
+KillMode=process
+OOMScoreAdjust=-999
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target

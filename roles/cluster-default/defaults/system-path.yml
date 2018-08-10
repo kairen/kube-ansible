@@ -9,3 +9,5 @@ systemd_env_dir: /etc/default
 systemd_dropin_dir: /etc/systemd/system
 
 docker_data_dir: /var/lib/docker
+containerd_data_dir: /var/lib/containerd
+containerd_config_dir: /etc/containerd
