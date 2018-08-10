@@ -1,3 +1,0 @@
-dependencies:
-    - { role: commons/os-check }
-    - { role: commons/packages, pkg: "{{ downloads.sigil }}" }

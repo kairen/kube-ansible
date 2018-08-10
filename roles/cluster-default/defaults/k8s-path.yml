@@ -1,0 +1,23 @@
+---
+
+etc_dir: /etc/kubernetes
+manifest_dir: /etc/kubernetes/manifests
+addon_dir: /etc/kubernetes/addons
+kubelet_config_dir: /var/lib/kubelet
+cni_etc_dir: /etc/cni/net.d
+cni_bin_dir: /opt/cni/bin
+audit_policy_dir: /etc/kubernetes/audit
+audit_log_dir: /var/log/kubernetes
+encryption_config_dir: /etc/kubernetes/encryption
+haproxy_config_dir: /etc/haproxy
+
+admin_kubeconfig: "{{ etc_dir }}/admin.conf"
+scheduler_kubeconfig: "{{ etc_dir }}/scheduler.conf"
+controller_manager_kubeconfig: "{{ etc_dir }}/controller-manager.conf"
+kubelet_kubeconfig: "{{ etc_dir }}/kubelet.conf"
+bootstrap_kubeconfig: "{{ etc_dir }}/kubelet-bootstrap.conf"
+kubelet_config: "{{ kubelet_config_dir }}/config.yml"
+audit_log: "{{ audit_log_dir }}/audit.log"
+audit_policy: "{{ audit_policy_dir }}/policy.yml"
+encryption_config: "{{ encryption_config_dir }}/config.yml"
+haproxy_config: "{{ haproxy_config_dir }}/haproxy.cfg"

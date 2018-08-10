@@ -1,0 +1,23 @@
+---
+
+- name: Configure Kubernetes default vars
+  debug:
+    msg: "Check roles/k8s-default/defaults/main.yml"
+  tags:
+    - always
+
+- name: Include vars of system-path.yml
+  include_vars:
+    file: defaults/system-path.yml
+
+- name: Include vars of cert-path.yml
+  include_vars:
+    file: defaults/cert-path.yml
+
+- name: Include vars of k8s-path.yml
+  include_vars:
+    file: defaults/k8s-path.yml
+
+- name: Include vars of etcd-path.yml
+  include_vars:
+    file: defaults/etcd-path.yml

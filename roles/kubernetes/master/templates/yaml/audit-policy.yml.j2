@@ -1,8 +1,0 @@
-{% if kube_version.split(".")[1]|int < 8 %}
-apiVersion: audit.k8s.io/v1alpha1	
-{% else %}
-apiVersion: audit.k8s.io/v1beta1
-{% endif -%}
-kind: Policy
-rules:
-- level: Metadata

@@ -1,0 +1,57 @@
+{% macro initial_cluster() -%}
+{% for host in groups['etcds'] -%}
+  {{ hostvars[host]['ansible_hostname'] }}=https://
+  {%- if etcd_iface != "" -%}
+    {{ hostvars[host]['ansible_' + etcd_iface].ipv4.address }}
+  {%- else -%}
+    {{ hostvars[host].ansible_default_ipv4.address }}
+  {%- endif -%}
+:2380
+  {%- if not loop.last -%},{%- endif -%}
+{%- endfor -%}
+{% endmacro -%}
+
+name: {{ ansible_hostname }}
+data-dir: {{ etcd_data_dir }}
+wal-dir: {{ etcd_wal_dir }}
+listen-peer-urls: '{{ etcd_listen_peer_urls }}'
+listen-client-urls: '{{ etcd_listen_client_urls }}'
+advertise-client-urls: '{{ etcd_advertise_client_urls }}'
+initial-advertise-peer-urls: '{{ etcd_initial_advertise_peer_urls }}'
+initial-cluster: '{{ initial_cluster() }}'
+max-snapshots: 3
+snapshot-count: 5000
+max-wals: 5
+heartbeat-interval: 100
+election-timeout: 1000
+quota-backend-bytes: 0
+discovery-fallback: 'proxy'
+initial-cluster-token: '{{ etcd_initial_token }}'
+initial-cluster-state: '{{ etcd_initial_cluster_state }}'
+strict-reconfig-check: false
+enable-v2: true
+enable-pprof: true
+proxy: 'off'
+proxy-failure-wait: 5000
+proxy-refresh-interval: 30000
+proxy-dial-timeout: 1000
+proxy-write-timeout: 5000
+proxy-read-timeout: 0
+client-transport-security:
+  ca-file: {{ etcd_ca }}
+  trusted-ca-file: {{ etcd_ca }}
+  cert-file: {{ etcd_cert }}
+  key-file: {{ etcd_cert_key }}
+  client-cert-auth: true
+  auto-tls: true
+peer-transport-security:
+  ca-file: {{ etcd_ca }}
+  trusted-ca-file: {{ etcd_ca }}
+  cert-file: {{ etcd_cert }}
+  key-file: {{ etcd_cert_key }}
+  peer-client-cert-auth: true
+  auto-tls: true
+debug: false
+log-package-levels:
+log-output: default
+force-new-cluster: false

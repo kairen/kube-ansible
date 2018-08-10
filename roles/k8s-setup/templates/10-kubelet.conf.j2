@@ -1,0 +1,12 @@
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig={{ bootstrap_kubeconfig }} --kubeconfig={{ kubelet_kubeconfig }}"
+Environment="KUBELET_SYSTEM_ARGS=--network-plugin=cni --cni-conf-dir={{ cni_etc_dir }} --cni-bin-dir={{ cni_bin_dir }} --allow-privileged=true"
+Environment="KUBELET_CONFIG_ARGS=--config={{ kubelet_config }}"
+{% if node_role == 'master'  %}
+Environment="KUBELET_EXTRA_ARGS=--node-labels=node-role.kubernetes.io/master=''"
+{% endif %}
+{% if container_runtime != 'docker' and container_runtime != 'nvidia-docker' %}
+Environment="CRI_RUNTIME_ARGS=--container-runtime=remote --container-runtime-endpoint=unix://{{ runtime_sockets['' + container_runtime] }}"
+{% endif %}
+ExecStart=
+ExecStart={{ bin_dir }}/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_SYSTEM_ARGS $KUBELET_EXTRA_ARGS $CRI_RUNTIME_ARGS

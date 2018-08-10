@@ -8,7 +8,6 @@ python:
 before_install:
   - pip install -U ansible ansible-lint
 script:
-  - ansible-lint reset.yml
-  - ansible-lint storage.yml
   - ansible-lint addons.yml
   - ansible-lint cluster.yml
+  - ansible-lint reset-cluster.yml

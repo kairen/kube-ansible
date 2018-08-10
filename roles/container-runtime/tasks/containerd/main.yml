@@ -1,0 +1,25 @@
+---
+
+- name: Ensure cni config directory exists
+  file: path="{{ cni_etc_dir }}" state=directory
+
+- name: Ensure containerd config directory exists
+  file: path="{{ containerd_config_dir }}" state=directory
+
+- name: Copy containerd service files
+  template:
+    src: "containerd/containerd.service.j2"
+    dest: "{{ systemd_service_dir }}/containerd.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: change_system_service
+
+- name: Enable and start containerd service
+  when: change_system_service is succeeded
+  systemd:
+    name: containerd.service
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  register: containerd_started

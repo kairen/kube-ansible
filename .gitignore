@@ -5,6 +5,9 @@ tmp
 tmp/*
 hosts
 *.ovpn
-inventory
 .keys/
 .venv/
+logs/
+roles-bk/
+extra-playbooks-bk/
+hosts-test.ini

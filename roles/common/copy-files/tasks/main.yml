@@ -1,0 +1,25 @@
+---
+
+- name: Check the files already exists
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ files }}" 
+  register: check_files
+
+- name: Read the config files
+  slurp: src={{ item.item }}
+  with_items: "{{ check_files['results'] }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: read_files
+
+- name: Write the content of files
+  when: item[0].item == item[1].source and not item[0].stat.exists
+  copy:
+    mode: 0644
+    content: "{{ item[1].content | b64decode  }}"
+    dest: "{{ item[1].source }}"
+  with_nested:
+    - "{{ check_files['results'] }}"
+    - "{{ read_files['results'] }}"
+  register: write_files

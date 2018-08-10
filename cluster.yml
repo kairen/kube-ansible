@@ -1,43 +1,43 @@
 ---
 
 - hosts: masters
-  become: yes
+  become: true
   roles:
-    - { role: gen-certs, tags: gen-certs }
+    - { role: cluster-default }
+    - { role: cert, tags: cert }
+
+- hosts: kube-cluster
+  gather_facts: false
+  become: true
+  roles:
+    - { role: cluster-default }
+    - { role: container-runtime, tags: container-runtime }
 
 - hosts: etcds
-  become: yes
+  become: true
   roles:
+   - { role: cluster-default }
    - { role: etcd, tags: etcd }
 
-- hosts: kube-cluster
-  become: yes
-  roles:
-    - { role: cri/docker,     when: cri_plugin == 'docker', tags: docker }
-    - { role: cri/containerd, when: cri_plugin == 'containerd', tags: containerd }
-
 - hosts: masters
-  become: yes
+  become: true
   roles:
-    - { role: kubernetes/gen-configs, node_role: "master", tags: master-gen-config }
-    - { role: kubernetes/ha, tags: ha }
-    - { role: kubernetes/master, tags: master }
+    - { role: cluster-default }
+    - { role: k8s-kubeconfig, node_role: 'master' }
+    - { role: k8s-setup, node_role: 'master', tags: master-setup }
+    - { role: k8s-addon, addon: "{{ addons.kubedns }}" }
+    - { role: k8s-addon, addon: "{{ addons.kubeproxy }}" }
 
 - hosts: nodes
-  become: yes
+  become: true
   roles:
-    - { role: kubernetes/gen-configs, node_role: "node", tags: master-gen-config }
-    - { role: kubernetes/node, tags: node }
+    - { role: cluster-default }
+    - { role: k8s-kubeconfig, node_role: 'node' }
+    - { role: k8s-setup, node_role: 'node', tags: node-setup }
 
 - hosts: masters
-  become: yes
+  become: true
+  gather_facts: false
   roles:
-    - { role: kubernetes/approve-certs, tags: approve-certs }
-    - { role: kubernetes/addon, when: kube_proxy, addon: "{{ addons.proxy }}", tags: kube-proxy }
-    - { role: kubernetes/addon, when: kube_dns,   addon: "{{ addons.dns }}",   tags: kube-dns }
-    - { role: cni, tags: cni }
-
-- hosts: kube-cluster
-  become: yes
-  roles:
-    - { role: cri/checker, when: cri_plugin == 'containerd', tags: checker }
+    - { role: cluster-default }
+    - { role: k8s-cni, when: cni_enable }

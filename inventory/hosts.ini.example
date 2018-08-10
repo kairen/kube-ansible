@@ -1,0 +1,13 @@
+[etcds]
+k8s-m1
+
+[masters]
+k8s-m1
+
+[nodes]
+k8s-n1
+k8s-n2
+
+[kube-cluster:children]
+masters
+nodes

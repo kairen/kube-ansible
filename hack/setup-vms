@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Program: Setup a vagrant env
+# History: 2017/1/19 Kyle.b Release
+
+source ./hack/.func-vars
+
+set -eu
+
+: ${MASTERS:="1"}
+: ${NODES:="2"}
+: ${CPU:="1"}
+: ${MEMORY:="2048"}
+: ${ETH:="eth1"}
+: ${CNI_PLUGIN:="calico"}
+: ${PROVIDER:="virtualbox"}
+: ${OS_IMAGE:="ubuntu16"}
+: ${FORCE:="false"}
+: ${DEPLOY:="true"}
+: ${COMBINE_MASTERS:="0"}
+: ${COMBINE_ETCD:="0"}
+
+[ ${#} -gt 0 ] && [ ${1} == "-h" ] && usage
+
+check_opts $@
+echo "Cluster Size: ${MASTERS} master, ${NODES} worker."
+echo "  VM Size: ${CPU} vCPU, ${MEMORY} MB"
+echo "  VM Info: ${OS_IMAGE}, ${PROVIDER}"
+echo "  CNI binding iface: ${ETH}"
+if [ ${FORCE} == "false" ]; then
+  read -p "Start to deploy?(y): " check && [ "${check}" != "y" ] && exit 1
+fi
+
+vagrant_config "master_count.*" "master_count = ${MASTERS}"
+vagrant_config "node_count.*" "node_count = ${NODES}"
+vagrant_config "system_vcpus.*" "system_vcpus = ${CPU}"
+vagrant_config "system_memory.*" "system_memory = ${MEMORY}"
+
+role_config "etcd_iface: \"\"" "etcd_iface: ${ETH}" ${GROUP_VARS_PATH}
+role_config "cni_iface:.*" "cni_iface: ${ETH}" ${GROUP_VARS_PATH}
+role_config "vip_interface:.*" "vip_interface: ${ETH}" ${GROUP_VARS_PATH}
+role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
+
+# Create inventory and hosts
+set_inventory
+set_hosts
+
+vagrant up --provider ${PROVIDER}

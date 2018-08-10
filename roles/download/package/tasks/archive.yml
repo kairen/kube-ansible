@@ -1,0 +1,22 @@
+---
+
+- name: "Check {{ pkg.name }} archive already exists"
+  stat: path="{{ cache_dir }}/{{ pkg.file }}"
+  register: pkg_check
+
+- name: "Downloading {{ pkg.name }} file"
+  when: not pkg_check.stat.exists
+  get_url:
+    url: "{{ pkg.url }}/{{ pkg.file }}"
+    dest: "{{ cache_dir }}/{{ pkg.file }}"
+    validate_certs: False
+  environment: "{{ proxy_env }}"
+  register: pkg_download
+
+- name: "Extract {{ pkg.name }} file"
+  unarchive:
+    src: "{{ cache_dir }}/{{ pkg.file }}"
+    dest: "{{ pkg.dir }}"
+    copy: no
+    extra_opts: "{{ pkg.unarchive.extra_opt }}"
+  register: pkg_copy

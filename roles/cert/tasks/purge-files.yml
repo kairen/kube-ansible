@@ -1,0 +1,27 @@
+---
+
+- name: Find unnecessary Kubernetes CSR files
+  find:
+    paths: "{{ pki_dir }}"
+    patterns: "*.csr,*.json"
+  register: find_k8s_result
+
+- name: Delete unnecessary Kubernetes files
+  when: find_k8s_result
+  file: path={{ item.path }} state=absent
+  with_items: "{{ find_k8s_result.files }}"
+
+- name: Find unnecessary etcd files
+  find:
+    paths: "{{ etcd_pki_dir }}"
+    patterns: "*.csr,*.json"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: find_etcd_result
+
+- name: Delete unnecessary etcd files
+  when: find_etcd_result
+  file: path={{ item.path }} state=absent
+  with_items: "{{ find_etcd_result.files }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true

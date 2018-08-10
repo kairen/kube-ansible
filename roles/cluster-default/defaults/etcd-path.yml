@@ -1,0 +1,6 @@
+---
+
+etcd_data_dir: /var/lib/etcd
+etcd_wal_dir: /var/lib/etcd/wal
+etcd_config_dir: /etc/etcd
+etcd_config_file: /etc/etcd/config.yml

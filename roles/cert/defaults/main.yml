@@ -1,0 +1,14 @@
+---
+
+etcd_hosts: "
+{% for host in groups['etcds'] %}{% if etcd_iface != '' %}{{ hostvars[host]['ansible_' + etcd_iface].ipv4.address }}{% else %}{{ hostvars[host].ansible_default_ipv4.address }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %},127.0.0.1,{{ etcd_domain_name }}"
+apiserver_hosts: "{{ vip_address }},{{ api_service_ip }},127.0.0.1,kubernetes.default,kubernetes"
+
+cert_key_algo: rsa
+cert_key_size: 2048
+cert_info_country: TW
+cert_info_state: Taipei
+cert_info_locality: "New Taipei city"
+cert_info_org_uit: Kubernetes-ansible
+cert_info_expiry: 87600h
+cert_info_profile: kubernetes

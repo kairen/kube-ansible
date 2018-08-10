@@ -1,0 +1,26 @@
+---
+
+- name: Check SSL CA json config
+  stat: path={{ ca_config }}
+  register: check_ca_config
+
+- name: Generate SSL CA config
+  when: not check_ca_config.stat.exists
+  template: src=ca-config.json.j2 dest="{{ ca_config }}"
+  register: gen_ca_config
+
+- include_tasks: create-k8s-certs.yml
+
+- name: Copy ca certificate and key
+  vars:
+    files:
+      - "{{ ca }}"
+      - "{{ ca_key }}"
+  import_role:
+    name: common/copy-files
+
+- include_tasks: create-k8s-kubelet-certs.yml
+
+- include_tasks: create-etcd-certs.yml
+
+- include_tasks: purge-files.yml

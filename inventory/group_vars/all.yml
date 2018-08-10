@@ -1,0 +1,30 @@
+---
+
+kube_version: 1.11.2
+
+# Container runtime,
+# Supported: docker, containerd.
+container_runtime: docker
+
+# Container network,
+# Supported: calico, flannel.
+cni_enable: true
+container_network: calico
+cni_iface: ""
+
+# Kubernetes HA extra variables.
+vip_interface: ""
+vip_address: 172.16.35.9
+
+# etcd extra variables.
+etcd_iface: ""
+
+# Kubernetes extra addons
+enable_ingress: false
+enable_dashboard: false
+enable_logging: false
+enable_monitoring: false
+enable_metric_server: false
+
+grafana_user: "admin"
+grafana_password: "p@ssw0rd"

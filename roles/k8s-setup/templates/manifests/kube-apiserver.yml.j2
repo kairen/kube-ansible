@@ -1,0 +1,126 @@
+{% macro etcd_initial_cluster() -%}
+{% for host in groups['etcds'] -%}
+  https://
+  {%- if etcd_iface != "" -%}
+    {{ hostvars[host]['ansible_' + etcd_iface].ipv4.address }}
+  {%- else -%}
+    {{ hostvars[host].ansible_default_ipv4.address }}
+  {%- endif -%}
+:2379
+  {%- if not loop.last -%},{%- endif -%}
+{%- endfor -%}
+{% endmacro -%}
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  labels:
+    component: kube-apiserver
+    tier: control-plane
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  priorityClassName: system-cluster-critical
+  containers :
+  - name: kube-apiserver
+    image: k8s.gcr.io/kube-apiserver-amd64:v{{ kube_version }}
+    command:
+      - kube-apiserver
+      - --v={{ log_level }}
+      - --logtostderr=true
+      - --allow-privileged=true
+      - --bind-address={{ apiserver_bind_address }}
+      - --secure-port={{ apiserver_secure_port }}
+      - --insecure-port={{ apiserver_insecure_port }}
+      - --advertise-address={{ vip_address }}
+      - --service-cluster-ip-range={{ service_ip_range }}
+      - --service-node-port-range={{ service_node_port_range }}
+      - --etcd-servers={{ etcd_initial_cluster() }}
+      - --etcd-cafile={{ etcd_ca }}
+      - --etcd-certfile={{ etcd_cert }}
+      - --etcd-keyfile={{ etcd_cert_key }}
+      - --client-ca-file={{ ca }}
+      - --tls-cert-file={{ apiserver }}
+      - --tls-private-key-file={{ apiserver_key }}
+      - --kubelet-client-certificate={{ apiserver }}
+      - --kubelet-client-key={{ apiserver_key }}
+      - --service-account-key-file={{ sa_public_key }}
+      - --requestheader-client-ca-file={{ front_ca }}
+      - --proxy-client-cert-file={{ front_client }}
+      - --proxy-client-key-file={{ front_client_key }}
+      - --requestheader-allowed-names={{ apiserver_allowed_names }}
+      - --requestheader-group-headers=X-Remote-Group
+      - --requestheader-extra-headers-prefix=X-Remote-Extra-
+      - --requestheader-username-headers=X-Remote-User
+      - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+      - --disable-admission-plugins={{ apiserver_disable_admission }}
+      - --enable-admission-plugins={{ apiserver_enable_admission }}
+      - --authorization-mode={{ apiserver_authorization_mode }}
+      - --enable-bootstrap-token-auth=true
+      - --audit-log-maxage=30
+      - --audit-log-maxbackup=3
+      - --audit-log-maxsize=128
+      - --audit-log-path={{ audit_log }}
+      - --audit-policy-file={{ audit_policy }}
+      - --experimental-encryption-provider-config={{ encryption_config }}
+      {% if feature_gates != '' -%}
+      - --feature-gates={{ feature_gates }}
+      {% endif -%}
+      - --event-ttl=1h
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: {{ apiserver_secure_port }}
+        scheme: HTTPS
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    resources:
+      requests:
+        cpu: 250m
+    volumeMounts:
+    - mountPath: {{ audit_log_dir }}
+      name: k8s-audit-log
+    - mountPath: {{ pki_dir }}
+      name: k8s-certs
+      readOnly: true
+    - mountPath: /etc/ssl/certs
+      name: ca-certs
+      readOnly: true
+    - mountPath: {{ encryption_config }}
+      name: encryption-config
+      readOnly: true
+    - mountPath: {{ audit_policy }}
+      name: audit-policy
+      readOnly: true
+    - mountPath: {{ etcd_pki_dir }}
+      name: etcd-ca-certs
+      readOnly: true
+  volumes:
+  - hostPath:
+      path: {{ audit_log_dir }}
+      type: Directory
+    name: k8s-audit-log
+  - hostPath:
+      path: {{ pki_dir }}
+      type: Directory
+    name: k8s-certs
+  - hostPath:
+      path: {{ encryption_config }}
+      type: File
+    name: encryption-config
+  - hostPath:
+      path: {{ audit_policy }}
+      type: File
+    name: audit-policy
+  - hostPath:
+      path: {{ etcd_pki_dir }}
+      type: Directory
+    name: etcd-ca-certs
+  - hostPath:
+      path: /etc/ssl/certs
+      type: Directory
+    name: ca-certs

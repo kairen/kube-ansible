@@ -1,0 +1,28 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  labels:
+    component: haproxy
+    tier: control-plane
+  name: kube-haproxy
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  priorityClassName: system-cluster-critical
+  containers:
+  - name: kube-haproxy
+    image: docker.io/haproxy:1.7-alpine
+    resources:
+      requests:
+        cpu: 100m
+    volumeMounts:
+    - name: haproxy-cfg
+      readOnly: true
+      mountPath: /usr/local/etc/haproxy/haproxy.cfg
+  volumes:
+  - hostPath:
+      path: {{ haproxy_config }}
+      type: File
+    name: haproxy-cfg

@@ -1,0 +1,21 @@
+---
+
+- name: Ensure Kubernetes PKI directory exists
+  file: path="{{ pki_dir }}" state=directory
+
+- name: Copy certificates and keys
+  vars:
+    files: "{{ copy_keys['' + node_role] }}"
+  import_role:
+    name: common/copy-files
+
+- when: node_role == 'master'
+  include_tasks: create-configs.yml
+
+- name: Copy bootstrap kubeconfig to nodes
+  when: node_role == 'node'
+  vars:
+    files:
+      - "{{ bootstrap_kubeconfig }}"
+  import_role:
+    name: common/copy-files

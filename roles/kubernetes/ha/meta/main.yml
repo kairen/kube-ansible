@@ -1,3 +1,0 @@
-dependencies:
-  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.haproxy }}",    pre_pull: false }
-  - { role: commons/container-images, when: cri_plugin =='docker', img: "{{ images.keepalived }}", pre_pull: false }

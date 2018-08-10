@@ -1,0 +1,86 @@
+---
+
+- name: "Ensure {{ addon.name }} addons directory exists"
+  when: addon is defined
+  file: path="{{ addon_dir }}/{{ item }}" state=directory
+  with_items: "{{ addon.dirs }}"
+
+- name: "Copy {{ addon.name }} addon template dependencies"
+  when: addon is defined and addon.dependencies is defined
+  template:
+    src: "{{ item.1 }}.j2"
+    dest: "{{ addon_dir }}/{{ item.1 }}"
+  with_subelements:
+    - "{{ addon.dependencies }}"
+    - files
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_addon_deps
+
+- name: "Apply {{ addon.name }} addon dependencies"
+  when: addon is defined and addon.dependencies is defined and copy_addon_deps
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ addon_dir }}/{{ item.1 }}
+  with_subelements:
+    - "{{ addon.dependencies }}"
+    - files
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: apply_addon_deps
+  until: apply_addon_deps.rc == 0
+  retries: 10
+  delay: 2
+
+- name: "Check {{ addon.name }} addon dependencies status"
+  when: addon is defined and addon.dependencies is defined and apply_addon_deps
+  shell: |
+    {% if item.kind == 'ns' %}
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }}  \
+       get {{ item.kind }} --no-headers | \
+       grep {{ item.name }} | awk '{ print $2}' | uniq
+    {% else %}
+    {{ bin_dir }}/kubectl -n {{ item.namespace }} --kubeconfig={{ admin_kubeconfig }} \
+      get {{ item.kind }} --no-headers | \
+      grep {{ item.name }} | awk '{ print $3}' | uniq
+    {% endif %}
+  with_items: "{{ addon.dependencies }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: check_addon_deps
+  until: check_addon_deps.stdout == 'Running' or check_addon_deps.stdout == 'Active'
+  retries: 10
+  delay: 10
+
+- name: "Copy {{ addon.name }} addon files"
+  when: addon is defined and addon.files is defined
+  copy:
+    src: "{{ item }}"
+    dest: "{{ addon_dir }}/{{ item }}"
+  with_items: "{{ addon.files }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_addon_files
+
+- name: "Copy {{ addon.name }} addon template files"
+  when: addon is defined
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ addon_dir }}/{{ item }}"
+  with_items: "{{ addon.templates }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: copy_addon_templates
+
+- name: "Apply {{ addon.name }} addon files"
+  when: addon is defined and copy_addon_templates
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      apply -f {{ addon_dir }}/{{ item }}
+  with_items: "{{ addon.dirs  }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: apply_addon
+  until: apply_addon.rc == 0
+  retries: 10
+  delay: 2
