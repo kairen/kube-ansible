@@ -120,10 +120,10 @@ Set the variables in `group_vars/all.yml` to reflect you need options. For examp
 # overide kubernetes version(default: 1.10.6)
 kube_version: 1.11.2
 
-# container runtime, supported: docker
+# container runtime, supported: docker, containerd.
 container_runtime: docker
 
-# container network, supported: calico, flannel
+# container network, supported: calico, flannel.
 cni_enable: true
 container_network: calico
 cni_iface: ''
