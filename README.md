@@ -9,19 +9,19 @@ Feature list:
 - [x] Highly available Kubernetes cluster.
 - [x] Full of the binaries installation.
 - [x] Kubernetes addons:
-  - [x] Promethues monitoring
-  - [x] Metrics Server
-  - [x] EFK logging
-  - [x] Ingress Controller
-  - [x] Kubernetes Dashboard
+  - [x] Promethues monitoring.
+  - [x] Metrics Server.
+  - [x] EFK logging.
+  - [x] Ingress Controller.
+  - [x] Kubernetes Dashboard.
 - [x] Support container network:
-  - [x] calico
-  - [x] flannel
+  - [x] calico.
+  - [x] flannel.
 - [x] Support container runtime:
-  - [x] docker
-  - [ ] nvidia-docker
-  - [x] containerd
-  - [ ] cri-o
+  - [x] docker.
+  - [ ] nvidia-docker(Require NVIDIA driver).
+  - [x] containerd.
+  - [ ] cri-o.
 
 ## Quick Start
 In this section you will deploy a cluster using vagrant.
