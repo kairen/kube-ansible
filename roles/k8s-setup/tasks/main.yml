@@ -1,5 +1,5 @@
 ---
-  
+
 - when: node_role == 'master'
   include_tasks: setup-masters.yml
 

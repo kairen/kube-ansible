@@ -10,7 +10,7 @@
 
 - name: Apply Kubernetes CNI
   when: copy_cni
-  shell: |
+  command: |
     {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
       apply -f {{ cache_dir }}/{{ container_network }}.yml
   delegate_to: "{{ groups['masters'][0] }}"
