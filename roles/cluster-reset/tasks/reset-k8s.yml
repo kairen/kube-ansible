@@ -5,23 +5,26 @@
   ignore_errors: True
   register: stop_kubelet_service
 
+- name: Stop docker containers
+  when: container_runtime == 'docker' or container_runtime == 'nvidia-docker'
+  shell: "{{ bin_dir }}/docker stop $(docker ps -aq) "
+  ignore_errors: True
+  register: stop_docker_containers
+
 - name: Clean docker containers
-  when: container_runtime == 'docker'
-  shell: |
-    {{ bin_dir }}/docker stop $(docker ps -aq) && \
-      {{ bin_dir }}/docker rm $(docker ps -aq)
+  when: stop_docker_containers and (container_runtime == 'docker' or container_runtime == 'nvidia-docker')
+  shell: "{{ bin_dir }}/docker rm $(docker ps -aq)"
   ignore_errors: True
   register: clean_docker_containers
 
 - name: Clean docker images
-  when: container_runtime == 'docker'
-  shell: |
-    {{ bin_dir }}/docker rmi $(docker images -aq)
+  when: clean_docker_containers and (container_runtime == 'docker' or container_runtime == 'nvidia-docker')
+  shell: "{{ bin_dir }}/docker rmi $(docker images -aq)"
   ignore_errors: True
   register: clean_docker_images
 
 - name: Stop docker systemd service
-  when: container_runtime == 'docker' and clean_docker_images
+  when: container_runtime == 'docker' or container_runtime == 'nvidia-docker'
   systemd: name={{ item }} state=stopped enabled=no
   with_items:
     - docker.service
@@ -60,7 +63,13 @@
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ docker_data_dir }}"
     - "{{ containerd_data_dir }}"
+    - "{{ nvidia_runtime_config_dir }}"
+    - "{{ libnvidia_header_file }}"
+    - "{{ libnvidia_lib_dir }}"
     - "{{ package.docker.dir }}"
+    - "{{ package.nvidia_docker.dir }}"
+    - "{{ package.libnvidia_container.dir }}"
+    - "{{ package.nvidia_container_runtime.dir }}"
     - "{{ package.containerd.dir }}"
     - "{{ package.kubelet.dir }}"
     - "{{ package.helm.dir }}"

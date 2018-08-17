@@ -86,7 +86,7 @@ package:
     unarchive:
       extra_opt: "['--strip-components=1']"
     symlinks:
-      - nvidia-docker
+      - usr/bin/nvidia-docker
     file: "nvidia-docker-v{{ base.nvidia_docker.version }}_amd64.tar.gz"
   libnvidia_container:
     name: libnvidia-container
@@ -95,7 +95,7 @@ package:
     unarchive:
       extra_opt: "['--strip-components=1']"
     symlinks:
-      - nvidia-container-cli
+      - usr/local/bin/nvidia-container-cli
     file: "libnvidia-container-{{ base.libnvidia_container.version }}_amd64.tar.xz"
   nvidia_container_runtime:
     name: nvidia-container-runtime
@@ -104,8 +104,8 @@ package:
     unarchive:
       extra_opt: "['--strip-components=1']"
     symlinks:
-      - nvidia-container-runtime
-      - nvidia-container-runtime-hook
+      - usr/bin/nvidia-container-runtime
+      - usr/bin/nvidia-container-runtime-hook
     file: "nvidia-container-runtime-v{{ base.nvidia_container_runtime.version }}_amd64.tar.gz"
   containerd:
     name: containerd
@@ -114,12 +114,13 @@ package:
     unarchive:
       extra_opt: "['--strip-components=0']"
     symlinks:
-      - containerd
-      - containerd-release
-      - containerd-shim
-      - containerd-stress
-      - crictl
-      - ctr
+      - usr/local/bin/containerd
+      - usr/local/bin/containerd-release
+      - usr/local/bin/containerd-shim
+      - usr/local/bin/containerd-stress
+      - usr/local/bin/crictl
+      - usr/local/bin/ctr
+      - usr/local/sbin/runc
     file: "cri-containerd-cni-{{ base.containerd.version }}.linux-amd64.tar.gz"
   cni:
     name: cni

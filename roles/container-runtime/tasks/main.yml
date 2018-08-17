@@ -1,7 +1,11 @@
 ---
 
+# nvidia-docker runtime
+- when: container_runtime == 'nvidia-docker'
+  include_tasks: nvidia-docker/main.yml
+
 # docker runtime
-- when: container_runtime == 'docker'
+- when: container_runtime == 'docker' or container_runtime == 'nvidia-docker'
   include_tasks: docker/main.yml
 
 # containerd runtime

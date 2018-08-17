@@ -10,4 +10,4 @@ hosts
 logs/
 roles-bk/
 extra-playbooks-bk/
-hosts-test.ini
+*.ini
