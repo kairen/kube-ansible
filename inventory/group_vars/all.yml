@@ -3,7 +3,7 @@
 kube_version: 1.11.2
 
 # Container runtime,
-# Supported: docker, containerd.
+# Supported: docker, nvidia-docker, containerd.
 container_runtime: docker
 
 # Container network,

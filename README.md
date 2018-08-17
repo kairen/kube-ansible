@@ -19,7 +19,7 @@ Feature list:
   - [x] flannel.
 - [x] Support container runtime:
   - [x] docker.
-  - [ ] nvidia-docker(Require NVIDIA driver).
+  - [x] nvidia-docker.(Require NVIDIA driver and CUDA 9.0+)
   - [x] containerd.
   - [ ] cri-o.
 
@@ -120,7 +120,7 @@ Set the variables in `group_vars/all.yml` to reflect you need options. For examp
 # overide kubernetes version(default: 1.10.6)
 kube_version: 1.11.2
 
-# container runtime, supported: docker, containerd.
+# container runtime, supported: docker, nvidia-docker, containerd.
 container_runtime: docker
 
 # container network, supported: calico, flannel.
@@ -135,7 +135,7 @@ vip_address: 172.16.35.9
 # etcd variables
 etcd_iface: ''
 
-# Kubernetes extra addons variables
+# kubernetes extra addons variables
 enable_dashboard: true
 enable_logging: false
 enable_monitoring: false
@@ -159,7 +159,7 @@ $ ansible-playbook -i inventory/hosts.ini addons.yml
 ```
 
 ## Verify cluster
-Now, check the cluster as following commands:
+Verify that you have deployed the cluster, check the cluster as following commands:
 ```sh
 $ kubectl -n kube-system get po,svc
 

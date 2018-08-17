@@ -1,0 +1,37 @@
+---
+
+- name: Ensure docker config directory exists
+  file: path="{{ docker_config_dir }}" state=directory
+
+- name: Ensure nvidia runtime config directory exists
+  file: path="{{ nvidia_runtime_config_dir }}" state=directory
+
+- name: Copy nvidia docker and runtime config template
+  template:
+    src: "nvidia-docker/{{ item.file }}.j2"
+    dest: "{{ item.dir }}/{{ item.file }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { file: "daemon.json", dir: "{{ docker_config_dir }}" }
+    - { file: "config.toml", dir: "{{ nvidia_runtime_config_dir }}" }
+  register: copy_nvidia_config_files
+
+- name: Ensure libnvidia lib directory exists
+  file: path="{{ libnvidia_lib_dir }}" state=directory
+
+- name: Copy libnvidia header file to system
+  copy:
+    src: "{{ package.libnvidia_container.dir }}/usr/local/include/nvc.h"
+    dest: "{{ libnvidia_header_file }}"
+    remote_src: yes
+
+- name: Copy libnvidia lib dir to system
+  shell: |
+    cp -rp {{ package.libnvidia_container.dir }}/usr/local/lib/* {{ libnvidia_lib_dir }}
+  register: copy_libnvidia_lib
+
+- name: Link dynamic library for libnvidia
+  when: copy_libnvidia_lib
+  command: "ldconfig -i {{ libnvidia_lib_dir }}"

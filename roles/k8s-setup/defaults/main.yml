@@ -6,6 +6,7 @@ log_level: 0
 feature_gates: "PodPriority=true"
 kubelet_feature_gates:
   PodPriority: true
+  DevicePlugins: true
 
 # apiserver variables
 apiserver_bind_address: 0.0.0.0

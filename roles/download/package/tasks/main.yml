@@ -27,15 +27,11 @@
   when: 'pkg is defined and not "unarchive" in pkg'
   include_tasks: binary.yml
 
-# filting containerd files
-- when: pkg is defined and pkg.name == 'containerd'
-  include_tasks: fix-containerd.yml
-
 - name: "Symlinks {{ pkg.name }} to {{ bin_dir }}"
   when: 'pkg is defined and "symlinks" in pkg and pkg_copy'
   file:
     src: "{{ pkg.dir }}/{{ item }}"
-    dest: "{{ bin_dir }}/{{ item }}"
+    dest: "{{ bin_dir }}/{{ item.split('/')[-1] }}"
     state: link
     force: yes
   with_items: "{{ pkg['symlinks'] }}"
