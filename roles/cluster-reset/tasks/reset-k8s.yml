@@ -62,6 +62,7 @@
     - "{{ ansible_env.HOME }}/.kube"
     - "{{ ansible_env.HOME }}/.helm"
     - "{{ docker_data_dir }}"
+    - "{{ docker_config_dir }}"
     - "{{ containerd_data_dir }}"
     - "{{ nvidia_runtime_config_dir }}"
     - "{{ libnvidia_header_file }}"

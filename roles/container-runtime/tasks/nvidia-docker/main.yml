@@ -14,8 +14,9 @@
     group: root
     mode: 0644
   with_items:
-    - { file: "daemon.json", dir: "{{ docker_config_dir }}" }
-    - { file: "config.toml", dir: "{{ nvidia_runtime_config_dir }}" }
+    - { file: "daemon.json",    dir: "{{ docker_config_dir }}" }
+    - { file: "config.toml",    dir: "{{ nvidia_runtime_config_dir }}" }
+    - { file: "libnvidia.conf", dir: "{{ ld_config_dir }}" }
   register: copy_nvidia_config_files
 
 - name: Ensure libnvidia lib directory exists
@@ -34,4 +35,4 @@
 
 - name: Link dynamic library for libnvidia
   when: copy_libnvidia_lib
-  command: "ldconfig -i {{ libnvidia_lib_dir }}"
+  command: "ldconfig -v"
