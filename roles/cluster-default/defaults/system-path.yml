@@ -3,6 +3,7 @@
 bin_dir: /usr/local/bin
 sbin_dir: /usr/local/sbin
 cache_dir: /tmp
+ld_config_dir: /etc/ld.so.conf.d
 
 systemd_service_dir: /lib/systemd/system
 systemd_env_dir: /etc/default
