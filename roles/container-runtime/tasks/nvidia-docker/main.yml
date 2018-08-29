@@ -33,6 +33,6 @@
     cp -rp {{ package.libnvidia_container.dir }}/usr/local/lib/* {{ libnvidia_lib_dir }}
   register: copy_libnvidia_lib
 
-- name: Link dynamic library for libnvidia
+- name: Configure dynamic linker for libnvidia
   when: copy_libnvidia_lib
   command: "ldconfig -v"
