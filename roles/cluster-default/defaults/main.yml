@@ -24,6 +24,8 @@ service_node_port_range: 30000-32767
 api_service_ip: "{{ cluster_subnet }}.1"
 
 # Kubernetes HA extra variables.
+enable_keepalived: true
+enable_haproxy: true
 vip_interface: ""
 vip_address: 172.16.35.9
 lb_secure_port: 8443
