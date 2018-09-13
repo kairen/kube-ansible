@@ -173,3 +173,6 @@ Finally, if you want to clean the cluster and redeploy, you can reset the cluste
 ```sh
 $ ansible-playbook -i inventory/hosts.ini reset-cluster.yml
 ```
+
+## Contributing
+Pull requests are always welcome!!! I am always thrilled to receive pull requests.
