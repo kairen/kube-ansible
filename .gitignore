@@ -11,3 +11,4 @@ logs/
 roles-bk/
 extra-playbooks-bk/
 *.ini
+openrc

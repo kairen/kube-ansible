@@ -1,0 +1,2 @@
+python-openstackclient
+python-heatclient

@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Install Kubernetes in build stage.
+#
+
+# add docker repo
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+# add kubernetes repo
+curl -s "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo apt-key add -
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+export KUBE_VERSION="1.11.2"
+sudo apt-get update && sudo apt-get install -y \
+  kubelet=${KUBE_VERSION}-00 \
+  kubeadm=${KUBE_VERSION}-00 \
+  kubectl=${KUBE_VERSION}-00 \
+  docker-ce
