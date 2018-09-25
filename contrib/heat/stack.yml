@@ -1,0 +1,274 @@
+---
+
+heat_template_version: 2015-10-15
+description: A template to deploy the Kubernetes cluster
+parameters:
+  image:
+    type: string
+    description: Image used for servers
+  flavor:
+    type: string
+    description: Flavor used by the servers
+  private_net:
+    type: string
+    description: Network used by the servers
+  public_net:
+    type: string
+    description: Public IP used by the servers
+  ansible_user:
+    type: string
+    description: "Ansible SSH user name"
+    default: ubuntu
+  kube_ansible_repo:
+    type: string
+    description: "Kubernetes ansible playbook repo"
+    default: "https://github.com/kairen/kube-ansible.git"
+  kube_version:
+    type: string
+    description: "Kubernetes version"
+    default: 1.11.2
+
+resources:
+  prefix:
+    type: OS::Heat::TestResource
+    properties:
+      value: { get_param: "OS::stack_name" }
+
+  base_k8s_sg:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name:
+        str_replace:
+          template: "%prefix%-base_k8s_sg"
+          params:
+            "%prefix%": { get_attr: [prefix, output] }
+      description: Base security group for Kubernetes node
+      rules:
+        - direction: egress
+          ethertype: IPv4
+        - direction: egress
+          ethertype: IPv6
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 6443
+          port_range_max: 6443
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+
+  keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      save_private_key: true
+      name:
+        str_replace:
+          template: "%prefix%-keypair"
+          params:
+            "%prefix%": { get_attr: [prefix, output] }
+
+  k8s_worker_nodes:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: 2
+      resource_def:
+        type: OS::Nova::Server
+        properties:
+          name:
+            str_replace:
+              template: "%prefix%-worker-%index%"
+              params:
+                "%prefix%": { get_attr: [prefix, output] }
+          image: { get_param: image }
+          key_name: { get_resource: keypair }
+          flavor: { get_param: flavor }
+          networks:
+          - network: { get_param: private_net }
+          security_groups:
+          - get_resource: base_k8s_sg
+
+  swift_signal_handle:
+    type: OS::Heat::SwiftSignalHandle
+
+  swift_signal:
+    type: OS::Heat::SwiftSignal
+    properties:
+      handle: { get_resource: swift_signal_handle }
+      count: 1
+      timeout: 14400
+
+  cloud_config_ansible:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+          - path: "/opt/k8s/id_rsa"
+            permissions: "0600"
+            content: { get_attr: [keypair, private_key] }
+          - path: "/opt/k8s/hosts.j2"
+            permissions: "0644"
+            content:
+              str_replace:
+                template: |
+                  [all]
+                  master ansible_ssh_host={{ master_node_ip_address }} ansible_user="%ansible_user%"
+                  {% for worker_node_ip_address in worker_nodes_ip_address %}
+                  worker-{{ loop.index0 }} ansible_ssh_host={{ worker_node_ip_address }} ansible_user="%ansible_user%"
+                  {% endfor %}
+
+                  [etcds]
+                  master
+
+                  [masters]
+                  master
+
+                  [nodes]
+                  {% for worker_node_ip_address in worker_nodes_ip_address %}
+                  worker-{{ loop.index0 }}
+                  {% endfor %}
+                  [kube-cluster:children]
+                  masters
+                  nodes
+                params:
+                  "%ansible_user%": { get_param: ansible_user }
+          - path: "/opt/k8s/environment.yaml"
+            permissions: "0600"
+            content:
+              str_replace:
+                template: |
+                  ---
+                  master_node_floating_ip: "%master_node_floating_ip%"
+                  worker_nodes_ip_address: %worker_nodes_ip_address%
+                params:
+                  "%master_node_floating_ip%": { get_attr: [floating_ip, floating_ip_address] }
+                  "%worker_nodes_ip_address%": { get_attr: [k8s_worker_nodes, first_address] }
+          - path: "/opt/k8s/all.yml"
+            permissions: "0644"
+            content:
+              str_replace:
+                template: |
+                  ---
+                  kube_version: "%kube_version%"
+
+                  vip_address: "%master_node_floating_ip%"
+                  lb_secure_port: 6443
+
+                  enable_keepalived: false
+                  enable_haproxy: false
+                  enable_dashboard: true
+                params:
+                  "%master_node_floating_ip%": { get_attr: [floating_ip, floating_ip_address] }
+                  "%kube_version%": { get_param: kube_version }
+          - path: "/opt/k8s/ansible.cfg"
+            permissions: "0644"
+            content: |
+              [ssh_connection]
+              ssh_args = -o ControlMaster=auto -o ControlPersist=30m -o ConnectionAttempts=100 -o UserKnownHostsFile=/dev/null
+              pipelining = True
+
+              [defaults]
+              roles_path = ./roles
+              remote_tmp = $HOME/.ansible/tmp
+              local_tmp  = $HOME/.ansible/tmp
+              gathering = smart
+              private_key_file=/opt/k8s/id_rsa
+              fact_caching = jsonfile
+              fact_caching_connection = /tmp/facts_cache
+              host_key_checking = False
+              stdout_callback = skippy
+              deprecation_warnings = False
+              inventory_ignore_extensions = ~, .orig, .bak, .ini, .cfg, .retry, .pyc, .pyo, .creds
+              become = True
+              host_key_checking = False
+              callback_whitelist = profile_tasks
+          - path: "/opt/k8s/runcmd-bash"
+            permissions: "0700"
+            content:
+              str_replace:
+                template: |
+                  #!/bin/bash
+
+                  set -ux
+
+                  function exit_failure {
+                    %swift_signal_notify% --data-binary '{"status": "FAILURE", "reason": "'"$@"'"}'
+                    exit 1
+                  }
+
+                  function exit_success {
+                    %swift_signal_notify% --data-binary '{"status": "SUCCESS"}'
+                  }
+
+                  sudo apt-add-repository -y ppa:ansible/ansible || exit_failure "Ansible key added apt"
+                  sudo apt-get update && sudo apt-get install -y ansible || exit_failure "Ansible apt install"
+
+                  git clone %kube_ansible_repo% /opt/k8s/kube-ansible || exit_failure "Git Clone - %kube_ansible_repo%"
+                  cd /opt/k8s/kube-ansible
+
+                  # copy and generate config
+                  echo "master_node_ip_address: $(ip route get 8.8.8.8 | awk '{print $NF; exit}')" | sudo tee -a /opt/k8s/environment.yaml
+                  sudo cp -r /opt/k8s/ansible.cfg ansible.cfg
+                  sudo cp -r /opt/k8s/all.yml inventory/group_vars/all.yml
+                  ansible localhost -e @/opt/k8s/environment.yaml -m template \
+                    -a "src=/opt/k8s/hosts.j2 dest=inventory/hosts.ini" || exit_failure "Generate Ansible Inventory"
+
+                  # run playbook
+                  ansible-playbook -i inventory/hosts.ini cluster.yml || exit_failure "Run Ansible Playbook"
+
+                  exit_success
+                params:
+                  "%swift_signal_notify%": { get_attr: [swift_signal_handle, curl_cli] }
+                  "%kube_ansible_repo%": { get_param: kube_ansible_repo }
+        runcmd:
+          - ./opt/k8s/runcmd-bash
+
+  k8s_master_node:
+    depends_on:
+      - k8s_worker_nodes
+    type: OS::Nova::Server
+    properties:
+      name:
+        str_replace:
+          template: "%prefix%-master"
+          params:
+            "%prefix%": { get_attr: [prefix, output] }
+      image: { get_param: image }
+      key_name: { get_resource: keypair }
+      flavor: { get_param: flavor }
+      networks:
+      - network: { get_param: private_net }
+      security_groups:
+      - get_resource: base_k8s_sg
+      user_data_format: RAW
+      user_data: { get_resource: cloud_config_ansible }
+
+  floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: public_net }
+
+  floating_ip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: floating_ip }
+      server_id: { get_resource: k8s_master_node }
+
+outputs:
+  kube_apiserver_addr:
+    description: Kubernetes API Server Address
+    value:
+      str_replace:
+        template: https://host:6443
+        params:
+          host: { get_attr: [floating_ip, floating_ip_address] }
+  master_ip:
+    description: IP address of master
+    value: { get_attr: [k8s_master_node, first_address] }
+  workers_ip:
+    description: IP address of workers
+    value: { get_attr: [k8s_worker_nodes, first_address] }
+  floating_ip:
+    description: Floating IP of master
+    value: { get_attr: [floating_ip, floating_ip_address] }
+  private_key:
+    description: Private key of all nodes
+    value: { get_attr: [keypair, private_key] }
