@@ -44,8 +44,6 @@ cluster_dns_ip: "{{ cluster_subnet }}.10"
 kubeproxy_bind_address: 0.0.0.0
 kubeproxy_healthz_bind_address: 0.0.0.0:10256
 kubeproxy_metrics_bind_address: 127.0.0.1:10249
-kubeproxy_mode: iptables # support: iptables or ipvs.
-kubeproxy_ipvs_scheduler: rr
 
 runtime_sockets:
   containerd: /run/containerd/containerd.sock

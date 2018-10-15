@@ -55,6 +55,10 @@ ingress_lb_address: "{{ vip_address }}"
 monitoring_grafana_user: "admin"
 monitoring_grafana_password: "p@ssw0rd"
 
+# kube-proxy variables
+kubeproxy_mode: iptables # support: iptables or ipvs.
+kubeproxy_ipvs_scheduler: rr
+
 ###############
 # Docker opts #
 ###############
