@@ -1,7 +1,13 @@
 ---
 
-# nvidia-docker runtime
 - when: container_runtime == 'nvidia-docker'
+  raw: "nvidia-smi"
+  register: check_driver
+
+# nvidia-docker runtime
+- when: 
+  - container_runtime == 'nvidia-docker'
+  - "'not found' not in check_driver.stdout"
   include_tasks: nvidia-docker/main.yml
 
 # docker runtime

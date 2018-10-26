@@ -1,44 +1,49 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    k8s-app: kube-dns
   name: coredns
   namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/name: "CoreDNS"
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       k8s-app: kube-dns
   template:
     metadata:
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
       labels:
         k8s-app: kube-dns
     spec:
-      serviceAccount: coredns
       serviceAccountName: coredns
       priorityClassName: system-cluster-critical
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       containers:
       - name: coredns
-        image: k8s.gcr.io/coredns:1.1.3
-        args:
-        - -conf
-        - /etc/coredns/Corefile
-        livenessProbe:
-          failureThreshold: 5
-          httpGet:
-            path: /health
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 5
+        image: coredns/coredns:1.2.5
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 170Mi
+          requests:
+            cpu: 100m
+            memory: 70Mi
+        args: [ "-conf", "/etc/coredns/Corefile" ]
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/coredns
+          readOnly: true
         ports:
         - containerPort: 53
           name: dns
@@ -49,10 +54,6 @@ spec:
         - containerPort: 9153
           name: metrics
           protocol: TCP
-        resources:
-          requests:
-            cpu: 50m
-            memory: 70Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -61,15 +62,20 @@ spec:
             drop:
             - all
           readOnlyRootFilesystem: true
-        volumeMounts:
-        - mountPath: /etc/coredns
-          name: config-volume
-          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+      dnsPolicy: Default
       volumes:
-      - configMap:
-          defaultMode: 420
-          items:
-          - key: Corefile
-            path: Corefile
-          name: coredns
-        name: config-volume
+        - name: config-volume
+          configMap:
+            name: coredns
+            items:
+            - key: Corefile
+              path: Corefile
