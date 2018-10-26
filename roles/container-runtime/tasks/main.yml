@@ -2,6 +2,7 @@
 
 - when: container_runtime == 'nvidia-docker'
   raw: "nvidia-smi"
+  ignore_errors: True
   register: check_driver
 
 # nvidia-docker runtime
