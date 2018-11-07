@@ -28,7 +28,7 @@ In this section you will deploy a cluster using vagrant.
 
 Prerequisites:
 * Ansible version: *v2.5 (or newer)*.
-* [Vagrant](https://www.vagrantup.com/downloads.html): >= 1.7.0.
+* [Vagrant](https://www.vagrantup.com/downloads.html): >= 2.0.0.
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads): >= 5.0.0.
 * Mac OS X need to install `sshpass` tool.
 
