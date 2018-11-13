@@ -1,0 +1,13 @@
+---
+# Tear down nodes
+
+- hosts: masters
+  become: yes
+  roles:
+    - { role: cluster-default }
+    - { role: cluster-reset, delete_k8s: true }
+  
+- hosts: delete-nodes
+  become: yes
+  roles:
+    - { role: cluster-reset , reset_k8s: true }

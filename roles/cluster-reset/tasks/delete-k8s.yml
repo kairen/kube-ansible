@@ -1,0 +1,27 @@
+---
+
+- name: Set node to maintainer mode
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      drain {{ hostvars['' + item].ansible_hostname }} --ignore-daemonsets --force --delete-local-data
+  register: set_drain
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  until: set_drain.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true
+  with_items: "{{ groups['delete-nodes'] }}"
+
+- name: Delete node 
+  command: |
+    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
+      delete node {{ hostvars['' + item].ansible_hostname }}
+  register: delete_node
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  until: delete_node.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: true
+  with_items: "{{ groups['delete-nodes'] }}"

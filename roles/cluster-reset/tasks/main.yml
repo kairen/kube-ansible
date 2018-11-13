@@ -4,6 +4,10 @@
   include_vars:
     file: ../download/package/defaults/main.yml
 
+- name: Delete Kubernetes nodes
+  when: delete_k8s|default(false)
+  include_tasks: delete-k8s.yml
+
 - name: Reset Kubernetes cluster
   when: reset_k8s|default(false)
   include_tasks: reset-k8s.yml
@@ -11,3 +15,4 @@
 - name: Reset etcd cluster
   when: reset_etcd|default(false)
   include_tasks: reset-etcd.yml
+
