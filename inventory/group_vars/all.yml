@@ -1,6 +1,6 @@
 ---
 
-kube_version: 1.11.2
+kube_version: 1.12.3
 
 # Container runtime,
 # Supported: docker, nvidia-docker, containerd.
