@@ -11,7 +11,7 @@ clusterDNS:
 clusterDomain: {{ cluster_domain_name }}
 {% if kubelet_feature_gates -%}
 featureGates:
-{% for k,v in kubelet_feature_gates.iteritems() %}
+{% for k,v in kubelet_feature_gates.items() %}
   {{ k }}: {{ v | lower }}
 {% endfor -%}
 {% endif -%}

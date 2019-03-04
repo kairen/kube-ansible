@@ -64,13 +64,13 @@ kubeproxy_ipvs_scheduler: rr
 ###############
 
 # A list of insecure registrys you might need to define
-add_registry:
+# add_registry:
 # - "gcr.io"
 
-insecure_registrys:
-# - "172.16.35.9:5000"
+# insecure_registrys:
+# - "192.168.2.9:5000"
 
-docker_opts:
+# docker_opts:
 # - "HTTP_PROXY=http://proxy.example.com:80/"
 # - "HTTPS_PROXY=https://proxy.example.com:443/"
 
