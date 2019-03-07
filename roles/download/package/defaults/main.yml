@@ -9,10 +9,10 @@ base:
     version: "{{ kube_version }}"
   etcd:
     url: "https://github.com"
-    version: 3.2.9
+    version: 3.3.12
   docker:
     url: "https://download.docker.com"
-    version: 18.03.0-ce
+    version: 18.09.3
   nvidia_docker:
     url: "https://github.com"
     version: 2.0.3
@@ -24,7 +24,7 @@ base:
     version: 1.4.0.1
   containerd:
     url: "https://storage.googleapis.com"
-    version: 1.1.2
+    version: 1.2.4
   cni:
     url: "https://github.com"
     version: 0.6.0
@@ -72,9 +72,6 @@ package:
     symlinks:
       - docker
       - dockerd
-      - docker-containerd
-      - docker-containerd-ctr
-      - docker-containerd-shim
       - docker-init
       - docker-proxy
       - docker-runc
@@ -115,10 +112,11 @@ package:
       extra_opt: "['--strip-components=0']"
     symlinks:
       - usr/local/bin/containerd
-      - usr/local/bin/containerd-release
       - usr/local/bin/containerd-shim
       - usr/local/bin/containerd-stress
+      - usr/local/bin/containerd-shim-runc-v1
       - usr/local/bin/crictl
+      - usr/local/bin/critest
       - usr/local/bin/ctr
       - usr/local/sbin/runc
     file: "cri-containerd-cni-{{ base.containerd.version }}.linux-amd64.tar.gz"

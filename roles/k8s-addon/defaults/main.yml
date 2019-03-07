@@ -71,6 +71,7 @@ addons:
       - logging/fluentd/fluentd-rbac.yml
       - logging/fluentd/fluentd-es-cm.yml
       - logging/fluentd/fluentd-es-ds.yml
+      - logging/kibana/kibana-anonymous-rbac.yml
       - logging/kibana/kibana-svc.yml
       - logging/kibana/kibana-dp.yml
   monitoring:

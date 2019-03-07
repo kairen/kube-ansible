@@ -1,10 +1,10 @@
 ---
 
-kube_version: 1.12.3
+kube_version: 1.13.4
 
 # Container runtime,
 # Supported: docker, nvidia-docker, containerd.
-container_runtime: docker
+container_runtime: nvidia-docker
 
 # Container network,
 # Supported: calico, flannel.
@@ -14,17 +14,22 @@ cni_iface: ""
 
 # Kubernetes HA extra variables.
 vip_interface: ""
-vip_address: 172.16.35.9
+vip_address: 172.22.132.9
 
 # etcd extra variables.
 etcd_iface: ""
 
 # Kubernetes extra addons
-enable_ingress: false
-enable_dashboard: false
-enable_logging: false
-enable_monitoring: false
-enable_metric_server: false
+enable_ingress: true
+enable_dashboard: true
+enable_logging: true
+enable_monitoring: true
+enable_metric_server: true
 
 grafana_user: "admin"
 grafana_password: "p@ssw0rd"
+
+kubeproxy_mode: ipvs # support: iptables or ipvs.
+kubeproxy_ipvs_scheduler: rr 
+
+ingress_lb_address: "172.22.132.10"
