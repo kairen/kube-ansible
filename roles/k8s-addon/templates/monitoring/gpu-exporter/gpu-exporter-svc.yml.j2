@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-gpu-exporter
+  labels:
+    app: node-gpu-exporter
+    k8s-app: node-gpu-exporter
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http-metrics
+    port: 9445
+    protocol: TCP
+  selector:
+    app: node-gpu-exporter

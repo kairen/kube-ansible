@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-gpu-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: node-gpu-exporter
+  template:
+    metadata:
+      labels:
+        app: node-gpu-exporter
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-gpu-exporter
+                operator: In
+                values:
+                - "true"
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: node-gpu-exporter
+        image: kairen/gpu-prometheus-exporter:v0.1.0
+        ports:
+        - containerPort: 9445
+          hostPort: 9445
+        resources:
+          requests:
+            memory: 30Mi
+            cpu: 100m
+          limits:
+            memory: 50Mi
+            cpu: 200m
