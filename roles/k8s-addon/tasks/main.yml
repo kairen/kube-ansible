@@ -50,7 +50,7 @@
   register: check_addon_deps
   until: check_addon_deps.stdout == 'Running' or check_addon_deps.stdout == 'Active'
   retries: 10
-  delay: 10
+  delay: 15
 
 - name: "Copy {{ addon.name }} addon files"
   when: addon is defined and addon.files is defined
