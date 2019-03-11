@@ -4,7 +4,7 @@ kube_version: 1.13.4
 
 # Container runtime,
 # Supported: docker, nvidia-docker, containerd.
-container_runtime: nvidia-docker
+container_runtime: docker
 
 # Container network,
 # Supported: calico, flannel.
