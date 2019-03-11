@@ -17,7 +17,3 @@
 - name: Include vars of k8s-path.yml
   include_vars:
     file: defaults/k8s-path.yml
-
-- name: Include vars of etcd-path.yml
-  include_vars:
-    file: defaults/etcd-path.yml

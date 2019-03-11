@@ -1,5 +1,10 @@
 ---
 
+etcd_data_dir: /var/lib/etcd
+etcd_wal_dir: /var/lib/etcd/wal
+etcd_config_dir: /etc/etcd
+etcd_config_file: /etc/etcd/config.yml
+
 etcd_listen_addr: "{% if etcd_iface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_iface].ipv4.address }}
 {%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
 etcd_listen_client_urls: "https://127.0.0.1:2379,https://{{ etcd_listen_addr }}:2379"
