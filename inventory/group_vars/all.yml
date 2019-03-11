@@ -20,10 +20,10 @@ vip_address: 172.22.132.9
 etcd_iface: ""
 
 # Kubernetes extra addons
-enable_ingress: true
-enable_dashboard: true
-enable_logging: true
-enable_monitoring: true
+enable_ingress: false
+enable_dashboard: false
+enable_logging: false
+enable_monitoring: false
 enable_metric_server: true
 
 grafana_user: "admin"

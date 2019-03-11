@@ -12,7 +12,7 @@ kubelet_feature_gates:
 apiserver_bind_address: 0.0.0.0
 apiserver_secure_port: 6443
 apiserver_insecure_port: 0
-apiserver_allowed_names: front-proxy-client
+apiserver_allowed_names: front-proxy-client,aggregator
 apiserver_disable_admission: "PersistentVolumeLabel"
 apiserver_enable_admission: "NodeRestriction"
 apiserver_authorization_mode: "Node,RBAC"
