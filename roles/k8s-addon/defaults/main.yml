@@ -20,6 +20,7 @@ addons:
       - kubedns/kubedns-cm.yml
       - kubedns/kubedns-svc.yml
       - kubedns/kubedns-dp.yml
+      - kubedns/kubedns-autoscale-dp.yml
   dashboard:
     name: kubernetes-dashboard
     dirs:

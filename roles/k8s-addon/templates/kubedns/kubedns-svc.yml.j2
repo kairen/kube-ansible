@@ -11,8 +11,6 @@ metadata:
     kubernetes.io/cluster-service: "true"
     kubernetes.io/name: "CoreDNS"
 spec:
-  selector:
-    k8s-app: kube-dns
   clusterIP: {{ cluster_dns_ip }}
   ports:
   - name: dns
@@ -25,3 +23,5 @@ spec:
     port: 9153
     protocol: TCP
     targetPort: 9153
+  selector:
+    k8s-app: kube-dns

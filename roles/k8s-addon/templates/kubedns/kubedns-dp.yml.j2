@@ -7,7 +7,7 @@ metadata:
     k8s-app: kube-dns
     kubernetes.io/name: "CoreDNS"
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -23,15 +23,15 @@ spec:
       serviceAccountName: coredns
       priorityClassName: system-cluster-critical
       tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
-        - key: "CriticalAddonsOnly"
-          operator: "Exists"
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
       nodeSelector:
         beta.kubernetes.io/os: linux
       containers:
       - name: coredns
-        image: coredns/coredns:1.2.5
+        image: coredns/coredns:1.4.0
         imagePullPolicy: IfNotPresent
         resources:
           limits:
