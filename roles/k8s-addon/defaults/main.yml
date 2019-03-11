@@ -60,14 +60,14 @@ addons:
   logging:
     name: kube-logging
     dirs:
-      - logging/es
+      - logging/elasticsearch
       - logging/fluentd
       - logging/kibana
     templates:
-      - logging/es/elasticsearch-sa.yml
-      - logging/es/elasticsearch-rbac.yml
-      - logging/es/elasticsearch-svc.yml
-      - logging/es/elasticsearch-sts.yml
+      - logging/elasticsearch/elasticsearch-sa.yml
+      - logging/elasticsearch/elasticsearch-rbac.yml
+      - logging/elasticsearch/elasticsearch-svc.yml
+      - logging/elasticsearch/elasticsearch-sts.yml
       - logging/fluentd/fluentd-sa.yml
       - logging/fluentd/fluentd-rbac.yml
       - logging/fluentd/fluentd-es-cm.yml
