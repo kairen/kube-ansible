@@ -74,7 +74,6 @@ package:
       - dockerd
       - docker-init
       - docker-proxy
-      - docker-runc
     file: "docker-{{ base.docker.version }}.tgz"
   nvidia_docker:
     name: nvidia-docker

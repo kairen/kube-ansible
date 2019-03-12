@@ -36,14 +36,5 @@ haproxy_stats_uri: "/haproxy_stats"
 haproxy_stats_user: "admin"
 haproxy_stats_password: "admin123"
 
-# kube-dns variables
-cluster_domain_name: cluster.local
-cluster_dns_ip: "{{ cluster_subnet }}.10"
-
-# kube-proxy variables
-kubeproxy_bind_address: 0.0.0.0
-kubeproxy_healthz_bind_address: 0.0.0.0:10256
-kubeproxy_metrics_bind_address: 127.0.0.1:10249
-
 runtime_sockets:
   containerd: /run/containerd/containerd.sock

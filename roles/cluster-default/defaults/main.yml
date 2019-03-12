@@ -22,6 +22,8 @@ cluster_subnet: 10.96.0
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
 api_service_ip: "{{ cluster_subnet }}.1"
+cluster_dns_ip: "{{ cluster_subnet }}.10"
+cluster_domain_name: cluster.local
 
 # Kubernetes HA extra variables.
 enable_keepalived: true

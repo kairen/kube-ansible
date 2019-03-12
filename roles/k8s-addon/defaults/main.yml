@@ -3,7 +3,7 @@
 addons:
   kubeproxy:
     name: kube-proxy
-    dirs:
+    directories:
       - kubeproxy
     templates:
       - kubeproxy/kubeproxy-sa.yml
@@ -12,7 +12,7 @@ addons:
       - kubeproxy/kubeproxy-ds.yml
   kubedns:
     name: kube-dns
-    dirs:
+    directories:
       - kubedns
     templates:
       - kubedns/kubedns-sa.yml
@@ -23,7 +23,7 @@ addons:
       - kubedns/kubedns-autoscale-dp.yml
   dashboard:
     name: kubernetes-dashboard
-    dirs:
+    directories:
       - dashboard
     templates:
       - dashboard/dashboard-sa.yml
@@ -34,7 +34,7 @@ addons:
       - dashboard/dashboard-dp.yml
   metric_server:
     name: metric-server
-    dirs:
+    directories:
       - metric-server
     templates:
       - metric-server/metric-server-sa.yml
@@ -44,11 +44,11 @@ addons:
       - metric-server/metrics-server-dp.yml
   ingress_nginx:
     name: ingress-nginx
-    dirs:
+    directories:
       - ingress-nginx
     dependencies:
       - name: ingress-nginx
-        kind: ns
+        kind: namespace
         files:
           - ingress-nginx/ingress-controller-ns.yml
     templates:
@@ -59,7 +59,7 @@ addons:
       - ingress-nginx/ingress-controller-dp.yml
   logging:
     name: kube-logging
-    dirs:
+    directories:
       - logging/elasticsearch
       - logging/fluentd
       - logging/kibana
@@ -77,7 +77,7 @@ addons:
       - logging/kibana/kibana-dp.yml
   monitoring:
     name: prometheus-monitoring
-    dirs:
+    directories:
       - monitoring/operator
       - monitoring/alertmanater
       - monitoring/node-exporter
@@ -89,7 +89,7 @@ addons:
       - monitoring/servicemonitor
     dependencies:
       - name: monitoring
-        kind: ns
+        kind: namespace
         files:
           - monitoring/monitoring-ns.yml
       - name: prometheus-operator

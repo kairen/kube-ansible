@@ -3,7 +3,9 @@ data:
   config.conf: |-
     apiVersion: kubeproxy.config.k8s.io/v1alpha1
     kind: KubeProxyConfiguration
-    bindAddress: {{ kubeproxy_bind_address }}
+    bindAddress: 0.0.0.0
+    healthzBindAddress: 0.0.0.0:10256
+    metricsBindAddress: 127.0.0.1:10249
     clientConnection:
       acceptContentTypes: ""
       burst: 10
@@ -11,15 +13,13 @@ data:
       kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
       qps: 5
     clusterCIDR: {{ pod_network_cidr }}
-    configSyncPeriod: 15m0s
+    configSyncPeriod: 10m0s
     conntrack:
       maxPerCore: 32768
       min: 131072
       tcpCloseWaitTimeout: 1h0m0s
       tcpEstablishedTimeout: 24h0m0s
     enableProfiling: false
-    healthzBindAddress: {{ kubeproxy_healthz_bind_address }}
-    hostnameOverride: ""
     iptables:
       masqueradeAll: false
       masqueradeBit: 14
@@ -29,12 +29,10 @@ data:
       minSyncPeriod: 0s
       scheduler: {{ kubeproxy_ipvs_scheduler }}
       syncPeriod: 30s
-    metricsBindAddress: {{ kubeproxy_metrics_bind_address }}
     mode: {{ kubeproxy_mode }}
     featureGates:
       SupportIPVSProxyMode: true
-    oomScoreAdj: -999
-    portRange: ""
+    oomScoreAdj: -998
     resourceContainer: /kube-proxy
     udpIdleTimeout: 250ms
   kubeconfig.conf: |-
