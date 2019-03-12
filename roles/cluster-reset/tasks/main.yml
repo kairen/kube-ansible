@@ -4,14 +4,6 @@
   include_vars:
     file: ../download/package/defaults/main.yml
 
-- name: Include vars of etcd/defaults
-  include_vars:
-    file: ../etcd/defaults/main.yml
-
-- name: Include vars of container-runtime/defaults
-  include_vars:
-    file: ../container-runtime/defaults/main.yml
-
 - name: Delete Kubernetes nodes
   when: delete_k8s|default(false)
   include_tasks: delete-k8s.yml

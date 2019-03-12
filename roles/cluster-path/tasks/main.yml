@@ -1,0 +1,7 @@
+---
+
+- name: Configure cluster path vars
+  debug:
+    msg: "Check roles/cluster-path/defaults/main.yml"
+  tags:
+    - always

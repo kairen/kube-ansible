@@ -6,6 +6,7 @@
   gather_facts: false
   roles:
   - { role: cluster-default }
+  - { role: cluster-path }
   - { role: k8s-addon, tags: dashboard,     when: enable_dashboard,     addon: "{{ addons.dashboard }}" }
   - { role: k8s-addon, tags: logging,       when: enable_logging,       addon: "{{ addons.logging }}" }
   - { role: k8s-addon, tags: monitoring,    when: enable_monitoring,    addon: "{{ addons.monitoring }}" }
