@@ -29,7 +29,3 @@ enable_metric_server: true
 grafana_user: "admin"
 grafana_password: "p@ssw0rd"
 
-kubeproxy_mode: ipvs # support: iptables or ipvs.
-kubeproxy_ipvs_scheduler: rr 
-
-ingress_lb_address: "172.22.132.10"

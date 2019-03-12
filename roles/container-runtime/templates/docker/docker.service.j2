@@ -4,16 +4,7 @@ After=network.target docker.socket
 
 [Service]
 Type=notify
-EnvironmentFile=-{{ systemd_env_dir }}/docker
-ExecStart={{ bin_dir }}/dockerd \
-  {% if ansible_os_family == 'Debian' -%}-H fd:// --containerd=/run/containerd/containerd.sock{% endif -%} \
-  $OPTIONS \
-  $DOCKER_STORAGE_OPTIONS \
-  $DOCKER_OPTS \
-  $DOCKER_NETWORK_OPTIONS \
-  $ADD_REGISTRY \
-  $BLOCK_REGISTRY \
-  $INSECURE_REGISTRY
+ExecStart={{ bin_dir }}/dockerd -H fd:// --containerd=/run/containerd/containerd.sock 
 
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=on-failure

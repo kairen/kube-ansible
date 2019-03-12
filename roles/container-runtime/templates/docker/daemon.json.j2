@@ -1,0 +1,15 @@
+{
+    {% if container_runtime == 'nvidia-docker' and 'not found' not in check_driver.stdout -%}
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "path": "{{ bin_dir }}/nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+    {% endif -%}
+    {% if insecure_registries is defined and insecure_registries > 0 -%}
+    "insecure-registries": [{% for reg in insecure_registries %}"{{ reg }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+    {% endif -%}
+    "debug": false
+}

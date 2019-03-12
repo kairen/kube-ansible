@@ -74,6 +74,10 @@ package:
       - dockerd
       - docker-init
       - docker-proxy
+      - containerd
+      - containerd-shim
+      - runc
+      - ctr
     file: "docker-{{ base.docker.version }}.tgz"
   nvidia_docker:
     name: nvidia-docker

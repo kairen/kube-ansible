@@ -65,11 +65,8 @@ kubeproxy_ipvs_scheduler: rr
 # Docker opts #
 ###############
 
-# A list of insecure registrys you might need to define
-# add_registry:
-# - "gcr.io"
-
-# insecure_registrys:
+# A list of the insecure registry you might need to define
+# insecure_registries:
 # - "192.168.2.9:5000"
 
 # docker_opts:
