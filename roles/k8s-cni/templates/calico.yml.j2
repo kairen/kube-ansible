@@ -12,6 +12,7 @@ rules:
   - apiGroups: [""]
     resources:
       - namespaces
+      - serviceaccounts
     verbs:
       - get
       - list
@@ -20,7 +21,7 @@ rules:
     resources:
       - pods/status
     verbs:
-      - update
+      - patch
   - apiGroups: [""]
     resources:
       - pods
@@ -28,7 +29,6 @@ rules:
       - get
       - list
       - watch
-      - patch
   - apiGroups: [""]
     resources:
       - services
@@ -100,6 +100,8 @@ metadata:
   namespace: kube-system
 data:
   typha_service_name: "none"
+  calico_backend: "bird"
+  veth_mtu: "1440"
   cni_network_config: |-
     {
       "name": "k8s-pod-network",
@@ -110,16 +112,16 @@ data:
           "log_level": "info",
           "datastore_type": "kubernetes",
           "nodename": "__KUBERNETES_NODE_NAME__",
-          "mtu": 1500,
+          "mtu": __CNI_MTU__,
           "ipam": {
             "type": "host-local",
             "subnet": "usePodCidr"
           },
           "policy": {
-            "type": "k8s"
+              "type": "k8s"
           },
           "kubernetes": {
-            "kubeconfig": "__KUBECONFIG_FILEPATH__"
+              "kubeconfig": "__KUBECONFIG_FILEPATH__"
           }
         },
         {
@@ -146,6 +148,19 @@ spec:
   selector:
     k8s-app: calico-typha
 ---
+kind: PodDisruptionBudget
+apiVersion: policy/v1beta1
+metadata:
+  name: calico-typha
+  namespace: kube-system
+  labels:
+    k8s-app: calico-typha
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      k8s-app: calico-typha
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -155,7 +170,6 @@ metadata:
     k8s-app: calico-typha
 spec:
   replicas: 0
-  revisionHistoryLimit: 2
   template:
     metadata:
       labels:
@@ -169,7 +183,7 @@ spec:
           operator: Exists
       serviceAccountName: calico-node
       containers:
-      - image: quay.io/calico/typha:v0.7.4
+      - image: calico/typha:v3.3.5
         name: calico-typha
         ports:
         - containerPort: 5473
@@ -234,8 +248,13 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: calico-node
-          image: quay.io/calico/node:v3.1.3
+          image: calico/node:v3.3.5
           env:
+            - name: CALICO_NETWORKING_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: calico_backend
             - name: DATASTORE_TYPE
               value: "kubernetes"
             - name: FELIX_LOGSEVERITYSCREEN
@@ -248,8 +267,6 @@ spec:
               value: "ACCEPT"
             - name: FELIX_IPV6SUPPORT
               value: "false"
-            - name: FELIX_IPINIPMTU
-              value: "1440"
             - name: WAIT_FOR_DATASTORE
               value: "true"
             - name: CALICO_IPV4POOL_CIDR
@@ -277,6 +294,11 @@ spec:
               value: "autodetect"
             - name: FELIX_HEALTHENABLED
               value: "true"
+            - name: FELIX_IPINIPMTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
           securityContext:
             privileged: true
           resources:
@@ -286,13 +308,16 @@ spec:
             httpGet:
               path: /liveness
               port: 9099
+              host: localhost
             periodSeconds: 10
             initialDelaySeconds: 10
             failureThreshold: 6
           readinessProbe:
-            httpGet:
-              path: /readiness
-              port: 9099
+            exec:
+              command:
+              - /bin/calico-node
+              - -bird-ready
+              - -felix-ready
             periodSeconds: 10
           volumeMounts:
             - mountPath: /lib/modules
@@ -301,11 +326,14 @@ spec:
             - mountPath: /var/run/calico
               name: var-run-calico
               readOnly: false
+            - mountPath: /run/xtables.lock
+              name: xtables-lock
+              readOnly: false
             - mountPath: /var/lib/calico
               name: var-lib-calico
               readOnly: false
         - name: install-cni
-          image: quay.io/calico/cni:v3.1.3
+          image: calico/cni:v3.3.5
           command: ["/install-cni.sh"]
           env:
             - name: CNI_CONF_NAME
@@ -319,6 +347,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: CNI_MTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
           volumeMounts:
             - mountPath: /host/opt/cni/bin
               name: cni-bin-dir
@@ -334,6 +367,10 @@ spec:
         - name: var-lib-calico
           hostPath:
             path: /var/lib/calico
+        - name: xtables-lock
+          hostPath:
+            path: /run/xtables.lock
+            type: FileOrCreate
         - name: cni-bin-dir
           hostPath:
             path: /opt/cni/bin
