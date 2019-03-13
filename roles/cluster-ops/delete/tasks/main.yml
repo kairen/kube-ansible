@@ -13,7 +13,7 @@
   ignore_errors: true
   with_items: "{{ groups['delete-nodes'] }}"
 
-- name: Delete node 
+- name: Delete node resource from kube-apiserver
   command: |
     {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }} \
       delete node {{ hostvars['' + item].ansible_hostname }}
