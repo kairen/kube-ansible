@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -17,10 +17,12 @@ spec:
     spec:
       serviceAccountName: kube-state-metrics
       containers:
-      - image: quay.io/coreos/kube-rbac-proxy:v0.3.1
-        name: kube-rbac-proxy-main
+      - name: kube-rbac-proxy-main
+        image: quay.io/coreos/kube-rbac-proxy:v0.4.1
         args:
+        - --logtostderr
         - --secure-listen-address=:8443
+        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
         - --upstream=http://127.0.0.1:8081/
         ports:
         - containerPort: 8443
@@ -33,9 +35,11 @@ spec:
             cpu: 10m
             memory: 20Mi
       - name: kube-rbac-proxy-self
-        image: quay.io/coreos/kube-rbac-proxy:v0.3.1
+        image: quay.io/coreos/kube-rbac-proxy:v0.4.1
         args:
+        - --logtostderr
         - --secure-listen-address=:9443
+        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
         - --upstream=http://127.0.0.1:8082/
         ports:
         - containerPort: 9443
@@ -48,7 +52,7 @@ spec:
             cpu: 10m
             memory: 20Mi
       - name: kube-state-metrics
-        image: quay.io/coreos/kube-state-metrics:v1.3.1
+        image: quay.io/coreos/kube-state-metrics:v1.5.0
         args:
         - --host=127.0.0.1
         - --port=8081
@@ -56,13 +60,13 @@ spec:
         - --telemetry-port=8082
         resources:
           limits:
-            cpu: 102m
-            memory: 180Mi
+            cpu: 100m
+            memory: 150Mi
           requests:
-            cpu: 102m
-            memory: 180Mi
+            cpu: 100m
+            memory: 150Mi
       - name: addon-resizer
-        image: quay.io/coreos/addon-resizer:1.0
+        image: gcr.io/google-containers/addon-resizer-amd64:2.1
         command:
         - /pod_nanny
         - --container=kube-state-metrics
@@ -70,7 +74,7 @@ spec:
         - --extra-cpu=2m
         - --memory=150Mi
         - --extra-memory=30Mi
-        - --threshold=5
+        - --acceptance-offset=5
         - --deployment=kube-state-metrics
         env:
         - name: MY_POD_NAME
@@ -85,7 +89,7 @@ spec:
               fieldPath: metadata.namespace
         resources:
           limits:
-            cpu: 10m
+            cpu: 50m
             memory: 30Mi
           requests:
             cpu: 10m

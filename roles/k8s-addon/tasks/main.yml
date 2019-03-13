@@ -35,15 +35,9 @@
 - name: Check {{ addon.name }} addon dependencies status
   when: addon is defined and addon.dependencies is defined and apply_addon_deps
   shell: |
-    {% if item.kind == 'ns' %}
-    {{ bin_dir }}/kubectl --kubeconfig={{ admin_kubeconfig }}  \
-       get {{ item.kind }} --no-headers | \
-       grep {{ item.name }} | awk '{ print $2}' | uniq
-    {% else %}
     {{ bin_dir }}/kubectl -n {{ item.namespace }} --kubeconfig={{ admin_kubeconfig }} \
-      get {{ item.kind }} --no-headers | \
-      grep {{ item.name }} | awk '{ print $3}' | uniq
-    {% endif %}
+      get {{ item.kind }} --no-headers -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase | \
+      grep {{ item.name }} | awk '{ print $2}' | uniq
   with_items: "{{ addon.dependencies }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

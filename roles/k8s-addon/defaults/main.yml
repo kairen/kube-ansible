@@ -86,10 +86,12 @@ addons:
       - monitoring/grafana
       - monitoring/service-discovery
       - monitoring/prometheus
+      - monitoring/prometheus-adapter
       - monitoring/servicemonitor
     dependencies:
       - name: monitoring
         kind: namespace
+        namespace: ""
         files:
           - monitoring/monitoring-ns.yml
       - name: prometheus-operator
@@ -101,10 +103,11 @@ addons:
           - monitoring/operator/operator-svc.yml
           - monitoring/operator/operator-dp.yml
     files:
-      - monitoring/grafana/grafana-definitions.yml
-      - monitoring/grafana/grafana-gpu-cluster-cm.yml
-      - monitoring/grafana/grafana-gpu-node-cm.yml
-      - monitoring/grafana/grafana-gpu-pod-cm.yml
+      - monitoring/grafana/grafana-res-definitions.yml
+      - monitoring/grafana/grafana-gpu-cluster-definitions.yml
+      - monitoring/grafana/grafana-gpu-node-definitions.yml
+      - monitoring/grafana/grafana-gpu-pod-definitions.yml
+      - monitoring/grafana/grafana-cluster-definitions.yml
       - monitoring/prometheus/prometheus-rules.yml
     templates:
       - monitoring/alertmanater/alertmanager-main-sa.yml
@@ -133,14 +136,21 @@ addons:
       - monitoring/prometheus/prometheus-rbac.yml
       - monitoring/prometheus/prometheus-svc.yml
       - monitoring/prometheus/prometheus-main.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-sa.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-rbac.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-svc.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-cm.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-apiservice.yml
+      - monitoring/prometheus-adapter/prometheus-adapter-dp.yml
       - monitoring/servicemonitor/alertmanager-sm.yml
       - monitoring/servicemonitor/coredns-sm.yml
       - monitoring/servicemonitor/kube-apiserver-sm.yml
       - monitoring/servicemonitor/kube-controller-manager-sm.yml
       - monitoring/servicemonitor/kube-scheduler-sm.yml
       - monitoring/servicemonitor/kubelet-sm.yml
-      - monitoring/servicemonitor/kubestate-metrics-sm.yml
+      - monitoring/servicemonitor/kube-state-metrics-sm.yml
       - monitoring/servicemonitor/node-exporter-sm.yml
       - monitoring/servicemonitor/gpu-exporter-sm.yml
       - monitoring/servicemonitor/prometheus-operator-sm.yml
       - monitoring/servicemonitor/prometheus-sm.yml
+      - monitoring/servicemonitor/grafana-sm.yml

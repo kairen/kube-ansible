@@ -34,6 +34,9 @@ rules:
   - apps
   resources:
   - statefulsets
+  - daemonsets
+  - deployments
+  - replicasets
   verbs:
   - list
   - watch
@@ -64,6 +67,13 @@ rules:
   - subjectaccessreviews
   verbs:
   - create
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -92,6 +102,15 @@ rules:
   - get
 - apiGroups:
   - extensions
+  resourceNames:
+  - kube-state-metrics
+  resources:
+  - deployments
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - apps
   resourceNames:
   - kube-state-metrics
   resources:

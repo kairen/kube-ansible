@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -15,14 +15,13 @@ spec:
       labels:
         app: grafana
     spec:
+      serviceAccountName: grafana
+      nodeSelector:
+        beta.kubernetes.io/os: linux
       containers:
       - name: grafana
-        image: grafana/grafana:5.1.0
+        image: grafana/grafana:6.0.1
         env:
-        - name: GF_AUTH_BASIC_ENABLED
-          value: "true"
-        - name: GF_AUTH_ANONYMOUS_ENABLED
-          value: "true"
         - name: GF_SECURITY_ADMIN_USER
           valueFrom:
             secretKeyRef:
@@ -36,6 +35,10 @@ spec:
         ports:
         - containerPort: 3000
           name: http
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: http
         resources:
           limits:
             cpu: 200m
@@ -86,10 +89,12 @@ spec:
         - mountPath: /grafana-dashboard-definitions/0/gpu-cluster
           name: grafana-dashboard-gpu-cluster
           readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/k8s-cluster
+          name: grafana-dashboard-k8s-cluster
+          readOnly: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
-      serviceAccountName: grafana
       volumes:
       - emptyDir: {}
         name: grafana-storage
@@ -132,3 +137,6 @@ spec:
       - configMap:
           name: grafana-dashboard-gpu-cluster
         name: grafana-dashboard-gpu-cluster
+      - configMap:
+          name: grafana-dashboard-k8s-cluster
+        name: grafana-dashboard-k8s-cluster

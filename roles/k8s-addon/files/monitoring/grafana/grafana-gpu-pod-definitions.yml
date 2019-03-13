@@ -99,7 +99,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU使用率",
+          "title": "GPU Usage",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -183,7 +183,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU記憶體使用量(byte)",
+          "title": "GPU Memory Usage(byte)",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -496,7 +496,10 @@ data:
       "refresh": "5s",
       "schemaVersion": 16,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "kubernetes-mixin",
+        "GPU"
+      ],
       "templating": {
         "list": [
           {
@@ -645,9 +648,9 @@ data:
         ]
       },
       "timezone": "",
-      "title": "K8s / Pod(GPU)",
+      "title": "Kubernetes / GPU Resources / Pod",
       "uid": "OKhcYv-mz",
-      "version": 27
+      "version": 1
     }
 kind: ConfigMap
 metadata:

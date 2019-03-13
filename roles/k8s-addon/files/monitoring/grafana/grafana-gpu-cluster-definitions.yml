@@ -118,7 +118,7 @@ data:
             }
           ],
           "thresholds": "",
-          "title": "已使用GPU張數",
+          "title": "Used GPU",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -199,7 +199,7 @@ data:
             }
           ],
           "thresholds": "",
-          "title": "GPU總張數",
+          "title": "Total GPU",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -803,7 +803,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU使用率",
+          "title": "GPU Usage",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -887,7 +887,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU記憶體使用量(byte)",
+          "title": "GPU Memory Usage(byte)",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -971,7 +971,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU Power使用量(mW)",
+          "title": "GPU Power Usage(mW)",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1055,7 +1055,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "GPU溫度",
+          "title": "GPU Temperature",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1139,7 +1139,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "CPU使用量",
+          "title": "CPU Usage",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1385,7 +1385,7 @@ data:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "記憶體使用量 (w/o cache)",
+          "title": "Memory Usage (w/o cache)",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1587,7 +1587,10 @@ data:
       ],
       "schemaVersion": 16,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "kubernetes-mixin",
+        "GPU"
+      ],
       "templating": {
         "list": [
           {
@@ -1636,7 +1639,7 @@ data:
         ]
       },
       "timezone": "",
-      "title": "K8s / Cluster(GPU)",
+      "title": "Kubernetes / GPU Resources / Cluster",
       "uid": "hgfPvI-mk",
       "version": 1
     }
