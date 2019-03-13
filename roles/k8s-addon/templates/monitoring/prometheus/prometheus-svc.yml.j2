@@ -6,6 +6,7 @@ metadata:
   name: prometheus-k8s
   namespace: monitoring
 spec:
+  sessionAffinity: ClientIP
   ports:
   - name: web
     port: 9090

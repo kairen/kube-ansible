@@ -7,12 +7,12 @@
   stat:
     path: "{{ pki_dir }}/{{ item.bare }}.pem"
   with_items:
-    - { file: ca-csr.json,                 name: kubernetes, org: Kubernetes, bare: ca }
-    - { file: admin-csr.json,              name: admin, org: "system:masters", bare: admin }
-    - { file: apiserver-csr.json,          name: kube-apiserver, org: Kubernetes, bare: apiserver }
-    - { file: manager-csr.json,            name: "system:kube-controller-manager", org: "system:kube-controller-manager", bare: controller-manager }
-    - { file: scheduler-csr.json,          name: "system:kube-scheduler", org: "system:kube-scheduler", bare: scheduler }
-    - { file: front-proxy-ca-csr.json,     name: kubernetes-front, org: Kubernetes, bare: front-proxy-ca }
+    - { file: ca-csr.json, name: kubernetes, org: Kubernetes, bare: ca }
+    - { file: admin-csr.json, name: admin, org: "system:masters", bare: admin }
+    - { file: apiserver-csr.json, name: kube-apiserver, org: Kubernetes, bare: apiserver }
+    - { file: manager-csr.json, name: "system:kube-controller-manager", org: "system:kube-controller-manager", bare: controller-manager }
+    - { file: scheduler-csr.json, name: "system:kube-scheduler", org: "system:kube-scheduler", bare: scheduler }
+    - { file: front-proxy-ca-csr.json, name: kubernetes-front, org: Kubernetes, bare: front-proxy-ca }
     - { file: front-proxy-client-csr.json, name: front-proxy-client, org: Kubernetes, bare: front-proxy-client }
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -32,7 +32,7 @@
   stat:
     path: "{{ pki_dir }}/{{ item.bare }}.pem"
   with_items:
-    - { file: ca-csr.json,             bare: ca }
+    - { file: ca-csr.json, bare: ca }
     - { file: front-proxy-ca-csr.json, bare: front-proxy-ca }
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true
@@ -52,10 +52,10 @@
   stat:
     path: "{{ pki_dir }}/{{ item.bare }}.pem"
   with_items:
-    - { file: apiserver-csr.json,          ca: ca, hosts: "{{ apiserver_hosts }}", bare: apiserver }
-    - { file: admin-csr.json,              ca: ca, bare: admin }
-    - { file: manager-csr.json,            ca: ca, bare: controller-manager }
-    - { file: scheduler-csr.json,          ca: ca, bare: scheduler }
+    - { file: apiserver-csr.json, ca: ca, hosts: "{{ apiserver_hosts }}", bare: apiserver }
+    - { file: admin-csr.json, ca: ca, bare: admin }
+    - { file: manager-csr.json, ca: ca, bare: controller-manager }
+    - { file: scheduler-csr.json, ca: ca, bare: scheduler }
     - { file: front-proxy-client-csr.json, ca: front-proxy-ca, bare: front-proxy-client }
   delegate_to: "{{ groups['masters'][0] }}"
   run_once: true

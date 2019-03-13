@@ -3,7 +3,7 @@
 - name: Check the files already exists
   stat:
     path: "{{ item }}"
-  with_items: "{{ files }}" 
+  with_items: "{{ files }}"
   register: check_files
 
 - name: Read the config files

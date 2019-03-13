@@ -6,6 +6,10 @@
 - name: Ensure containerd config directory exists
   file: path="{{ containerd_config_dir }}" state=directory
 
+- name: Copy containerd config file
+  when: insecure_registries is defined and insecure_registries > 0
+  template: src=containerd/config.toml.j2 dest={{ containerd_config_dir }}/config.toml
+
 - name: Copy containerd service files
   template:
     src: "containerd/containerd.service.j2"

@@ -14,6 +14,35 @@
   import_role:
     name: common/copy-files
 
-- include_tasks: config-etcd.yml
+- name: Ensure etcd config directory exists
+  file:
+    path: "{{ etcd_config_dir }}"
+    recurse: yes
+    state: directory
 
-- include_tasks: systemd-etcd.yml
+- name: Ensure etcd data directory exists
+  file:
+    path: "{{ etcd_data_dir }}"
+    recurse: yes
+    state: directory
+
+- name: Copy etcd config template file
+  template: src=etcd-config.yml.j2 dest={{ etcd_config_file }}
+
+- name: Copy etcd systemd service file
+  template:
+    src: etcd.service.j2
+    dest: "{{ systemd_service_dir }}/etcd.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: change_etcd
+
+- name: Enable and restart etcd
+  when: change_etcd
+  systemd:
+    name: etcd
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  register: started_etcd

@@ -3,3 +3,11 @@ kind: ServiceAccount
 metadata:
   name: coredns
   namespace: kube-system
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: kube-dns-autoscaler
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile

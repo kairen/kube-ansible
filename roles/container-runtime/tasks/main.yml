@@ -5,8 +5,11 @@
   ignore_errors: True
   register: check_driver
 
+# containerd runtime
+- include_tasks: containerd/main.yml
+
 # nvidia-docker runtime
-- when: 
+- when:
   - container_runtime == 'nvidia-docker'
   - "'not found' not in check_driver.stdout"
   include_tasks: nvidia-docker/main.yml
@@ -14,10 +17,6 @@
 # docker runtime
 - when: container_runtime == 'docker' or container_runtime == 'nvidia-docker'
   include_tasks: docker/main.yml
-
-# containerd runtime
-- when: container_runtime == 'containerd'
-  include_tasks: containerd/main.yml
 
 - name: Check sysctl k8s file
   stat: path=/etc/sysctl.d/99-k8s.conf
@@ -30,6 +29,8 @@
       net.ipv4.ip_forward=1
       net.bridge.bridge-nf-call-ip6tables=1
       net.bridge.bridge-nf-call-iptables=1
+      net.ipv4.conf.all.arp_ignore=1
+      net.ipv4.conf.all.arp_announce=2
     dest: /etc/sysctl.d/99-k8s.conf
   register: copy_sysctl
 

@@ -1,0 +1,31 @@
+---
+
+- hosts: etcds
+  become: true
+  serial: 1
+  roles:
+   - { role: cluster-default }
+   - { role: cluster-path }
+   - { role: etcd, tags: etcd }
+
+- hosts: masters
+  become: true
+  serial: 1
+  roles:
+    - { role: cluster-default }
+    - { role: cluster-path }
+    - { role: k8s-setup, node_role: 'master', init: false, tags: master-setup }
+
+- hosts: masters
+  become: true
+  roles: 
+    - { role: cluster-default }
+    - { role: cluster-path }
+    - { role: k8s-addon, addon: "{{ addons.kubeproxy }}" }
+
+- hosts: nodes
+  become: true
+  roles:
+    - { role: cluster-default }
+    - { role: cluster-path }
+    - { role: k8s-setup, node_role: 'node', tags: node-setup }

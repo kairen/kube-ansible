@@ -6,11 +6,10 @@ metadata:
   name: prometheus-operator
   namespace: monitoring
 spec:
+  clusterIP: None
   ports:
   - name: http
     port: 8080
-    protocol: TCP
     targetPort: http
   selector:
     k8s-app: prometheus-operator
-  type: ClusterIP

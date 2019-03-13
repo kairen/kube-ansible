@@ -6,8 +6,10 @@ services:
 python:
   - "2.7"
 before_install:
-  - pip install -U ansible ansible-lint
+  - pip install -U yamllint ansible
 script:
-  - ansible-lint addons.yml
-  - ansible-lint cluster.yml
-  - ansible-lint reset-cluster.yml
+  - yamllint roles
+  - ansible-playbook -i inventory/local-tests.ini cluster.yml -vvv --syntax-check
+  - ansible-playbook -i inventory/local-tests.ini upgrade-cluster.yml -vvv --syntax-check
+  - ansible-playbook -i inventory/local-tests.ini addons.yml -vvv --syntax-check
+  - ansible-playbook -i inventory/local-tests.ini reset-cluster.yml -vvv --syntax-check

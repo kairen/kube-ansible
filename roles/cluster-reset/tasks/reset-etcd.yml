@@ -10,4 +10,7 @@
     - "{{ etcd_config_dir }}"
     - "{{ etcd_data_dir }}"
     - "{{ package.etcd.dir }}"
+    - "{{ bin_dir }}/etcd"
+    - "{{ bin_dir }}/etcdctl"
+    - "{{ systemd_service_dir }}/etcd.service"
   ignore_errors: True

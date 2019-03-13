@@ -12,7 +12,7 @@ kubelet_feature_gates:
 apiserver_bind_address: 0.0.0.0
 apiserver_secure_port: 6443
 apiserver_insecure_port: 0
-apiserver_allowed_names: front-proxy-client
+apiserver_allowed_names: front-proxy-client,aggregator
 apiserver_disable_admission: "PersistentVolumeLabel"
 apiserver_enable_admission: "NodeRestriction"
 apiserver_authorization_mode: "Node,RBAC"
@@ -35,15 +35,6 @@ haproxy_stats_bind_address: 9090
 haproxy_stats_uri: "/haproxy_stats"
 haproxy_stats_user: "admin"
 haproxy_stats_password: "admin123"
-
-# kube-dns variables
-cluster_domain_name: cluster.local
-cluster_dns_ip: "{{ cluster_subnet }}.10"
-
-# kube-proxy variables
-kubeproxy_bind_address: 0.0.0.0
-kubeproxy_healthz_bind_address: 0.0.0.0:10256
-kubeproxy_metrics_bind_address: 127.0.0.1:10249
 
 runtime_sockets:
   containerd: /run/containerd/containerd.sock

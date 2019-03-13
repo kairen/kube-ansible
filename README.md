@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/kairen/kube-ansible.svg?branch=master)](https://travis-ci.org/kairen/kube-ansible)
 # Kubernetes Ansible
-A playbooks to building the hard way Kubernetes cluster, This playbook is a fully automated command to bring up a Kubernetes cluster on VM or Baremetal.
+A collection of playbooks for deploying/managing/upgrading a Kubernetes cluster onto machines, they are a fully automated command to bring up a Kubernetes cluster on bare-metal or VMs.  
 
 [![asciicast](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi.png)](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi?speed=2)
 
@@ -9,22 +9,22 @@ Feature list:
 - [x] Highly available Kubernetes cluster.
 - [x] Full of the binaries installation.
 - [x] Kubernetes addons:
-  - [x] Promethues monitoring.
+  - [x] Promethues Monitoring.
+  - [x] EFK Logging.
   - [x] Metrics Server.
-  - [x] EFK logging.
-  - [x] Ingress Controller.
+  - [x] NGINX Ingress Controller.
   - [x] Kubernetes Dashboard.
 - [x] Support container network:
-  - [x] calico.
-  - [x] flannel.
+  - [x] Calico.
+  - [x] Flannel.
 - [x] Support container runtime:
-  - [x] docker.
-  - [x] nvidia-docker.(Require NVIDIA driver and CUDA 9.0+)
-  - [x] containerd.
-  - [ ] cri-o.
+  - [x] Docker.
+  - [x] NVIDIA-Docker.(Require NVIDIA driver and CUDA 9.0+)
+  - [x] Containerd.
+  - [ ] CRI-O.
 
 ## Quick Start
-In this section you will deploy a cluster using vagrant.
+In this section you will deploy a cluster via vagrant.
 
 Prerequisites:
 * Ansible version: *v2.5 (or newer)*.
@@ -36,7 +36,7 @@ Prerequisites:
 $ brew install http://git.io/sshpass.rb
 ```
 
-The getting started guide will use Vagrant with VirtualBox to deploy a Kubernetes cluster on virtual machines. You can deploy the cluster with a single command:
+The getting started guide will use Vagrant with VirtualBox to deploy a Kubernetes cluster onto virtual machines. You can deploy the cluster with a single command:
 ```sh
 $ ./hack/setup-vms
 Cluster Size: 1 master, 2 worker.
@@ -45,7 +45,7 @@ Cluster Size: 1 master, 2 worker.
   CNI binding iface: eth1
 Start to deploy?(y):
 ```
-> * You also can use `sudo ./hack/setup-vms -p libvirt -i eth1` command to deploy the cluster on KVM.
+> * You also can use `sudo ./hack/setup-vms -p libvirt -i eth1` command to deploy the cluster onto KVM.
 
 If you want to access API you need to create RBAC object define the permission of role. For example using `cluster-admin` role:
 ```sh

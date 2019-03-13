@@ -4,7 +4,7 @@
 # Kubernetes opts #
 ###################
 
-kube_version: 1.10.5
+kube_version: 1.13.4
 
 # Container runtime,
 # Supported: docker, containerd.
@@ -22,6 +22,8 @@ cluster_subnet: 10.96.0
 service_ip_range: "{{ cluster_subnet }}.0/12"
 service_node_port_range: 30000-32767
 api_service_ip: "{{ cluster_subnet }}.1"
+cluster_dns_ip: "{{ cluster_subnet }}.10"
+cluster_domain_name: cluster.local
 
 # Kubernetes HA extra variables.
 enable_keepalived: true
@@ -52,22 +54,21 @@ enable_metric_server: false
 
 ingress_lb_address: "{{ vip_address }}"
 
+monitoring_lb_address: "{{ vip_address }}"
 monitoring_grafana_user: "admin"
 monitoring_grafana_password: "p@ssw0rd"
 
 # kube-proxy variables
-kubeproxy_mode: iptables # support: iptables or ipvs.
+# Supported: iptables or ipvs.
+kubeproxy_mode: iptables
 kubeproxy_ipvs_scheduler: rr
 
 ###############
 # Docker opts #
 ###############
 
-# A list of insecure registrys you might need to define
-# add_registry:
-# - "gcr.io"
-
-# insecure_registrys:
+# A list of the insecure registry you might need to define
+# insecure_registries:
 # - "192.168.2.9:5000"
 
 # docker_opts:
@@ -76,12 +77,16 @@ kubeproxy_ipvs_scheduler: rr
 
 # Add http and https proxy
 proxy_env:
-  http_proxy: "" # http://:<usr>@<passwd>:<ip>:<port>
-  https_proxy: "" # https://<usr>:<passwd>@<ip>:<port>
+  # http://:<usr>@<passwd>:<ip>:<port>
+  http_proxy: ""
+  # https://<usr>:<passwd>@<ip>:<port>
+  https_proxy: ""
 
 #############
 # Msic opts #
 #############
-repos_offline: false # download pkg from custom url
+
+# Download pkg from custom URL.
+repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

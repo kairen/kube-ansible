@@ -1,8 +1,5 @@
 ---
 
-- name: Ensure docker config directory exists
-  file: path="{{ docker_config_dir }}" state=directory
-
 - name: Ensure nvidia runtime config directory exists
   file: path="{{ nvidia_runtime_config_dir }}" state=directory
 
@@ -14,8 +11,7 @@
     group: root
     mode: 0644
   with_items:
-    - { file: "daemon.json",    dir: "{{ docker_config_dir }}" }
-    - { file: "config.toml",    dir: "{{ nvidia_runtime_config_dir }}" }
+    - { file: "config.toml", dir: "{{ nvidia_runtime_config_dir }}" }
     - { file: "libnvidia.conf", dir: "{{ ld_config_dir }}" }
   register: copy_nvidia_config_files
 

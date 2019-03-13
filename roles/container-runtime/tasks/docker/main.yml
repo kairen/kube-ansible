@@ -1,10 +1,36 @@
 ---
 
-# Add Docker systemd service
-- include_tasks: config-systemd.yml
+- name: Create Docker system user group
+  group:
+    name: docker
+    state: present
 
-# Add Docker options
-- include_tasks: config-opts.yml
+- name: Create Docker system user
+  user:
+    name: docker
+    comment: "Docker user"
+    shell: /sbin/nologin
+    state: present
+    system: yes
+    groups: docker
+
+- name: Copy Docker engine service files from host
+  template:
+    src: "docker/{{ item }}.j2"
+    dest: "{{ systemd_service_dir }}/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - docker.service
+    - docker.socket
+  register: change_system_service
+
+- name: Ensure docker config directory exists
+  file: path="{{ docker_config_dir }}" state=directory
+
+- name: Copy Docker daemon.json file
+  template: src=docker/daemon.json.j2 dest={{ docker_config_dir }}/daemon.json
 
 - name: Enable and start Docker socket
   when: change_system_service is succeeded

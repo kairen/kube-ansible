@@ -1,0 +1,18 @@
+---
+extends: default
+
+rules:
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  comments:
+    require-starting-space: false
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  line-length: disable
+  truthy: disable
+  new-line-at-end-of-file: disable

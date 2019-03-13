@@ -1,0 +1,10 @@
+[plugins]
+  [plugins.cri]
+    [plugins.cri.registry]
+      [plugins.cri.registry.mirrors]
+        [plugins.cri.registry.mirrors."docker.io"]
+          endpoint = ["https://registry-1.docker.io"]
+        {% for reg in insecure_registries -%}
+        [plugins.cri.registry.mirrors."{{ reg }}"]
+          endpoint = ["{{ reg }}"]
+        {% endfor -%}

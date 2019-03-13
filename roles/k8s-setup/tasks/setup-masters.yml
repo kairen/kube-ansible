@@ -19,7 +19,7 @@
   when: enable_haproxy
   template: src="{{ item.src }}.j2" dest="{{ item.dest }}"
   with_items:
-    - { src: "etc/haproxy.cfg",       dest: "{{ haproxy_config }}" }
+    - { src: "etc/haproxy.cfg", dest: "{{ haproxy_config }}" }
     - { src: "manifests/haproxy.yml", dest: "{{ manifest_dir }}/haproxy.yml" }
 
 - name: Copy Keepalived manifest and config files into cluster
@@ -29,10 +29,10 @@
 - name: Copy Kubernetes manifest and config files into cluster
   template: src="{{ item.src }}.j2" dest="{{ item.dest }}"
   with_items:
-    - { src: "audit/policy.yml",                      dest: "{{ audit_policy }}" }
-    - { src: "encryption/config.yml",                 dest: "{{ encryption_config }}" }
-    - { src: "manifests/kube-apiserver.yml",          dest: "{{ manifest_dir }}/kube-apiserver.yml" }
-    - { src: "manifests/kube-scheduler.yml",          dest: "{{ manifest_dir }}/kube-scheduler.yml" }
+    - { src: "audit/policy.yml", dest: "{{ audit_policy }}" }
+    - { src: "encryption/config.yml", dest: "{{ encryption_config }}" }
+    - { src: "manifests/kube-apiserver.yml", dest: "{{ manifest_dir }}/kube-apiserver.yml" }
+    - { src: "manifests/kube-scheduler.yml", dest: "{{ manifest_dir }}/kube-scheduler.yml" }
     - { src: "manifests/kube-controller-manager.yml", dest: "{{ manifest_dir }}/kube-controller-manager.yml" }
 
 - name: Copy Kubernetes admin config to home directory
