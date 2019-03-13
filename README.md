@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/kairen/kube-ansible.svg?branch=master)](https://travis-ci.org/kairen/kube-ansible)
 # Kubernetes Ansible
-A collection of playbooks for deploying/managing/upgrading a Kubernetes cluster onto machines, they are a fully automated command to bring up a Kubernetes cluster on bare-metal or VMs.  
+A collection of playbooks for deploying/managing/upgrading a Kubernetes cluster onto machines, they are fully automated command to bring up a Kubernetes cluster on bare-metal or VMs.
 
 [![asciicast](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi.png)](https://asciinema.org/a/fDjMx3fTZX9SZktqEdTtWwZwi?speed=2)
 
