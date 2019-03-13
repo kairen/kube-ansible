@@ -10,5 +10,6 @@ before_install:
 script:
   - yamllint roles
   - ansible-playbook -i inventory/local-tests.ini cluster.yml -vvv --syntax-check
+  - ansible-playbook -i inventory/local-tests.ini upgrade-cluster.yml -vvv --syntax-check
   - ansible-playbook -i inventory/local-tests.ini addons.yml -vvv --syntax-check
   - ansible-playbook -i inventory/local-tests.ini reset-cluster.yml -vvv --syntax-check
