@@ -59,7 +59,8 @@ monitoring_grafana_user: "admin"
 monitoring_grafana_password: "p@ssw0rd"
 
 # kube-proxy variables
-kubeproxy_mode: iptables # support: iptables or ipvs.
+# Supported: iptables or ipvs.
+kubeproxy_mode: iptables
 kubeproxy_ipvs_scheduler: rr
 
 ###############
@@ -76,12 +77,16 @@ kubeproxy_ipvs_scheduler: rr
 
 # Add http and https proxy
 proxy_env:
-  http_proxy: "" # http://:<usr>@<passwd>:<ip>:<port>
-  https_proxy: "" # https://<usr>:<passwd>@<ip>:<port>
+  # http://:<usr>@<passwd>:<ip>:<port>
+  http_proxy: ""
+  # https://<usr>:<passwd>@<ip>:<port>
+  https_proxy: ""
 
 #############
 # Msic opts #
 #############
-repos_offline: false # download pkg from custom url
+
+# Download pkg from custom URL.
+repos_offline: false
 repos_port: 4040
 repos_offline_url: "http://172.16.35.9:{{ repos_port }}"

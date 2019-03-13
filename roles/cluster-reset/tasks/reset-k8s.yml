@@ -18,39 +18,39 @@
   when: stop_docker_service
   file: path="{{ item }}" state=absent
   with_items:
-  - "{{ docker_data_dir }}"
-  - "{{ docker_config_dir }}"
-  - "{{ docker_shim_dir }}"
-  - "{{ containerd_data_dir }}"
-  - "{{ containerd_config_dir }}"
-  - "{{ nvidia_runtime_config_dir }}"
-  - "{{ libnvidia_header_file }}"
-  - "{{ libnvidia_lib_dir }}"
-  - "{{ package.docker.dir }}"
-  - "{{ package.nvidia_docker.dir }}"
-  - "{{ package.libnvidia_container.dir }}"
-  - "{{ package.nvidia_container_runtime.dir }}"
-  - "{{ package.containerd.dir }}"
-  - "{{ bin_dir }}/docker"
-  - "{{ bin_dir }}/dockerd"
-  - "{{ bin_dir }}/docker-init"
-  - "{{ bin_dir }}/docker-proxy"
-  - "{{ bin_dir }}/docker-runc"
-  - "{{ bin_dir }}/ctr"
-  - "{{ bin_dir }}/critest"
-  - "{{ bin_dir }}/crictl"
-  - "{{ bin_dir }}/containerd"
-  - "{{ bin_dir }}/containerd-shim"
-  - "{{ bin_dir }}/containerd-shim-runc-v1"
-  - "{{ bin_dir }}/containerd-stress"
-  - "{{ bin_dir }}/nvidia-container-cli"
-  - "{{ bin_dir }}/nvidia-container-runtime"
-  - "{{ bin_dir }}/nvidia-container-runtime-hook"
-  - "{{ bin_dir }}/nvidia-docker"
-  - "{{ bin_dir }}/runc"
-  - "{{ systemd_service_dir }}/docker.service"
-  - "{{ systemd_service_dir }}/docker.socket"
-  - "{{ systemd_service_dir }}/containerd.service"
+    - "{{ docker_data_dir }}"
+    - "{{ docker_config_dir }}"
+    - "{{ docker_shim_dir }}"
+    - "{{ containerd_data_dir }}"
+    - "{{ containerd_config_dir }}"
+    - "{{ nvidia_runtime_config_dir }}"
+    - "{{ libnvidia_header_file }}"
+    - "{{ libnvidia_lib_dir }}"
+    - "{{ package.docker.dir }}"
+    - "{{ package.nvidia_docker.dir }}"
+    - "{{ package.libnvidia_container.dir }}"
+    - "{{ package.nvidia_container_runtime.dir }}"
+    - "{{ package.containerd.dir }}"
+    - "{{ bin_dir }}/docker"
+    - "{{ bin_dir }}/dockerd"
+    - "{{ bin_dir }}/docker-init"
+    - "{{ bin_dir }}/docker-proxy"
+    - "{{ bin_dir }}/docker-runc"
+    - "{{ bin_dir }}/ctr"
+    - "{{ bin_dir }}/critest"
+    - "{{ bin_dir }}/crictl"
+    - "{{ bin_dir }}/containerd"
+    - "{{ bin_dir }}/containerd-shim"
+    - "{{ bin_dir }}/containerd-shim-runc-v1"
+    - "{{ bin_dir }}/containerd-stress"
+    - "{{ bin_dir }}/nvidia-container-cli"
+    - "{{ bin_dir }}/nvidia-container-runtime"
+    - "{{ bin_dir }}/nvidia-container-runtime-hook"
+    - "{{ bin_dir }}/nvidia-docker"
+    - "{{ bin_dir }}/runc"
+    - "{{ systemd_service_dir }}/docker.service"
+    - "{{ systemd_service_dir }}/docker.socket"
+    - "{{ systemd_service_dir }}/containerd.service"
 
 - name: Stop containerd systemd service
   systemd: name=containerd.service state=stopped enabled=no
@@ -58,9 +58,7 @@
   register: stop_containerd_service
 
 - name: Find containerd mounted volumes
-  when: 
-  - stop_containerd_service
-  - container_runtime == 'containerd'
+  when: stop_containerd_service and container_runtime == 'containerd'
   shell: "df | grep -o '/run/containerd/.*'"
   ignore_errors: True
   register: containerd_mounts

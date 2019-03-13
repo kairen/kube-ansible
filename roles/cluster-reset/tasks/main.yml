@@ -11,4 +11,3 @@
 - name: Reset etcd cluster
   when: reset_etcd|default(false)
   include_tasks: reset-etcd.yml
-

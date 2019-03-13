@@ -9,7 +9,7 @@
 - include_tasks: containerd/main.yml
 
 # nvidia-docker runtime
-- when: 
+- when:
   - container_runtime == 'nvidia-docker'
   - "'not found' not in check_driver.stdout"
   include_tasks: nvidia-docker/main.yml

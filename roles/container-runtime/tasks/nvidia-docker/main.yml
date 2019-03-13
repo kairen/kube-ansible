@@ -11,7 +11,7 @@
     group: root
     mode: 0644
   with_items:
-    - { file: "config.toml",    dir: "{{ nvidia_runtime_config_dir }}" }
+    - { file: "config.toml", dir: "{{ nvidia_runtime_config_dir }}" }
     - { file: "libnvidia.conf", dir: "{{ ld_config_dir }}" }
   register: copy_nvidia_config_files
 
