@@ -39,7 +39,7 @@ vagrant_config "system_memory.*" "system_memory = ${MEMORY}"
 role_config "etcd_iface:.*" "etcd_iface: ${ETH}" ${GROUP_VARS_PATH}
 role_config "cni_iface:.*" "cni_iface: ${ETH}" ${GROUP_VARS_PATH}
 role_config "vip_interface:.*" "vip_interface: ${ETH}" ${GROUP_VARS_PATH}
-role_config "${SUBNET}.[0-9]*" "${SUBNET}.9" ${GROUP_VARS_PATH}
+role_config "vip_address:.*" "vip_address: ${SUBNET}.9" ${GROUP_VARS_PATH}
 
 # Create inventory and hosts
 set_inventory

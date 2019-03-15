@@ -13,7 +13,7 @@ container_network: calico
 
 # Kubernetes HA extra variables.
 vip_interface: ""
-vip_address: 172.22.132.9
+vip_address: 172.16.35.9
 
 # Kubernetes extra addons
 enable_ingress: false
