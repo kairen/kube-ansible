@@ -91,7 +91,6 @@ addons:
     dependencies:
       - name: monitoring
         kind: namespace
-        namespace: ""
         files:
           - monitoring/monitoring-ns.yml
       - name: prometheus-operator
