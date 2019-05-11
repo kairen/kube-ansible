@@ -19,6 +19,21 @@
 - name: Disable vm swappiness
   shell: "swapoff -a && sysctl -w vm.swappiness=0"
 
+- name: copy new SystemD file for swapoff.service
+  copy:
+    src: swapoff.service
+    dest: /etc/systemd/system/swapoff.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install and enbale SystemD swapoff.service
+  systemd:
+    name: swapoff
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    
 - name: Enable and restart kubelet engine
   systemd:
     name: kubelet
