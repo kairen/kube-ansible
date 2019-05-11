@@ -33,7 +33,7 @@
     daemon_reload: yes
     enabled: yes
     state: started
-    
+
 - name: Enable and restart kubelet engine
   systemd:
     name: kubelet
