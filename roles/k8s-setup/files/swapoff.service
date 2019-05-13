@@ -1,0 +1,14 @@
+# /etc/systemd/system/swapoff.service
+
+[Unit]
+Description=Swapoff, kubelet requirement
+After=network.target
+Before=kubelet.service
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/swapoff -a
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
