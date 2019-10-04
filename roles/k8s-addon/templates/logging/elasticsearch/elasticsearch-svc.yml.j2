@@ -13,3 +13,25 @@ spec:
     targetPort: db
   selector:
     k8s-app: elasticsearch-logging
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kube-system
+  name: elasticsearch-discovery
+  labels:
+    service: elasticsearch
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+  - port: 9200
+    name: db
+    targetPort: db
+  - port: 9300
+    name: transport
+    targetPort: transport
+  selector:
+    k8s-app: elasticsearch-logging
