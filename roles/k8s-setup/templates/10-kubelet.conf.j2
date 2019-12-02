@@ -1,6 +1,6 @@
 [Service]
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig={{ bootstrap_kubeconfig }} --kubeconfig={{ kubelet_kubeconfig }}"
-{% if kube_version.split(".")[1] >= 15 %}
+{% if (kube_version.split(".")[1]|int) >= 15 %}
 Environment="KUBELET_SYSTEM_ARGS=--network-plugin=cni --cni-conf-dir={{ cni_etc_dir }}"
 {% else %}
 Environment="KUBELET_SYSTEM_ARGS=--network-plugin=cni --cni-conf-dir={{ cni_etc_dir }} --cni-bin-dir={{ cni_bin_dir }} --allow-privileged=true"
