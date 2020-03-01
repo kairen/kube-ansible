@@ -67,7 +67,7 @@ oomScoreAdj: -999
 podPidsLimit: -1
 registryBurst: 10
 registryPullQPS: 5
-resolvConf: /etc/resolv.conf
+resolvConf: {{ kubelet_resolv_conf }}
 rotateCertificates: true
 runtimeRequestTimeout: 2m0s
 serializeImagePulls: true
