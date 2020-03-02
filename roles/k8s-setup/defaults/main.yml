@@ -23,6 +23,7 @@ kubelet_bind_healthz_address: 127.0.0.1
 kubelet_bind_port: 10250
 kubelet_bind_read_port: 10255
 kubelet_bind_healthz_port: 10248
+kubelet_resolv_conf: /etc/resolv.conf
 
 # keepalived variables
 keepalived_unicast_peers: "{% for host in groups['masters'] %}{% if vip_interface != '' %}'{{ hostvars[host]['ansible_' + vip_interface].ipv4.address }}'{% else %}'{{ hostvars[host].ansible_default_ipv4.address }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
