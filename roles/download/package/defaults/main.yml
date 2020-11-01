@@ -1,5 +1,4 @@
 ---
-
 base:
   kubelet:
     url: "https://storage.googleapis.com"
@@ -9,10 +8,10 @@ base:
     version: "{{ kube_version }}"
   etcd:
     url: "https://github.com"
-    version: 3.3.12
+    version: 3.3.25
   docker:
     url: "https://download.docker.com"
-    version: 18.09.3
+    version: 19.03.13
   nvidia_docker:
     url: "https://github.com"
     version: 2.0.3
@@ -27,10 +26,10 @@ base:
     version: 1.2.4
   cni:
     url: "https://github.com"
-    version: 0.6.0
+    version: 0.8.7
   helm:
     url: "https://kubernetes-helm.storage.googleapis.com"
-    version: 2.9.1
+    version: 3.4.0
   cfssl:
     url: "https://pkg.cfssl.org"
     version: 1.2
@@ -129,7 +128,7 @@ package:
     url: "{{ base.cni.url }}/containernetworking/plugins/releases/download/v{{ base.cni.version }}"
     unarchive:
       extra_opt: "['--strip-components=0']"
-    file: "cni-plugins-amd64-v{{ base.cni.version }}.tgz"
+    file: "cni-plugins-linux-amd64-v{{ base.cni.version }}.tgz"
   helm:
     name: helm
     dir: /opt/helm
