@@ -1,6 +1,5 @@
 ---
-
-kube_version: 1.14.3
+kube_version: 1.19.3
 
 # Container runtime,
 # Supported: docker, nvidia-docker, containerd.
@@ -13,7 +12,7 @@ container_network: calico
 
 # Kubernetes HA extra variables.
 vip_interface: ""
-vip_address: 172.16.35.9
+vip_address: 192.168.1.55
 
 # Kubernetes extra addons
 enable_ingress: false
