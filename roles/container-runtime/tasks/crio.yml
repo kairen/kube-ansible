@@ -1,0 +1,99 @@
+- name: Installing Prerequisites for Kubernetes
+  apt: 
+    name: apt-transport-https
+    state: present
+
+- name: Configure module for CRIO
+  copy: 
+    src: crio.conf
+    dest: /etc/modules-load.d/crio.conf
+    mode: 0644
+
+- name: "sysctl"
+  shell: "sysctl --system"
+
+- name: Put kubernetes-cri Conf file
+  copy: 
+    src: 99-kubernetes-cri.conf
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+    mode: 0644
+
+- name: Creates directory 
+  file:
+    path: /etc/cni/net.d
+    state: directory    
+
+- name: Put 10-crio.conf template
+  template:
+    src: 10-crio.conf.j2
+    dest: /etc/cni/net.d/10-crio.conf
+    mode: 777
+
+- name: Setting OS Variable for CRIO
+  shell: cat /etc/os-release  | grep VERSION_ID | sed 's/"//g' | cut -d'=' -f2
+  register: os
+  changed_when: False
+
+- set_fact:
+     OS: "xUbuntu_{{ os.stdout }}"
+
+- name: Getting Version for CRIO
+  shell: echo {{ kube_version }} | cut -d'.' -f1,2
+  register: version
+  changed_when: False
+
+- set_fact:
+     VERSION: "{{ version.stdout }}"
+
+- name: Get CRIO apt-key
+  apt_key: 
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/Release.key
+    state: present
+
+- name: Get CRIO apt-key
+  apt_key: 
+    url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ VERSION }}/{{ OS }}/Release.key
+    state: present
+
+- name: Add CRIO stable repo
+  apt_repository:
+    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/ /
+    state: present
+    filename: cri-o-stable
+
+- name: Add CRIO stable repo
+  apt_repository:
+    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ VERSION }}/{{ OS }}/ /
+    state: present
+    filename: cri-o-{{ VERSION }}
+
+- name: Install Required Rackages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: present
+  vars:
+    packages:
+      - cri-o
+      - cri-tools
+      - cri-o-runc
+      - runc
+
+- name: Configuring cgroup driver
+  copy:
+    src: 02-cgroup-manager.conf
+    dest: /etc/crio/crio.conf.d/02-cgroup-manager.conf
+    mode: 0644
+
+- name: "Put storage template"
+  template:
+    src: storage.conf.j2
+    dest: /etc/containers/storage.conf
+    mode: 0777
+
+- name: Restart CRIO
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: crio
