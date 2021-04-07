@@ -1,4 +1,6 @@
 ---
+- include_tasks: crio.yml
+  when: container_runtime == "crio"
 
 - when: container_runtime == 'nvidia-docker'
   raw: "nvidia-smi"

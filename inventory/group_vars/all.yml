@@ -1,9 +1,10 @@
 ---
 
-kube_version: 1.14.3
+kube_version: 1.20.5
 
 # Container runtime,
-# Supported: docker, nvidia-docker, containerd.
+# Supported: docker, nvidia-docker, containerd, crio
+# CRIO support with only Ubuntu distro yet.
 container_runtime: docker
 
 # Container network,
